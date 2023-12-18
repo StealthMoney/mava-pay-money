@@ -168,12 +168,8 @@ export const UserRepository = (): IUserRepository => {
     create,
     updateUser,
     getUserById,
+    getUserBylnAddress,
     getUserByEmail,
-    getUserByPhone,
     getUserByAccountId,
-    getUserWithAccount,
-    getUserProfile,
-    updateUserProfile,
-    updateUserEmailVerifiedById,
   };
 };

@@ -12,13 +12,13 @@ async function main() {
 	    password: `$2y$12$GBfcgD6XwaMferSOdYGiduw3Awuo95QAPhxFE0oNJ.Ds8qj3pzEZy`, //password
       kycInfo: {
         create: {
-          bvn: 22394832848
+          bvn: "22394832848"
         }
       },
       account: {
         create: {
           bankCode: 1011,
-          accountNumber: 7055604770,
+          accountNumber: "7055604770",
           lnAddress: "test@mavapay.money"
         }
       }

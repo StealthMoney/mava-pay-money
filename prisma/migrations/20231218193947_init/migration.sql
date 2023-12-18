@@ -14,7 +14,7 @@ CREATE TABLE "Account" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "bankCode" INTEGER NOT NULL,
-    "accountNumber" BIGINT NOT NULL,
+    "accountNumber" TEXT NOT NULL,
     "lnAddress" TEXT,
 
     CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
@@ -24,7 +24,7 @@ CREATE TABLE "Account" (
 CREATE TABLE "KYCInfo" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "bvn" BIGINT NOT NULL,
+    "bvn" TEXT NOT NULL,
 
     CONSTRAINT "KYCInfo_pkey" PRIMARY KEY ("id")
 );

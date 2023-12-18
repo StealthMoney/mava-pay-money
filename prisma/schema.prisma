@@ -25,7 +25,7 @@ model Account {
   user          User   @relation(fields: [userId], references: [id])
   userId        Int    @unique
   bankCode      Int
-  accountNumber BigInt    @unique
+  accountNumber String    @unique
   lnAddress     String? @unique
 }
 
@@ -33,5 +33,5 @@ model KYCInfo {
   id     Int  @id @default(autoincrement())
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique
-  bvn    BigInt
+  bvn    String
 }
