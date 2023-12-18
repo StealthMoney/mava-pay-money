@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" INTEGER NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -14,8 +14,8 @@ CREATE TABLE "Account" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "bankCode" INTEGER NOT NULL,
-    "accountNumber" INTEGER NOT NULL,
-    "lnAddress" TEXT NOT NULL DEFAULT 'NULL',
+    "accountNumber" BIGINT NOT NULL,
+    "lnAddress" TEXT,
 
     CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
@@ -24,7 +24,7 @@ CREATE TABLE "Account" (
 CREATE TABLE "KYCInfo" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "bvn" INTEGER NOT NULL,
+    "bvn" BIGINT NOT NULL,
 
     CONSTRAINT "KYCInfo_pkey" PRIMARY KEY ("id")
 );
