@@ -1,0 +1,1 @@
+export const LN_ADDRESS_REGEX = /^[a-z0-9\-_\.]+$/i;

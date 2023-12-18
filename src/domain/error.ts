@@ -36,6 +36,7 @@ export class DomainError extends Error {
 
 export class RepositoryError extends DomainError {}
 
+export class ValidationError extends DomainError {}
 export class UnknownRepositoryError extends RepositoryError {
   level = ErrorLevel.Critical
 }
