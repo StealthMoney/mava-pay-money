@@ -82,9 +82,13 @@ export const UserRepository = (): IUserRepository => {
         where: {
           id: userId,
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          verified: true,
           account: true,
-        },
+        }
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -103,9 +107,13 @@ export const UserRepository = (): IUserRepository => {
         where: {
           email: email,
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          verified: true,
           account: true,
-        },
+        }
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -126,9 +134,13 @@ export const UserRepository = (): IUserRepository => {
             lnAddress: lnAddress
           },
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          verified: true,
           account: true,
-        },
+        }
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -149,9 +161,13 @@ export const UserRepository = (): IUserRepository => {
             id: accountId
           },
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          verified: true,
           account: true,
-        },
+        }
       });
       if (!user) {
         return new RepositoryError("User not found");

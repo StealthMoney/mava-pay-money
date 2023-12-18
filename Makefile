@@ -2,9 +2,9 @@ start:
 	docker-compose up
 	yarn dev
 
-start-deps:
+start-deps-dev:
 	make start-db
-	make start
+	npx prisma migrate reset
 
 start-db:
 	docker run --name mava-pay-money -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=mava-pay-money -d -p 5432:5432 postgres

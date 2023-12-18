@@ -24,7 +24,10 @@ export const validateLNAddress = (lnAddress?: string) => {
   }
 
   if (LN_ADDRESS_REGEX.test(username)) {
-    return lnAddress
+    return {
+      address: lnAddress,
+      addressName: username 
+    }
   } else {
     message = "Invalid address"
     return new ValidationError(message)
