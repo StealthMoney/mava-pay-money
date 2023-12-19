@@ -8,29 +8,25 @@ import {
 import { Logger } from "@/config/logger";
 
 type UserType = Prisma.UserCreateInput;
-// type HLK = Prisma.User
-type UserWithAccount = Prisma.UserInclude["account"]
-type AccountType = Prisma.AccountCreateArgs["data"];
-type KycInfoType = Prisma.KYCInfoCreateArgs["data"];
 
-interface IUserRepository {
-  create: (user: UserType) => Promise<UserType | RepositoryError>;
-  updateUser: ({
-    user,
-    userId,
-  }: {
-    user: UserType;
-    userId: number;
-  }) => Promise<true | RepositoryError>;
-  getUserById: (userId: number) => Promise<(UserType & {id: number}) | RepositoryError>;
-  getUserBylnAddress: (lnAddress: string) => Promise<UserType | RepositoryError>;
-  getUserByEmail: (email: string) => Promise<UserType | RepositoryError>;
-  getUserByAccountId: (
-    accountId: number
-  ) => Promise<UserType | RepositoryError>;
-}
+// interface IUserRepository {
+//   create: (user: UserType) => Promise<UserType | RepositoryError>;
+//   updateUser: ({
+//     user,
+//     userId,
+//   }: {
+//     user: UserType;
+//     userId: number;
+//   }) => Promise<true | RepositoryError>;
+//   getUserById: (userId: number) => Promise<(UserType & {id: number}) | RepositoryError>;
+//   getUserBylnAddress: (lnAddress: string) => Promise<UserType | RepositoryError>;
+//   getUserByEmail: (email: string) => Promise<UserType | RepositoryError>;
+//   getUserByAccountId: (
+//     accountId: number
+//   ) => Promise<UserType | RepositoryError>;
+// }
 
-export const UserRepository = (): IUserRepository => {
+export const UserRepository = () => {
   const create = async (user: UserType) => {
     try {
       const newUser = await prisma.user.create({ data: user });
