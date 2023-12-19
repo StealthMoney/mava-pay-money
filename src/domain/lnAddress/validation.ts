@@ -9,24 +9,24 @@ export const validateLNAddress = (lnAddress?: string) => {
     return new ValidationError(message)
   }
 
-  const path = lnAddress.split("@")
-  const username = path[0]
-  const domain = path[1]
+  // const path = lnAddress.split("@")
+  // const username = path[0]
+  // const domain = path[1]
 
-  if (!domain) {
-    message = "Invalid address"
-    return new ValidationError(message)
-  }
-  if (!isDev) {
-    if (domain !== MAVAPAY_MONEY_DOMAIN)
-    message = "Invalid domain"
-    return new ValidationError(message)
-  }
+  // if (!domain) {
+  //   message = "Invalid address"
+  //   return new ValidationError(message)
+  // }
+  // if (!isDev) {
+  //   if (domain !== MAVAPAY_MONEY_DOMAIN)
+  //   message = "Invalid domain"
+  //   return new ValidationError(message)
+  // }
 
-  if (LN_ADDRESS_REGEX.test(username)) {
+  if (LN_ADDRESS_REGEX.test(lnAddress)) {
     return {
       address: lnAddress,
-      addressName: username 
+      addressName: lnAddress 
     }
   } else {
     message = "Invalid address"

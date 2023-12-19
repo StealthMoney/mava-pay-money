@@ -44,7 +44,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
   
-  const user = await UserRepository().getUserBylnAddress(lnAddress);
+  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@mavapay.money`);
 
   if (user instanceof Error) {
     return new Response(stringifyError(user), {
