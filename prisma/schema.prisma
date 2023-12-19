@@ -32,6 +32,7 @@ model Account {
   userId        Int           @unique
   bankCode      Int
   accountNumber String        @unique
+  accountName   String
   lnAddress     String?       @unique
   transactions  Transaction[]
 }
