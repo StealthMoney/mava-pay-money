@@ -1,20 +1,81 @@
 import { type NextRequest } from "next/server";
-import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation";
-import { UserRepository } from "@/services/prisma/repository/user";
-import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
+import { Transaction } from "@/types/transaction";
+import { prisma } from "@/lib/prisma";
+import crypto from "crypto";
+import { OrderRepository } from "@/services/prisma/repository/order";
+import { Logger } from "@/config/logger";
 
 export async function POST(request: NextRequest, context: { params: any }) {
-  const username = context.params?.username;
-  const searchParams = request.nextUrl.searchParams;
-  const amount = searchParams.get("amount");
+  const requestbody = (await request.json()) as {
+    event: string;
+    data: Transaction;
+  };
+  console.log("a request came through", requestbody);
 
-  
-  const requestbody = await request.json()
-  console.log("a request came through", requestbody)
+  const order = await OrderRepository().getOrderByOrderId(
+    requestbody.data.transactionMetadata.orderId
+  );
+
+  if (order instanceof Error) {
+    Logger.error(order.message);
+    return new Response("success", {
+      status: 200,
+    });
+  }
+
+  const txHash = crypto
+    .createHash("sha256")
+    .update(JSON.stringify(requestbody.data))
+    .digest("hex");
+
+  const { ref, amount, id, type, status } = requestbody.data;
+  await prisma.transaction.upsert({
+    where: { txId: id },
+    update: {},
+    create: {
+      txId: id,
+      txHash,
+      orderId: order.orderId,
+      ref,
+      amount,
+      type,
+      status,
+    },
+  });
+
+  if (status === "FAILED") {
+    await OrderRepository().updateOrder({
+      order: { status: "FAILED" },
+      orderId: order.orderId,
+    });
+    return new Response("success", {
+      status: 200,
+    });
+  }
+
+  switch (requestbody.event) {
+    case "payment.received":
+      if (type === "DEPOSIT" && status === "SUCCESS") {
+        await OrderRepository().updateOrder({
+          order: { status: "PAYMENT_RECEIVED" },
+          orderId: order.orderId,
+        });
+      }
+      break;
+    case "payment.sent":
+      if (type === "WITHDRAWAL" && status === "SUCCESS") {
+        await OrderRepository().updateOrder({
+          order: { status: "PAYMENT_SENT" },
+          orderId: order.orderId,
+        });
+      }
+      break;
+    default:
+      break;
+  }
   return new Response("success", {
     status: 200,
   });
-  
 }
 
 const stringifyError = (
@@ -29,4 +90,3 @@ const stringifyError = (
     reason: errMessage,
   });
 };
-
