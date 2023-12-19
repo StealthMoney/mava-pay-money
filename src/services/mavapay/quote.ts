@@ -27,7 +27,6 @@ export const acceptQuote = async ({
   descriptionHash,
   memo
 }: acceptQuoteProps) => {
-  "use server";
   const params = new URLSearchParams()
   params.append("autopayout", "true")
   params.append("id", id)
@@ -42,7 +41,6 @@ export const acceptQuote = async ({
   const queryParams = params.toString()
   try {
     const res = await axiosInstance.get(`quote/accept?${queryParams}`);
-    console.log("accept quote", res.data.data)
     return { success: true, data: res.data.data as Order };
   } catch (error: any) {
     console.error("error from accept quote", error.response.data)
