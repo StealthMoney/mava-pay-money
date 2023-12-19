@@ -1,11 +1,11 @@
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { Prisma, PrismaClient } from "@prisma/client";
 import {
   RepositoryError,
   UnknownRepositoryError,
   parseErrorMessageFromUnknown,
 } from "@/domain/error";
 import { Logger } from "@/config/logger";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
 type UserType = Prisma.UserCreateInput;
 
@@ -26,7 +26,12 @@ type UserType = Prisma.UserCreateInput;
 //   ) => Promise<UserType | RepositoryError>;
 // }
 
-export const UserRepository = () => {
+type Prisma = Omit<
+  PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
+
+export const UserRepository = (prisma: Prisma) => {
   const create = async (user: UserType) => {
     try {
       const newUser = await prisma.user.create({ data: user });

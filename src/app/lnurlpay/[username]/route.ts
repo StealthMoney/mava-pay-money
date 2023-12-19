@@ -3,10 +3,9 @@ import { validateAmount, validateFees, validateLNAddress } from "@/domain/lnAddr
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 import { acceptQuote, getQuote } from "@/services/mavapay";
-import { TransactionRepository } from "@/services/prisma/repository/transaction";
 import { milliSatsToSats } from "@/utils/conversion";
 import { prisma } from "@/lib/prisma";
-import { AccountRepository } from "@/services/prisma/repository/account";
+import { AccountRepository, UserRepository } from "@/services/prisma/repository";
 import { buildResponse } from "@/domain/lnAddress/constructor";
 import { Quote } from "@/types/quote";
 import { Order } from "@/types/order";
@@ -74,7 +73,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
   
-  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
+  const user = await UserRepository(prisma).getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
 
   if (user instanceof Error) {
     console.error(user.message)
@@ -86,7 +85,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
 
-  const account = await AccountRepository().getAccountByUserId(user.id)
+  const account = await AccountRepository(prisma).getAccountByUserId(user.id)
 
   if (account instanceof Error) {
     return new Response(stringifyError(account), {
