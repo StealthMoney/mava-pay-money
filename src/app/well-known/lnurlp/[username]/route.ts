@@ -69,7 +69,7 @@ const buildResponse = (
     callback: `${hostname}/lnurlpay/${addressName}`,
     maxSendable: MAX_SPENDABLE,
     minSendable: MIN_SPENDABLE,
-    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${lnAddress}\"]]`,
+    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${addressName}@mavapay.money\"]]`,
     tag: "payRequest",
   };
 };
