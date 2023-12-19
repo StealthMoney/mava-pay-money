@@ -25,9 +25,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
       });
     }
 
-    const hostname = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : request.nextUrl.origin;
+    const hostname = "https://mavapay.money";
     
     const responseJson = buildResponse(hostname, validateAddress.addressName, lnAddress)
 
