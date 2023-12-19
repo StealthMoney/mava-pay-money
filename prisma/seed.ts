@@ -17,9 +17,9 @@ async function main() {
       },
       account: {
         create: {
-          bankCode: 1011,
+          bankCode: 100004,
           accountNumber: "7055604770",
-          accountName: "Emmanuel Itakpe",
+          accountName: "EMMANUEL ANUOLUWA ITAKPE",
           lnAddress: "test@mavapay.money"
         }
       }
