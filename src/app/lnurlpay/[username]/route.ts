@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server";
 import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
+import { acceptQuote, getQuote } from "@/services/mavapay";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const username = context.params?.username;
@@ -26,12 +27,23 @@ export async function GET(request: NextRequest, context: { params: any }) {
       statusText: validateAddress?.message,
     });
   }
+  
+  const user = await UserRepository().getUserBylnAddress(lnAddress);
+
+  if (user instanceof Error) {
+    return new Response(stringifyError(user), {
+      status: 404,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 
   try {
-    const user = await UserRepository().getUserBylnAddress(lnAddress);
-
-    if (user instanceof Error) {
-      return new Response(stringifyError(user), {
+    const quote = await getQuote({amount: validatedAmount})
+    
+    if (!quote.success || !quote.data) {
+      return new Response(stringifyError(quote, quote.message), {
         status: 404,
         headers: {
           "Content-Type": "application/json",
@@ -39,11 +51,17 @@ export async function GET(request: NextRequest, context: { params: any }) {
       });
     }
 
-    const hostname = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : request.nextUrl.origin;
-    
-    const responseJson = buildResponse(hostname, validateAddress.addressName, lnAddress)
+    const quoteId = quote.data.id
+
+    const metadataString = buildResponse("", username, lnAddress).metadata;
+
+    const order = await acceptQuote({
+      id: quoteId,
+      bankAccountName: user.account?.accountName ?? "",
+      bankAccountNumber: user.account?.accountNumber ?? "",
+      bankCode: user.account?.bankCode.toString() ?? "",
+      descriptionHash: metadataString
+    })
 
     // return new Response(JSON.stringify(responseJson), {
     //   status: 200,

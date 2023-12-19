@@ -44,13 +44,15 @@ export const validateAmount = (amount: any) => {
     message = "Amount is invalid"
     return new ValidationError(message)
   }
-  if (amount < MIN_SPENDABLE) {
+
+  const ammount_number = Number(amount)
+  if (ammount_number < MIN_SPENDABLE) {
     message = "Amount provided is less than min spendable amount"
     return new ValidationError(message)
   }
-  if (amount > MAX_SPENDABLE) {
+  if (ammount_number > MAX_SPENDABLE) {
     message = "Amount provided is more than max spendable amount"
     return new ValidationError(message)
   }
-  return amount as number
+  return ammount_number
 }
