@@ -11,7 +11,7 @@ export type Transaction = {
   hash: string;
   id: string;
   ref: string;
-  status: PaymentStatus;
+  status: "SUCCESS" | "FAILED";
   transactionMetadata: TransactionMetadata;
   type: "DEPOSIT" | "WITHDRAWAL";
   updatedAt: string;
