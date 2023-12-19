@@ -1,6 +1,7 @@
 import { type NextRequest } from "next/server";
 import { validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
+import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const lnAddress = context.params?.username;
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
       headers: {
         "Content-Type": "application/json",
       },
-      statusText: err?.message ?? "Error generating feed",
+      statusText: err?.message ?? "Error getting address",
     });
   }
 }
@@ -68,8 +69,8 @@ const buildResponse = (
 ) => {
   return {
     callback: `${hostname}/lnurlpay/${addressName}`,
-    maxSendable: 100000000,
-    minSendable: 10000,
+    maxSendable: MAX_SPENDABLE,
+    minSendable: MIN_SPENDABLE,
     metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${lnAddress}\"]]`,
     tag: "payRequest",
   };
