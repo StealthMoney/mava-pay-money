@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id       Int      @id @default(autoincrement())
   name     String
@@ -21,17 +27,37 @@ model User {
 }
 
 model Account {
-  id            Int    @id @default(autoincrement())
-  user          User   @relation(fields: [userId], references: [id])
-  userId        Int    @unique
+  id            Int           @id @default(autoincrement())
+  user          User          @relation(fields: [userId], references: [id])
+  userId        Int           @unique
   bankCode      Int
-  accountNumber String    @unique
-  lnAddress     String? @unique
+  accountNumber String        @unique
+  lnAddress     String?       @unique
+  transactions  Transaction[]
 }
 
 model KYCInfo {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
   bvn    String
+}
+
+model Transaction {
+  id        Int                  @id @default(autoincrement())
+  account   Account              @relation(fields: [accountId], references: [id])
+  accountId Int                  @unique
+  amount    BigInt
+  status    TransactionStatus    @default(PENDING)
+  metadata  TransactionMetadata?
+}
+
+model TransactionMetadata {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [TransactionId], references: [id])
+  TransactionId Int         @unique
+  amount        BigInt
+  quote         String
+  invoice       String
+  ref           String
 }
