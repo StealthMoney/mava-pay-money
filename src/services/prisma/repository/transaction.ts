@@ -71,31 +71,11 @@ export const TransactionRepository = () => {
     }
   };
 
-  const getTransactionByAccountId = async (accountId: number) => {
+  const getTransactionsByOrderId = async (orderId: string) => {
     try {
-      const transaction = await prisma.transaction.findUnique({
+      const transaction = await prisma.transaction.findMany({
         where: {
-          accountId: accountId,
-        },
-      });
-      if (!transaction) {
-        return new RepositoryError("Transaction not found");
-      }
-      return transaction;
-    } catch (error) {
-      Logger.error(error);
-      const errMsg = parseErrorMessageFromUnknown(error);
-      return new UnknownRepositoryError(errMsg);
-    }
-  };
-
-  const getTransactionByQuoteId = async (quoteId: string) => {
-    try {
-      const transaction = await prisma.transaction.findFirst({
-        where: {
-          metadata: {
-            quote: quoteId
-          },
+          orderId: orderId
         },
       });
       if (!transaction) {
@@ -114,7 +94,6 @@ export const TransactionRepository = () => {
     create,
     updateTransaction,
     getTransactionById,
-    getTransactionByAccountId,
-    getTransactionByQuoteId,
+    getTransactionsByOrderId,
   };
 };
