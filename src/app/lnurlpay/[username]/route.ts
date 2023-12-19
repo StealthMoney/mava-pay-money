@@ -3,6 +3,10 @@ import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 import { acceptQuote, getQuote } from "@/services/mavapay";
+import { TransactionRepository } from "@/services/prisma/repository/transaction";
+import { milliSatsToSats } from "@/utils/conversion";
+import { prisma } from "@/lib/prisma";
+import { AccountRepository } from "@/services/prisma/repository/account";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const username = context.params?.username;
@@ -19,6 +23,18 @@ export async function GET(request: NextRequest, context: { params: any }) {
       },
     });
   }
+
+  const sats = milliSatsToSats(validatedAmount)
+
+  if (sats instanceof Error) {
+    return new Response(stringifyError(sats), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   const lnAddress = `${username}@${MAVAPAY_MONEY_DOMAIN}`
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
@@ -39,17 +55,30 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
 
+  const account = await AccountRepository().getAccountByUserId(user.id)
+
+  if (account instanceof Error) {
+    return new Response(stringifyError(account), {
+      status: 404,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   try {
-    const quote = await getQuote({amount: validatedAmount})
+    const quote = await getQuote({amount: sats})
     
     if (!quote.success || !quote.data) {
       return new Response(stringifyError(quote, quote.message), {
-        status: 404,
+        status: 500,
         headers: {
           "Content-Type": "application/json",
         },
       });
     }
+
+    console.log("quote", quote.data)
 
     const quoteId = quote.data.id
 
@@ -57,18 +86,45 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
     const order = await acceptQuote({
       id: quoteId,
-      bankAccountName: user.account?.accountName ?? "",
-      bankAccountNumber: user.account?.accountNumber ?? "",
-      bankCode: user.account?.bankCode.toString() ?? "",
+      bankAccountName: account.accountName,
+      bankAccountNumber: account.accountNumber,
+      bankCode: account.bankCode.toString(),
       descriptionHash: metadataString
     })
 
-    // return new Response(JSON.stringify(responseJson), {
-    //   status: 200,
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
+    if (!order.success || !order.data) {
+      return new Response(stringifyError(order, order.message), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    console.log("order", order.data)
+
+    // const newTransaction = await TransactionRepository().create({account: {connect: {id: user.account?.id}}, amount: validatedAmount})
+    const newTransaction = prisma.transaction.create({ data: {
+      amount: sats,
+      accountId: account.id,
+      metadata: {
+        create: {
+          amount: sats,
+          invoice: order.data.orderId,
+          quote: quote.data.id,
+          ref: order.data.paymentBtcDetail
+        }
+      }
+    }})
+    console.log({newTransaction})
+
+    const lnResponse = buildLnResponse(order.data.paymentBtcDetail)
+    return new Response(JSON.stringify(lnResponse), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (err: any) {
     const errorMessage = "Internal Server Error";
     return new Response(stringifyError(err, errorMessage), {
@@ -107,3 +163,10 @@ const buildResponse = (
     tag: "payRequest",
   };
 };
+
+const buildLnResponse = (lninvoice: string) => {
+  return {
+    routes: [],
+    pr: lninvoice,
+  }
+}

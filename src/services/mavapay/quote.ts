@@ -8,12 +8,13 @@ export const getQuote = async ({ amount }: { amount: number }) => {
     sourceCurrency: "BTC",
     targetCurrency: "NGN",
     paymentMethod: "LIGHTNING",
+    paymentCurrency: "BTC",
   };
   try {
     const res = await axiosInstance.post("quote", data);
     return { success: true, data: res.data.data as Quote["data"] };
   } catch (error: any) {
-    console.error(error.response);
+    console.error("err from getquote", error.response);
     return { success: false, message: error?.response?.data?.message };
   }
 };
@@ -41,8 +42,10 @@ export const acceptQuote = async ({
   const queryParams = params.toString()
   try {
     const res = await axiosInstance.get(`quote/accept?${queryParams}`);
+    console.log("accept quote", res.data.data)
     return { success: true, data: res.data.data as Order };
   } catch (error: any) {
+    console.error("error from accept quote", error.response.data)
     return { success: false, message: error.response.data.message };
   }
 };

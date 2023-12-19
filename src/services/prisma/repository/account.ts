@@ -70,6 +70,23 @@ export const AccountRepository = () => {
       return new UnknownRepositoryError(errMsg);
     }
   };
+  const getAccountByUserId = async (userId: number) => {
+    try {
+      const account = await prisma.account.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+      if (!account) {
+        return new RepositoryError("Account not found");
+      }
+      return account;
+    } catch (error) {
+      Logger.error(error);
+      const errMsg = parseErrorMessageFromUnknown(error);
+      return new UnknownRepositoryError(errMsg);
+    }
+  };
 
   const getAccountBylnAddress = async (lnAddress: string) => {
     try {
@@ -93,6 +110,7 @@ export const AccountRepository = () => {
     create,
     updateAccount,
     getAccountById,
+    getAccountByUserId,
     getAccountBylnAddress,
   };
 };
