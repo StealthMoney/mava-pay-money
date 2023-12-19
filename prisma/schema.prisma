@@ -53,7 +53,7 @@ model Account {
   id            Int           @id @default(autoincrement())
   user          User          @relation(fields: [userId], references: [id])
   userId        Int           @unique
-  bankCode      Int
+  bankCode      String
   accountNumber String        @unique
   accountName   String
   lnAddress     String?       @unique
