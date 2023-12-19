@@ -10,8 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TransactionStatus {
+enum OrderStatus {
   PENDING
+  EXPIRED
+  PAYMENT_RECEIVED
+  PAYMENT_SENT
+  FAILED
+}
+
+enum Currency {
+  NGN
+  BTC
+  USD
+}
+
+enum PaymentMethod {
+  BTC
+  LIGHTNING
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum TransactionStatus {
   SUCCESS
   FAILED
 }
@@ -34,7 +57,7 @@ model Account {
   accountNumber String        @unique
   accountName   String
   lnAddress     String?       @unique
-  transactions  Transaction[]
+  order         Order[]
 }
 
 model KYCInfo {
@@ -44,21 +67,31 @@ model KYCInfo {
   bvn    String
 }
 
-model Transaction {
-  id        Int                  @id @default(autoincrement())
-  account   Account              @relation(fields: [accountId], references: [id])
-  accountId Int                  @unique
-  amount    BigInt
-  status    TransactionStatus    @default(PENDING)
-  metadata  TransactionMetadata?
+model Order {
+  id            Int           @id @default(autoincrement())
+  account       Account       @relation(fields: [accountId], references: [id])
+  accountId     Int
+  orderId       String        @unique
+  quoteId       String
+  paymentMethod PaymentMethod
+  amount        BigInt
+  targetAmount  String
+  createdAt     DateTime
+  status        OrderStatus   @default(PENDING)
+  isValid       Boolean
+  invoice       String
+  expiryTime    DateTime
+  transaction   Transaction[]
 }
 
-model TransactionMetadata {
-  id            Int         @id @default(autoincrement())
-  transaction   Transaction @relation(fields: [TransactionId], references: [id])
-  TransactionId Int         @unique
-  amount        BigInt
-  quote         String
-  invoice       String
-  ref           String
+model Transaction {
+  id        Int               @id @default(autoincrement())
+  txId      String            @unique
+  txHash    String            @unique
+  order     Order             @relation(fields: [orderId], references: [orderId])
+  orderId   String
+  ref       String
+  amount    BigInt
+  type      TransactionType
+  status    TransactionStatus
 }
