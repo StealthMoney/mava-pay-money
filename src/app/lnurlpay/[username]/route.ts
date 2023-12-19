@@ -1,9 +1,24 @@
 import { type NextRequest } from "next/server";
-import { validateLNAddress } from "@/domain/lnAddress/validation";
+import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
+import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 
 export async function GET(request: NextRequest, context: { params: any }) {
-  const lnAddress = context.params?.username;
+  const username = context.params?.username;
+  const searchParams = request.nextUrl.searchParams;
+  const amount = searchParams.get("amount");
+
+  const validatedAmount = validateAmount(amount)
+  
+  if (validatedAmount instanceof Error) {
+    return new Response(stringifyError(validatedAmount), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  const lnAddress = `${username}@${MAVAPAY_MONEY_DOMAIN}`
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
     return new Response(stringifyError(validateAddress), {
@@ -30,12 +45,12 @@ export async function GET(request: NextRequest, context: { params: any }) {
     
     const responseJson = buildResponse(hostname, validateAddress.addressName, lnAddress)
 
-    return new Response(JSON.stringify(responseJson), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // return new Response(JSON.stringify(responseJson), {
+    //   status: 200,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
   } catch (err: any) {
     const errorMessage = "Internal Server Error";
     return new Response(stringifyError(err, errorMessage), {
