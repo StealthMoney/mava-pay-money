@@ -8,7 +8,9 @@ export async function POST(request: NextRequest, context: { params: any }) {
   const searchParams = request.nextUrl.searchParams;
   const amount = searchParams.get("amount");
 
-  console.log("a request came through", request.body)
+  
+  const requestbody = await request.json()
+  console.log("a request came through", requestbody)
   return new Response("success", {
     status: 200,
   });
