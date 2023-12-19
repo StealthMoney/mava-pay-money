@@ -35,7 +35,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
 
-  const lnAddress = `${username}@${MAVAPAY_MONEY_DOMAIN}`
+  const lnAddress = username
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
     return new Response(stringifyError(validateAddress), {
