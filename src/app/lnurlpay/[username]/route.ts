@@ -103,20 +103,20 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
     console.log("order", order.data)
 
-    // const newTransaction = await TransactionRepository().create({account: {connect: {id: user.account?.id}}, amount: validatedAmount})
-    const newTransaction = prisma.transaction.create({ data: {
-      amount: sats,
+    const newOrder = await prisma.order.create({data: {
       accountId: account.id,
-      metadata: {
-        create: {
-          amount: sats,
-          invoice: order.data.orderId,
-          quote: quote.data.id,
-          ref: order.data.paymentBtcDetail
-        }
-      }
+      orderId: order.data.orderId,
+      quoteId: order.data.quoteId,
+      paymentMethod: "LIGHTNING",
+      amount: Number(quote.data.amountInSourceCurrency),
+      targetAmount: quote.data.amountInTargetCurrency,
+      status: "PENDING",
+      isValid: order.data.isValid,
+      invoice: order.data.paymentBtcDetail,
+      createdAt: order.data.createdAt,
+      expiryTime: quote.data.expiry,
     }})
-    console.log({newTransaction})
+    console.log({newOrder})
 
     const lnResponse = buildLnResponse(order.data.paymentBtcDetail)
     return new Response(JSON.stringify(lnResponse), {
@@ -132,7 +132,6 @@ export async function GET(request: NextRequest, context: { params: any }) {
       headers: {
         "Content-Type": "application/json",
       },
-      statusText: err?.message ?? "Error generating feed",
     });
   }
 }
