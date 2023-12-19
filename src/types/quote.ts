@@ -3,7 +3,7 @@ export type acceptQuoteProps = {
   bankAccountNumber: string;
   bankAccountName: string;
   bankCode: string;
-  descriptionHash?: string;
+  descriptionHash: string;
   memo?: string;
 };
 
