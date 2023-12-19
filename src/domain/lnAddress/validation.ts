@@ -1,4 +1,4 @@
-import { LN_ADDRESS_REGEX } from "@/config/default"
+import { LN_ADDRESS_REGEX, MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default"
 import { ValidationError } from "../error"
 import { MAVAPAY_MONEY_DOMAIN, isDev } from "@/config/process"
 
@@ -32,4 +32,25 @@ export const validateLNAddress = (lnAddress?: string) => {
     message = "Invalid address"
     return new ValidationError(message)
   }
+}
+
+export const validateAmount = (amount: any) => {
+  let message = ""
+  if (!amount) {
+    message = "No amount provided"
+    return new ValidationError(message)
+  }
+  if (!parseInt(amount)) {
+    message = "Amount is invalid"
+    return new ValidationError(message)
+  }
+  if (amount < MIN_SPENDABLE) {
+    message = "Amount provided is less than min spendable amount"
+    return new ValidationError(message)
+  }
+  if (amount > MAX_SPENDABLE) {
+    message = "Amount provided is more than max spendable amount"
+    return new ValidationError(message)
+  }
+  return amount as number
 }

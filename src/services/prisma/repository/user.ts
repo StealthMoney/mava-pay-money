@@ -23,7 +23,7 @@ interface IUserRepository {
     userId: number;
   }) => Promise<true | RepositoryError>;
   getUserById: (userId: number) => Promise<(UserType & {id: number}) | RepositoryError>;
-  getUserBylnAddress: (userId: number) => Promise<UserType | RepositoryError>;
+  getUserBylnAddress: (lnAddress: string) => Promise<UserType | RepositoryError>;
   getUserByEmail: (email: string) => Promise<UserType | RepositoryError>;
   getUserByAccountId: (
     accountId: number
