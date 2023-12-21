@@ -7,9 +7,11 @@ import { TransactionRepository } from "@/services/prisma/repository/transaction"
 import { milliSatsToSats } from "@/utils/conversion";
 import { prisma } from "@/lib/prisma";
 import { AccountRepository } from "@/services/prisma/repository/account";
+import { buildResponse } from "@/domain/lnAddress/constructor";
 
 export async function GET(request: NextRequest, context: { params: any }) {
-  const username = context.params?.username;
+  const reqUsername = context.params?.username;
+  const username = reqUsername?.toLowerCase()
   const searchParams = request.nextUrl.searchParams;
   const amount = searchParams.get("amount");
 
@@ -149,19 +151,6 @@ const stringifyError = (
   });
 };
 
-const buildResponse = (
-  hostname: string,
-  addressName: string,
-  lnAddress: string
-) => {
-  return {
-    callback: `${hostname}/lnurlpay/${addressName}`,
-    maxSendable: 100000000,
-    minSendable: 10000,
-    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${lnAddress}\"]]`,
-    tag: "payRequest",
-  };
-};
 
 const buildLnResponse = (lninvoice: string) => {
   return {

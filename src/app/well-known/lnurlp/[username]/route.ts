@@ -2,9 +2,10 @@ import { type NextRequest } from "next/server";
 import { validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
+import { buildResponse } from "@/domain/lnAddress/constructor";
 
 export async function GET(request: NextRequest, context: { params: any }) {
-  const lnAddress = context.params?.username;
+  const lnAddress = context.params?.username?.toLowerCase();
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
     return new Response(stringifyError(validateAddress), {
@@ -58,18 +59,4 @@ const stringifyError = (
     status: "Error",
     reason: errMessage,
   });
-};
-
-const buildResponse = (
-  hostname: string,
-  addressName: string,
-  lnAddress: string
-) => {
-  return {
-    callback: `${hostname}/lnurlpay/${addressName}`,
-    maxSendable: MAX_SPENDABLE,
-    minSendable: MIN_SPENDABLE,
-    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${addressName}@mavapay.money\"]]`,
-    tag: "payRequest",
-  };
 };
