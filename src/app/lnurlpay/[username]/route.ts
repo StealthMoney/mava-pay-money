@@ -8,6 +8,9 @@ import { milliSatsToSats } from "@/utils/conversion";
 import { prisma } from "@/lib/prisma";
 import { AccountRepository } from "@/services/prisma/repository/account";
 import { buildResponse } from "@/domain/lnAddress/constructor";
+import { Quote } from "@/types/quote";
+import { Order } from "@/types/order";
+import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const reqUsername = context.params?.username;
@@ -120,7 +123,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     }})
     console.log({newOrder})
 
-    const lnResponse = buildLnResponse(order.data.paymentBtcDetail)
+    const lnResponse = buildLnResponse(quote.data, order.data)
     return new Response(JSON.stringify(lnResponse), {
       status: 200,
       headers: {
@@ -152,9 +155,13 @@ const stringifyError = (
 };
 
 
-const buildLnResponse = (lninvoice: string) => {
+const buildLnResponse = (quote: Quote["data"], order: Order) => {
+  const {id, isValid, ...rest } = quote!
   return {
     routes: [],
-    pr: lninvoice,
+    pr: order.paymentBtcDetail,
+    data: {...rest},
+    minSpendable: MIN_SPENDABLE,
+    maxSpendable: MAX_SPENDABLE
   }
 }
