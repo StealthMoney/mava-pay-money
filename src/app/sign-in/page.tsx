@@ -1,6 +1,7 @@
 import React from "react";
 import CustomButton from "../components/button";
 import CustomInput from "../components/custom-input";
+import PasswordInput from "../components/password-input";
 
 const page = () => {
   return (
@@ -11,7 +12,7 @@ const page = () => {
             <h2 className='text-black text-[32px]'>Sign In</h2>
           </div>
           <CustomInput labelName='Email' inputProps={{ placeholder: "Enter your email address", name: "email", type: "email" }} />
-          <CustomInput labelName='Password' inputProps={{ placeholder: "Enter your password", name: "password", type: "password" }} />
+          <PasswordInput placeholder='Enter your password' />
           <CustomButton label='Sign in' loading={false} />
         </div>
       </section>

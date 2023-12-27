@@ -25,7 +25,8 @@ const config: Config = {
             borderColor: {
                 "green-border": "#2EAE4E",
                 "input-border": "#494949",
-                "card-border": "#DBE1E7"
+                "card-border": "#DBE1E7",
+                "nav-border": "#E7F9EB"
             },
             colors: {
                 "primary-green": "#2EAE4E",

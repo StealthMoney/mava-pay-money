@@ -1,27 +1,44 @@
-"use client";
+"use client"
 
-import React from "react";
-import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
-import CustomInput from "../custom-input";
+import React from "react"
+import Image from "next/image"
+import EyeCloseSvg from "../../assets/svgs/eye-closed-icon.svg"
+import EyeOpenSvg from "../../assets/svgs/eye-open-icon.svg"
+import { CustomInput } from "../custom-input/CustomInput"
 
 const PasswordInput = ({ placeholder }: { placeholder: string }) => {
-  const [isVisible, setIsVisible] = React.useState(false);
+    const [isVisible, setIsVisible] = React.useState(false)
 
-  return (
-    <CustomInput
-      labelName='Password'
-      inputProps={{ placeholder: placeholder, name: "password", type: isVisible ? "text" : "password" }}
-      rightIcon={
-        <button onClick={() => setIsVisible(!isVisible)}>
-          {isVisible ? (
-            <EyeOpenIcon color='black' height='18px' width='24px' cursor='pointer' />
-          ) : (
-            <EyeClosedIcon color='black' height='18px' width='18px' cursor='pointer' />
-          )}
-        </button>
-      }
-    />
-  );
-};
+    return (
+        <CustomInput
+            inputProps={{
+                placeholder: placeholder,
+                name: "password",
+                type: isVisible ? "text" : "password",
+                style: { color: "black" }
+            }}
+            className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+            rightIcon={
+                <button onClick={() => setIsVisible(!isVisible)}>
+                    {isVisible ? (
+                        <Image
+                            src={EyeOpenSvg}
+                            alt="eye"
+                            height={20}
+                            width={20}
+                        />
+                    ) : (
+                        <Image
+                            src={EyeCloseSvg}
+                            alt="eye"
+                            height={20}
+                            width={20}
+                        />
+                    )}
+                </button>
+            }
+        />
+    )
+}
 
-export default PasswordInput;
+export default PasswordInput
