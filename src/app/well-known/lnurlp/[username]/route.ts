@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
     const hostname = "https://mavapay.money";
     
-    const responseJson = buildResponse(hostname, validateAddress.addressName, lnAddress)
+    const responseJson = buildResponse(hostname, validateAddress.addressName)
 
     return new Response(JSON.stringify(responseJson), {
       status: 200,

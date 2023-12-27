@@ -87,7 +87,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
     const quoteId = quote.data.id
 
-    const metadataString = buildResponse("", username, lnAddress).metadata;
+    const metadataString = buildResponse("", username).metadata;
 
     const order = await acceptQuote({
       id: quoteId,
