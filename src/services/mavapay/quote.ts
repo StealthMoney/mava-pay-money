@@ -2,14 +2,15 @@ import { Quote, acceptQuoteProps } from "@/types/quote";
 import axiosInstance from "../rest/axios";
 import { Order } from "@/types/order";
 
-export const getQuote = async ({ amount }: { amount: number }) => {
+export const getQuote = async ({ amount, customerInternalFee }: { amount: number, customerInternalFee?: number }) => {
   const data = {
     amount,
     sourceCurrency: "BTC",
     targetCurrency: "NGN",
     paymentMethod: "LIGHTNING",
     paymentCurrency: "BTC",
-    implicitFees: true
+    implicitFees: true,
+    customerInternalFee
   };
   try {
     const res = await axiosInstance.post("quote", data);

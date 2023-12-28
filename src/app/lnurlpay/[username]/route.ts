@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation";
+import { validateAmount, validateFees, validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 import { acceptQuote, getQuote } from "@/services/mavapay";
@@ -17,6 +17,8 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const username = reqUsername?.toLowerCase()
   const searchParams = request.nextUrl.searchParams;
   const amount = searchParams.get("amount");
+  const fees = searchParams.get("feesInSats")
+  const partner = searchParams.get("partner")
 
   const validatedAmount = validateAmount(amount)
   
@@ -49,7 +51,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
   
-  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@mavapay.money`);
+  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
 
   if (user instanceof Error) {
     return new Response(stringifyError(user), {
@@ -72,7 +74,19 @@ export async function GET(request: NextRequest, context: { params: any }) {
   }
 
   try {
-    const quote = await getQuote({amount: sats})
+    
+    const validatedFees = validateFees(fees)
+
+    if (validatedFees instanceof Error) {
+      return new Response(stringifyError(validatedFees), {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const quote = await getQuote({amount: sats, customerInternalFee: validatedFees})
     
     if (!quote.success || !quote.data) {
       return new Response(stringifyError(quote, quote.message), {

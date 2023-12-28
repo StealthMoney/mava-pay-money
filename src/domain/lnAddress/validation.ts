@@ -56,3 +56,15 @@ export const validateAmount = (amount: any) => {
   }
   return ammount_number
 }
+
+export const validateFees = (fees: any) => {
+  let message = ""
+
+  if (!fees) return undefined
+
+  if (isNaN(Number(fees))) {
+    message = "Fee is invalid"
+    return new ValidationError(message)
+  }
+  return Number(fees)
+}
