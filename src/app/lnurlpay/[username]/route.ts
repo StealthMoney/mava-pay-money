@@ -86,7 +86,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
       });
     }
 
-    const quote = await getQuote({amount: sats, customerInternalFee: validatedFees})
+    const quote = await getQuote({amount: sats})
     
     if (!quote.success || !quote.data) {
       return new Response(stringifyError(quote, quote.message), {
@@ -108,7 +108,8 @@ export async function GET(request: NextRequest, context: { params: any }) {
       bankAccountName: account.accountName,
       bankAccountNumber: account.accountNumber,
       bankCode: account.bankCode.toString(),
-      descriptionHash: metadataString
+      descriptionHash: metadataString,
+      customerInternalFee: validatedFees
     })
 
     if (!order.success || !order.data) {

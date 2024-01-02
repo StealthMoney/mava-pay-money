@@ -2,7 +2,7 @@ import { Quote, acceptQuoteProps } from "@/types/quote";
 import axiosInstance from "../rest/axios";
 import { Order } from "@/types/order";
 
-export const getQuote = async ({ amount, customerInternalFee }: { amount: number, customerInternalFee?: number }) => {
+export const getQuote = async ({ amount }: { amount: number }) => {
   const data = {
     amount,
     sourceCurrency: "BTC",
@@ -10,7 +10,6 @@ export const getQuote = async ({ amount, customerInternalFee }: { amount: number
     paymentMethod: "LIGHTNING",
     paymentCurrency: "BTC",
     implicitFees: true,
-    customerInternalFee
   };
   try {
     const res = await axiosInstance.post("quote", data);
@@ -27,7 +26,8 @@ export const acceptQuote = async ({
   bankAccountName,
   bankCode,
   descriptionHash,
-  memo
+  memo,
+  customerInternalFee
 }: acceptQuoteProps) => {
   const params = new URLSearchParams()
   params.append("autopayout", "true")
@@ -38,6 +38,9 @@ export const acceptQuote = async ({
   params.append("descriptionHash", descriptionHash)
   if (memo) {
     params.append("memo", memo)
+  }
+  if (customerInternalFee) {
+    params.append("customerInternalFee", customerInternalFee.toString())
   }
 
   const queryParams = params.toString()
