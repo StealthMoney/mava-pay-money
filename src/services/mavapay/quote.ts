@@ -9,6 +9,7 @@ export const getQuote = async ({ amount }: { amount: number }) => {
     targetCurrency: "NGN",
     paymentMethod: "LIGHTNING",
     paymentCurrency: "BTC",
+    implicitFees: true,
   };
   try {
     const res = await axiosInstance.post("quote", data);
