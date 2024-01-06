@@ -36,10 +36,12 @@ export async function POST(request: NextRequest, context: { params: any }) {
     .update(JSON.stringify(requestbody.data))
     .digest("hex");
 
-  const { ref, amount, id, type, status, createdAt } = requestbody.data;
+  const { ref, amount, id, type, status, createdAt, updatedAt } = requestbody.data;
   await prisma.transaction.upsert({
     where: { txId: id },
-    update: {},
+    update: {
+      updatedAt
+    },
     create: {
       txId: id,
       txHash,
@@ -48,7 +50,8 @@ export async function POST(request: NextRequest, context: { params: any }) {
       amount,
       type,
       status,
-      createdAt
+      createdAt,
+      updatedAt,
     },
   });
 

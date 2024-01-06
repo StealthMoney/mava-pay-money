@@ -97,6 +97,7 @@ model Transaction {
   type      TransactionType
   status    TransactionStatus
   createdAt DateTime
+  updatedAt DateTime
 }
 
 model Partner {
