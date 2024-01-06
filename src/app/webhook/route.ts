@@ -12,14 +12,22 @@ export async function POST(request: NextRequest, context: { params: any }) {
   };
   console.log("a request came through", requestbody);
 
+  if (requestbody.event === "ping") {
+    return new Response("success", {
+      status: 200,
+    });
+  }
+
   const order = await OrderRepository().getOrderByOrderId(
     requestbody.data.transactionMetadata.orderId
   );
 
   if (order instanceof Error) {
     Logger.error(order.message);
-    return new Response("success", {
-      status: 200,
+    return new Response(parseResponseBody({
+      message: order.message
+    }), {
+      status: 404,
     });
   }
 
@@ -77,6 +85,10 @@ export async function POST(request: NextRequest, context: { params: any }) {
   return new Response("success", {
     status: 200,
   });
+}
+
+const parseResponseBody = (data: any) => {
+  return JSON.stringify(data)
 }
 
 const stringifyError = (
