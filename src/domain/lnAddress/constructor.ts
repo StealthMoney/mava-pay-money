@@ -9,7 +9,8 @@ export const buildResponse = (
     callback: `${hostname}/lnurlpay/${addressName}`,
     maxSendable: MAX_SPENDABLE,
     minSendable: MIN_SPENDABLE,
-    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${addressName}@${MAVAPAY_MONEY_DOMAIN}\"]]`,
+    // metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${addressName}@${MAVAPAY_MONEY_DOMAIN}\"]]`,
+    metadata: `[[\"text/plain\",\"Payment to ${addressName}\"],[\"text/identifier\",\"${addressName}@${process.env.API_DOMAIN}\"]]`,
     tag: "payRequest",
   };
 };
