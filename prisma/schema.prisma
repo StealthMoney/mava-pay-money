@@ -96,7 +96,7 @@ model Transaction {
   amount    BigInt
   type      TransactionType
   status    TransactionStatus
-  createdAt String
+  createdAt DateTime
 }
 
 model Partner {

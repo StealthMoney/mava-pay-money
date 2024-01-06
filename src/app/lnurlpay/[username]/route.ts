@@ -23,6 +23,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const validatedAmount = validateAmount(amount)
   
   if (validatedAmount instanceof Error) {
+    console.error(validatedAmount.message)
     return new Response(stringifyError(validatedAmount), {
       status: 500,
       headers: {
@@ -34,6 +35,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const sats = milliSatsToSats(validatedAmount)
 
   if (sats instanceof Error) {
+    console.error(sats.message)
     return new Response(stringifyError(sats), {
       status: 500,
       headers: {
@@ -45,6 +47,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const lnAddress = username
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
+    console.error(validateAddress.message)
     return new Response(stringifyError(validateAddress), {
       status: 500,
       statusText: validateAddress?.message,
@@ -54,6 +57,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
 
   if (user instanceof Error) {
+    console.error(user.message)
     return new Response(stringifyError(user), {
       status: 404,
       headers: {
@@ -89,6 +93,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     const quote = await getQuote({amount: sats})
     
     if (!quote.success || !quote.data) {
+      console.error(quote.message)
       return new Response(stringifyError(quote, quote.message), {
         status: 500,
         headers: {
@@ -113,6 +118,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     })
 
     if (!order.success || !order.data) {
+      console.error(order.message)
       return new Response(stringifyError(order, order.message), {
         status: 500,
         headers: {
@@ -175,7 +181,7 @@ const buildLnResponse = (quote: Quote["data"], order: Order) => {
   return {
     routes: [],
     pr: order.paymentBtcDetail,
-    data: {...rest},
+    metadata: {...rest},
     minSpendable: MIN_SPENDABLE,
     maxSpendable: MAX_SPENDABLE
   }
