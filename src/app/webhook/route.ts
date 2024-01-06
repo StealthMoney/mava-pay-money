@@ -39,8 +39,17 @@ export async function POST(request: NextRequest, context: { params: any }) {
   const { ref, amount, id, type, status, createdAt, updatedAt } = requestbody.data;
   await prisma.transaction.upsert({
     where: { txId: id },
+
     update: {
-      updatedAt
+      txId: id,
+      txHash,
+      orderId: order.orderId,
+      ref,
+      amount,
+      type,
+      status,
+      createdAt,
+      updatedAt,
     },
     create: {
       txId: id,
