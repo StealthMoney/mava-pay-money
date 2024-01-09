@@ -84,6 +84,7 @@ model Order {
   transaction   Transaction[]
   partner       Partner?      @relation(fields: [partnerId], references: [id])
   partnerId     Int?
+  callback      String?
 }
 
 model Transaction {
@@ -102,7 +103,7 @@ model Transaction {
 
 model Partner {
   id     Int     @id @default(autoincrement())
-  name   String
+  name   String   @unique
   domain String
   token  String
   Order  Order[]

@@ -6,6 +6,7 @@ export type acceptQuoteProps = {
   descriptionHash: string;
   memo?: string;
   customerInternalFee?: number
+  partner?: string
 };
 
 export type Quote = {
