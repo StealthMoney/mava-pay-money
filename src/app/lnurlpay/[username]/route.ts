@@ -11,6 +11,9 @@ import { buildResponse } from "@/domain/lnAddress/constructor";
 import { Quote } from "@/types/quote";
 import { Order } from "@/types/order";
 import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
+import { PartnerRepository } from "@/services/prisma/repository/partner";
+import { createJwtToken } from "@/services/auth/token";
+import { Partner } from "@prisma/client";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const reqUsername = context.params?.username;
@@ -19,6 +22,23 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const amount = searchParams.get("amount");
   const fees = searchParams.get("feesInSats")
   const partner = searchParams.get("partner")
+  const callback = searchParams.get("callback")
+
+  let partnerData = {} as Partner;
+  
+  console.log("🚀 ~ file: route.ts:24 ~ GET ~ partner:", partner)
+  if (partner) {
+    const validatedPartner = await PartnerRepository().getPartnerByName(partner)
+    if (validatedPartner instanceof Error) {
+      return new Response(stringifyError(validatedPartner), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    partnerData = validatedPartner
+  }
 
   const validatedAmount = validateAmount(amount)
   
@@ -114,7 +134,8 @@ export async function GET(request: NextRequest, context: { params: any }) {
       bankAccountNumber: account.accountNumber,
       bankCode: account.bankCode.toString(),
       descriptionHash: metadataString,
-      customerInternalFee: validatedFees
+      customerInternalFee: validatedFees,
+      partner: partnerData.name,
     })
 
     if (!order.success || !order.data) {
@@ -141,6 +162,8 @@ export async function GET(request: NextRequest, context: { params: any }) {
       invoice: order.data.paymentBtcDetail,
       createdAt: order.data.createdAt,
       expiryTime: quote.data.expiry,
+      partnerId: partnerData.id,
+      callback: callback,
     }})
     console.log({newOrder})
 

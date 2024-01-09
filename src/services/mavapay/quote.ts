@@ -27,7 +27,8 @@ export const acceptQuote = async ({
   bankCode,
   descriptionHash,
   memo,
-  customerInternalFee
+  customerInternalFee,
+  partner
 }: acceptQuoteProps) => {
   const params = new URLSearchParams()
   params.append("autopayout", "true")
@@ -39,7 +40,7 @@ export const acceptQuote = async ({
   if (memo) {
     params.append("memo", memo)
   }
-  if (customerInternalFee) {
+  if (customerInternalFee && partner) {
     params.append("customerInternalFee", customerInternalFee.toString())
   }
 

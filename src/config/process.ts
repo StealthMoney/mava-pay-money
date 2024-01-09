@@ -12,6 +12,9 @@ export const MAVAPAY_MONEY_DOMAIN =
 export const isProd = process.env.NODE_ENV === "production";
 export const isDev = process.env.NODE_ENV === "development";
 
+export const JWT_SECRET = 
+  process.env.JWT_SECRET ?? ""
+
 
 if (!MAVAPAY_URL) {
   throw new ConfigError("MAVAPAY_URL not found");
@@ -21,4 +24,7 @@ if (!MAVAPAY_API_KEY) {
 }
 if (!MAVAPAY_MONEY_DOMAIN) {
   throw new ConfigError("MAVAPAY_MONEY_DOMAIN not found");
+}
+if (!JWT_SECRET) {
+  throw new ConfigError("JWT_SECRET not found");
 }
