@@ -1,12 +1,8 @@
-import jwt from "jsonwebtoken";
 import * as jose from "jose";
-import crypto from "crypto";
 import { UnauthorizedError } from "./error";
 import { NextRequest } from "next/server";
 import { JwtPayload, ValidateAuthHeaderResult } from "@/types/auth";
-import { JWT_SECRET } from "@/config/process";
-import { API_KEY_LENGTH, PARTNER_QUERY } from "@/config/default";
-import { PartnerRepository } from "../prisma/repository/partner";
+import { PARTNER_QUERY } from "@/config/default";
 
 const SECRET = process.env.JWT_SECRET ?? "";
 

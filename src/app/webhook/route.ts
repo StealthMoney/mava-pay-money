@@ -1,15 +1,13 @@
 import { type NextRequest } from "next/server";
-import { Transaction } from "@/types/transaction";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { OrderRepository } from "@/services/prisma/repository/order";
 import { Logger } from "@/config/logger";
+import { constructNewPayload, sendUpdateToCallback } from "@/services/webhook";
+import { ReceivedWebhookPayload } from "@/types/webhook";
 
 export async function POST(request: NextRequest, context: { params: any }) {
-  const requestbody = (await request.json()) as {
-    event: string;
-    data: Transaction;
-  };
+  const requestbody = (await request.json()) as ReceivedWebhookPayload
   console.log("a request came through", requestbody);
 
   if (requestbody.event === "ping") {
@@ -39,7 +37,6 @@ export async function POST(request: NextRequest, context: { params: any }) {
   const { ref, amount, id, type, status, createdAt, updatedAt } = requestbody.data;
   await prisma.transaction.upsert({
     where: { txId: id },
-
     update: {
       txId: id,
       txHash,
@@ -63,6 +60,12 @@ export async function POST(request: NextRequest, context: { params: any }) {
       updatedAt,
     },
   });
+
+  // handle webhook
+  if (order.partnerId && order.callback) {
+    const newPayload = constructNewPayload(requestbody, txHash)
+    sendUpdateToCallback(newPayload, order.callback)
+  }
 
   if (status === "FAILED") {
     await OrderRepository().updateOrder({
