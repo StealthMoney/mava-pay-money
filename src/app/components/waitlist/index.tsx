@@ -7,29 +7,31 @@ import ArrowIcon from "../../assets/svgs/arrow.svg";
 
 export const WaitList = () => {
   return (
-    <div className='py-[81px] bg-secondary-white w-full'>
+    <div className='py-10 md:py-20 bg-secondary-white w-full'>
       <Wrapper>
-        <div className=' bg-secondary-black rounded-2xl w-full flex flex-col pt-[96px] pb-[126px] items-center justify-center gap-10'>
+        <div className=' bg-secondary-black rounded-2xl w-full flex flex-col pt-7 md:pt-[96px] pb-7 md:pb-[126px] px-7 items-center justify-center gap-5 md:gap-10'>
           <section className=' w-full flex flex-col items-center'>
-            <h1 className='text-white text-[40px] font-bold leading-[60px] tracking-[0.8px] text-center'>Join Our Waitlist</h1>
-            <p className='text-white pt-3 text-center text-xl leading-[150%]'>
+            <h1 className='text-white text-xl md:text-[40px] font-bold leading-[30px] md:leading-[60px] tracking-[0.8px] text-center'>
+              Join Our Waitlist
+            </h1>
+            <p className='text-white pt-3 text-center text-sm md:text-xl leading-[150%]'>
               By joining our Waitlist, you will be the first to know when we launch! 🚀
             </p>
           </section>
 
-          <section className='flex gap-6 max-w-[824px] w-full'>
+          <section className='flex flex-col md:flex-row gap-5 md:gap-6 max-w-[824px] w-full'>
             <CustomInput
               inputProps={{
                 style: { width: "100%", backgroundColor: "#090909", border: "1.5px solid #494949" },
                 placeholder: "Email Address",
               }}
+              className='py-[13.5px px-5'
             />
             <div>
               <CustomButton
                 label='Join Waitlist'
                 type='primary'
-                buttonProps={{ style: { maxWidth: "251px", minWidth: "251px", width: "100%" } }}
-                labelStyle={{ fontSize: "20px", fontWeight: "600", lineHeight: "32px" }}
+                className='text-sm md:text-xl font-medium md:font-semibold md:max-w-[251px] md:min-w-[251px] leading-8 py-4 md:py-[24.5px] px-6 md:px-12 flex items-center justify-center'
                 rightIcon={<Image src={ArrowIcon} alt='info icon' />}
               />
             </div>

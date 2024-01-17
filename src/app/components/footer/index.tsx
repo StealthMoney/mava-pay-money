@@ -9,13 +9,13 @@ import YoutubeIcon from "../../assets/svgs/twitter-x-icon.svg";
 
 export const Footer = () => {
   return (
-    <footer className='pt-[138px] w-full'>
+    <footer className=' pt-20 md:pt-[138px] w-full'>
       <Wrapper>
-        <section className='flex flex-col gap-6 items-center justify-center w-full pb-[120px]'>
-          <h3 className='text-[40px] font-extrabold leading-[60px] tracking-[0.96px]'>
+        <section className='flex flex-col gap-6 items-center justify-center w-full pb-[100px] md:pb-[120px]'>
+          <h3 className=' text-[28px] md:text-[40px] font-extrabold leading-[42px] md:leading-[60px] tracking-[0.96px]'>
             MAVAPAY.<span className='text-primary-green'>MONEY</span>
           </h3>
-          <p className=' max-w-[691px] w-full text-center text-2xl leading-[40px] text-white tracking-[0.48px]'>
+          <p className=' max-w-[691px] w-full text-center text-base md:text-2xl leading-[28px] md:leading-[40px] text-white tracking-[0.48px]'>
             Experience the speed of Lightning Network transactions. Send and receive Bitcoin in Naira instantly!
           </p>
 

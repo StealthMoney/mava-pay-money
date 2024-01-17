@@ -3,8 +3,8 @@ import { CustomButton } from "../custom-button/CustomButtom";
 
 export const LaunchBanner = () => {
   return (
-    <div className='w-full flex items-center justify-center gap-3 py-[15px] max-h-16 h-full bg-banner-color'>
-      <section>
+    <div className='w-full flex items-center justify-center gap-3 py-6 md:py-[15px] min-h-16 h-full bg-none md:bg-banner-color px-5'>
+      <section className='hidden md:flex'>
         <CustomButton
           label='INFO'
           type='primary'
@@ -12,7 +12,9 @@ export const LaunchBanner = () => {
           disabled={true}
         />
       </section>
-      <p className='text-xl text-white font-medium tracking-[0.6px] whitespace-nowrap'>We are launching soon. Stay tuned and be there 🚀🫵🏿</p>
+      <p className='text-sm md:text-xl text-white font-medium tracking-[0.42px] md:tracking-[0.6px] text-center break-words'>
+        We are launching soon. Stay tuned and be there 🚀🫵🏿
+      </p>
     </div>
   );
 };
