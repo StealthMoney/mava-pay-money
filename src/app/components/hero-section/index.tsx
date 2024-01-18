@@ -1,9 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import Wrapper from "../wrapper";
 import { CustomInput } from "../custom-input/CustomInput";
 import { CustomButton } from "../custom-button/CustomButtom";
-import { Navbar } from "../navbar";
 import { LaunchBanner } from "../launch-banner/LaunchBanner";
 import InfoIcon from "../../assets/svgs/info.svg";
 import ArrowIcon from "../../assets/svgs/arrow.svg";
@@ -11,8 +9,7 @@ import HeroImage from "../../assets/svgs/hero-icon.svg";
 
 export const HeroSection = () => {
   return (
-    <div className='w-full min-h-screen flex flex-col'>
-      <Navbar />
+    <div className='w-full min-h-[calc(100vh-68px)] flex flex-col'>
       <LaunchBanner />
 
       <div className='flex flex-1 w-full'>
