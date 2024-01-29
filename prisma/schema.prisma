@@ -40,13 +40,14 @@ enum TransactionStatus {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  password String
-  kycInfo  KYCInfo?
-  account  Account?
-  verified Boolean  @default(false)
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  kycInfo      KYCInfo?
+  account      Account?
+  verification Verification?
+  verified     Boolean       @default(false)
 }
 
 model Account {

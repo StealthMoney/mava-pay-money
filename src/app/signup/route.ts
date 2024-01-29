@@ -1,124 +1,124 @@
-import { NextRequest, NextResponse } from "next/server";
+import { EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process";
 import { prisma } from "@/lib/prisma";
+import { sendMail } from "@/services/mail/sendgrid";
 import {
   UserRepository,
-  AccountRepository,
-  // add KYCInfoRepository
+  VerificationRepository,
 } from "@/services/prisma/repository";
-import axiosInstance from "@/services/rest/axios";
-import { getAccountName, getBankCode } from "@/services/mavapay/bank";
+import { generateEmailToken } from "@/utils/mail";
+import { createPassword } from "@/utils/password";
 
 type RequestBody = {
   firstName: string;
   lastName: string;
+  middleName: string;
   email: string;
   password: string;
-  bvn: string;
-  bankName: string;
-  bankAccountNumber: string;
-  bankAccountName: string;
-  username: string;
+  [key: string]: string;
 };
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: Request) {
   const requestBody = (await req.json()) as RequestBody;
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    bvn,
-    bankName,
-    bankAccountNumber,
-    bankAccountName,
-    username,
-  } = requestBody;
+  const { firstName, lastName, middleName, email, password } = requestBody;
+
+  const requiredFields = [
+    "firstName",
+    "lastName",
+    "middleName",
+    "email",
+    "password",
+  ];
+  const missingFields = requiredFields.filter((field) => !requestBody[field]);
+
   if (
-    !firstName ||
-    !lastName ||
-    !password ||
-    !email ||
-    !bvn ||
-    !bankName ||
-    !bankAccountNumber ||
-    !bankAccountName ||
-    !username
+    missingFields.length > 0 ||
+    !email.includes("@") ||
+    !email.includes(".")
   ) {
-    return new Response("Missing required fields", { status: 400 });
+    return new Response(
+      JSON.stringify({ error: `missing fields - ${missingFields.join(", ")}` }),
+      {
+        status: 400,
+      }
+    );
+  }
+
+  if (password.length < 8) {
+    return new Response(
+      JSON.stringify({ error: "password must be at least 8 characters" }),
+      {
+        status: 400,
+      }
+    );
   }
 
   const userExists = await UserRepository(prisma).getUserByEmail(email);
   if (!(userExists instanceof Error)) {
-    return new Response("User already exists", { status: 400 });
-  }
-
-  // check bank details are correct
-  const bankCode = await getBankCode();
-  if (!bankCode.success) {
-    return new Response("incorrect bank details", { status: 400 });
-  }
-  const bankCodeData = bankCode.data;
-  const bankCodeDataFiltered = bankCodeData.filter(
-    (bank: any) => bank.name.toLowercase() === bankName.toLowerCase()
-  );
-  if (bankCodeDataFiltered.length === 0) {
-    return new Response("incorrect bank details", { status: 400 });
-  }
-  const accountName = await getAccountName(
-    bankAccountNumber,
-    bankCodeDataFiltered[0].nipBankCode
-  );
-  if (!accountName.success) {
-    return new Response("incorrect bank details", { status: 400 });
+    return new Response(JSON.stringify({ error: "User already exists" }), {
+      status: 400,
+    });
   }
 
   try {
-    const result = await prisma.$transaction(async (prisma) => {
-      // Create user
+    const result = prisma.$transaction(async (prisma) => {
+      const hashedPassword = await createPassword(password);
       const user = await UserRepository(prisma).create({
         email,
-        name: `${firstName} ${lastName}`,
-        password,
+        name: `${firstName} ${lastName} ${middleName}`,
+        password: hashedPassword,
         verified: false,
       });
       if (user instanceof Error) {
         throw new Error(user.message);
       }
 
-      // Create account
-      const account = await AccountRepository(prisma).create({
-        userId: user.id,
-        bankCode: bankCodeDataFiltered[0].nipBankCode,
-        accountNumber: bankAccountNumber,
-        accountName: accountName.data.accountName,
-        lnAddress: username,
+      const token = generateEmailToken();
+      const verification = await VerificationRepository(prisma).create({
         user: {
           connect: { id: user.id },
         },
+        token,
+        userId: user.id,
       });
-      if (account instanceof Error) {
-        throw new Error(account.message);
+      if (verification instanceof Error) {
+        throw new Error(verification.message);
       }
 
-      // Todo: Create KYCInfo
-      // const kycInfo = await KYCInfoRepository(prisma).create({ ... });
-      // if (kycInfo instanceof Error) {
-      //   throw new Error(kycInfo.message);
-      // }
+      const verificationUrl = `${process.env.VERIFICATION_URL}/account/verify?key=${token}`;
+      const mail = await sendMail({
+        from: "donotreply@mavapay.co",
+        to: email,
+        templateId: EMAIL_VERIFY_TEMPLATE_ID,
+        dynamicTemplateData: {
+          url: verificationUrl,
+        },
+      });
+      if (mail instanceof Error) {
+        throw new Error(mail.message);
+      }
 
-      return user;
+      return verification;
     });
 
-    return new Response(JSON.stringify(result), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    if (!(await result).token || result instanceof Error) {
+      throw new Error("An error occurred while creating user and account");
+    } else {
+      return new Response(JSON.stringify({ message: "user created!" }), {
+        status: 201,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   } catch (error) {
     console.error(error);
-    return new Response("An error occurred while creating user and account", {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({
+        error: "An error occurred while creating user and account",
+      }),
+      {
+        status: 500,
+      }
+    );
   }
 }

@@ -15,7 +15,10 @@ export const API_DOMAIN =
   process.env.API_DOMAIN ?? "";
 export const isProd = process.env.NODE_ENV === "production";
 export const isDev = process.env.NODE_ENV === "development";
-
+export const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY ?? "";
+export const JWT_SECRET_KEY = Buffer.from(process.env.JWT_SECRET ?? "", "base64");
+export const VERIFICATION_URL = process.env.VERIFICATION_URL ?? "";
+export const EMAIL_VERIFY_TEMPLATE_ID = process.env.EMAIL_VERIFY_TEMPLATE_ID ?? "";
 export const JWT_SECRET = 
   process.env.JWT_SECRET ?? ""
 export const PRIVATE_KEY = 

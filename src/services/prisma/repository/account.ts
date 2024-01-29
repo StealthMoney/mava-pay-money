@@ -1,10 +1,10 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Logger } from "@/config/logger";
 import {
+  parseErrorMessageFromUnknown,
   RepositoryError,
   UnknownRepositoryError,
-  parseErrorMessageFromUnknown,
 } from "@/domain/error";
-import { Logger } from "@/config/logger";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 
 type Prisma = Omit<
@@ -13,18 +13,19 @@ type Prisma = Omit<
 >;
 
 export const AccountRepository = (prisma: Prisma) => {
-  const create = async (accountData: Prisma.AccountCreateInput & {userId: number}) => {
+  const create = async (
+    accountData: Prisma.AccountCreateInput & { userId: number }
+  ) => {
     try {
-      // const newAccount = await prisma.account.create({ data: account });
       const { userId, ...account } = accountData;
       const newAccount = await prisma.account.create({
-      data: {
-        ...account,
-        user: {
-          connect: { id: userId },
+        data: {
+          ...account,
+          user: {
+            connect: { id: userId },
+          },
         },
-      },
-    });
+      });
       if (!newAccount) {
         return new RepositoryError("Could not create account");
       }
