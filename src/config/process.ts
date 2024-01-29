@@ -14,7 +14,10 @@ export const isDev = process.env.NODE_ENV === "development";
 
 export const JWT_SECRET = 
   process.env.JWT_SECRET ?? ""
-
+export const PRIVATE_KEY = 
+  process.env.PRIVATE_KEY ?? ""
+export const PUBLIC_KEY = 
+  process.env.PUBLIC_KEY ?? ""
 
 if (!MAVAPAY_URL) {
   throw new ConfigError("MAVAPAY_URL not found");
@@ -27,4 +30,7 @@ if (!MAVAPAY_MONEY_DOMAIN) {
 }
 if (!JWT_SECRET) {
   throw new ConfigError("JWT_SECRET not found");
+}
+if (!PRIVATE_KEY) {
+  throw new ConfigError("PRIVATE_KEY not found");
 }

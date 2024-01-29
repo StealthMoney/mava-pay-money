@@ -15,7 +15,9 @@ export async function GET(request: NextRequest, context: { params: any }) {
   }
 
   try {
-    const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
+    const user = await UserRepository().getUserBylnAddress(
+      `${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`
+    );
 
     if (user instanceof Error) {
       return new Response(stringifyError(user), {
@@ -26,10 +28,12 @@ export async function GET(request: NextRequest, context: { params: any }) {
       });
     }
 
-    const API_DOMAIN = process.env.API_DOMAIN
-    const hostname = isProd ? `https://${MAVAPAY_MONEY_DOMAIN}` : `https://${API_DOMAIN}`;
-    
-    const responseJson = buildResponse(hostname, validateAddress.addressName)
+    const API_DOMAIN = process.env.API_DOMAIN;
+    const hostname = isProd
+      ? `https://${MAVAPAY_MONEY_DOMAIN}`
+      : `https://${API_DOMAIN}`;
+
+    const responseJson = buildResponse(hostname, validateAddress.addressName);
 
     return new Response(JSON.stringify(responseJson), {
       status: 200,
