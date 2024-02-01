@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server";
 import { validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { buildResponse } from "@/domain/lnAddress/constructor";
-import { MAVAPAY_MONEY_DOMAIN, isProd } from "@/config/process";
+import { API_DOMAIN, MAVAPAY_MONEY_DOMAIN, isProd } from "@/config/process";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const lnAddress = context.params?.username?.toLowerCase();
@@ -28,10 +28,9 @@ export async function GET(request: NextRequest, context: { params: any }) {
       });
     }
 
-    const API_DOMAIN = process.env.API_DOMAIN;
     const hostname = isProd
-      ? `https://${MAVAPAY_MONEY_DOMAIN}`
-      : `https://${API_DOMAIN}`;
+      ? MAVAPAY_MONEY_DOMAIN
+      : API_DOMAIN;
 
     const responseJson = buildResponse(hostname, validateAddress.addressName);
 

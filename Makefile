@@ -11,3 +11,9 @@ start-db:
 
 stop:
 	docker-compose down
+
+migrate:
+	npx prisma migrate dev
+
+deploy:
+	npx prisma migrate deploy
