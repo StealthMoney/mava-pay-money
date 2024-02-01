@@ -1,16 +1,20 @@
 import { type NextRequest } from "next/server";
-import { Transaction } from "@/types/transaction";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { OrderRepository } from "@/services/prisma/repository/order";
 import { Logger } from "@/config/logger";
+import { constructNewPayload, sendUpdateToCallback } from "@/services/webhook";
+import { ReceivedWebhookPayload } from "@/types/webhook";
 
 export async function POST(request: NextRequest, context: { params: any }) {
-  const requestbody = (await request.json()) as {
-    event: string;
-    data: Transaction;
-  };
+  const requestbody = (await request.json()) as ReceivedWebhookPayload
   console.log("a request came through", requestbody);
+
+  if (requestbody.event === "ping") {
+    return new Response("success", {
+      status: 200,
+    });
+  }
 
   const order = await OrderRepository().getOrderByOrderId(
     requestbody.data.transactionMetadata.orderId
@@ -18,8 +22,10 @@ export async function POST(request: NextRequest, context: { params: any }) {
 
   if (order instanceof Error) {
     Logger.error(order.message);
-    return new Response("success", {
-      status: 200,
+    return new Response(parseResponseBody({
+      message: order.message
+    }), {
+      status: 404,
     });
   }
 
@@ -28,10 +34,20 @@ export async function POST(request: NextRequest, context: { params: any }) {
     .update(JSON.stringify(requestbody.data))
     .digest("hex");
 
-  const { ref, amount, id, type, status } = requestbody.data;
+  const { ref, amount, id, type, status, createdAt, updatedAt } = requestbody.data;
   await prisma.transaction.upsert({
     where: { txId: id },
-    update: {},
+    update: {
+      txId: id,
+      txHash,
+      orderId: order.orderId,
+      ref,
+      amount,
+      type,
+      status,
+      createdAt,
+      updatedAt,
+    },
     create: {
       txId: id,
       txHash,
@@ -40,8 +56,16 @@ export async function POST(request: NextRequest, context: { params: any }) {
       amount,
       type,
       status,
+      createdAt,
+      updatedAt,
     },
   });
+
+  // handle webhook
+  if (order.partnerId && order.callback) {
+    const newPayload = constructNewPayload(requestbody, txHash)
+    sendUpdateToCallback(newPayload, order.callback)
+  }
 
   if (status === "FAILED") {
     await OrderRepository().updateOrder({
@@ -76,6 +100,10 @@ export async function POST(request: NextRequest, context: { params: any }) {
   return new Response("success", {
     status: 200,
   });
+}
+
+const parseResponseBody = (data: any) => {
+  return JSON.stringify(data)
 }
 
 const stringifyError = (

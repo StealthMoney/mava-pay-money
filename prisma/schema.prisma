@@ -50,13 +50,13 @@ model User {
 }
 
 model Account {
-  id            Int           @id @default(autoincrement())
-  user          User          @relation(fields: [userId], references: [id])
-  userId        Int           @unique
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userId], references: [id])
+  userId        Int     @unique
   bankCode      String
-  accountNumber String        @unique
+  accountNumber String  @unique
   accountName   String
-  lnAddress     String?       @unique
+  lnAddress     String? @unique
   order         Order[]
 }
 
@@ -82,6 +82,9 @@ model Order {
   invoice       String
   expiryTime    DateTime
   transaction   Transaction[]
+  partner       Partner?      @relation(fields: [partnerId], references: [id])
+  partnerId     Int?
+  callback      String?
 }
 
 model Transaction {
@@ -94,4 +97,14 @@ model Transaction {
   amount    BigInt
   type      TransactionType
   status    TransactionStatus
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+model Partner {
+  id     Int     @id @default(autoincrement())
+  name   String   @unique
+  domain String
+  token  String
+  Order  Order[]
 }

@@ -25,6 +25,15 @@ async function main() {
       }
     },
   })
+  const partner = await prisma.partner.upsert({
+    where: { name: "test_partner" },
+    update: {},
+    create: {
+      name: 'test_partner',
+      domain: 'https://test.com',
+      token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwibmFtZSI6InRlc3RfcGFydG5lciIsImRvbWFpbiI6Imh0dHBzOi8vdGVzdC5jb20ifQ.vP_xgLN9JbJfsh9_-CbOcskTgceNUhydJVUM_i1a4zc',
+    }
+  })
   console.log({ user })
 }
 main()

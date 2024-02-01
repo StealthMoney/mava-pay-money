@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { validateAmount, validateLNAddress } from "@/domain/lnAddress/validation";
+import { validateAmount, validateFees, validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 import { acceptQuote, getQuote } from "@/services/mavapay";
@@ -8,16 +8,42 @@ import { milliSatsToSats } from "@/utils/conversion";
 import { prisma } from "@/lib/prisma";
 import { AccountRepository } from "@/services/prisma/repository/account";
 import { buildResponse } from "@/domain/lnAddress/constructor";
+import { Quote } from "@/types/quote";
+import { Order } from "@/types/order";
+import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
+import { PartnerRepository } from "@/services/prisma/repository/partner";
+import { createJwtToken } from "@/services/auth/token";
+import { Partner } from "@prisma/client";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const reqUsername = context.params?.username;
   const username = reqUsername?.toLowerCase()
   const searchParams = request.nextUrl.searchParams;
   const amount = searchParams.get("amount");
+  const fees = searchParams.get("feesInSats")
+  const partner = searchParams.get("partner")
+  const callback = searchParams.get("callback")
+
+  let partnerData = {} as Partner;
+  
+  console.log("🚀 ~ file: route.ts:24 ~ GET ~ partner:", partner)
+  if (partner) {
+    const validatedPartner = await PartnerRepository().getPartnerByName(partner)
+    if (validatedPartner instanceof Error) {
+      return new Response(stringifyError(validatedPartner), {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    partnerData = validatedPartner
+  }
 
   const validatedAmount = validateAmount(amount)
   
   if (validatedAmount instanceof Error) {
+    console.error(validatedAmount.message)
     return new Response(stringifyError(validatedAmount), {
       status: 500,
       headers: {
@@ -29,6 +55,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const sats = milliSatsToSats(validatedAmount)
 
   if (sats instanceof Error) {
+    console.error(sats.message)
     return new Response(stringifyError(sats), {
       status: 500,
       headers: {
@@ -40,15 +67,17 @@ export async function GET(request: NextRequest, context: { params: any }) {
   const lnAddress = username
   const validateAddress = validateLNAddress(lnAddress);
   if (validateAddress instanceof Error) {
+    console.error(validateAddress.message)
     return new Response(stringifyError(validateAddress), {
       status: 500,
       statusText: validateAddress?.message,
     });
   }
   
-  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@mavapay.money`);
+  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
 
   if (user instanceof Error) {
+    console.error(user.message)
     return new Response(stringifyError(user), {
       status: 404,
       headers: {
@@ -69,9 +98,22 @@ export async function GET(request: NextRequest, context: { params: any }) {
   }
 
   try {
+    
+    const validatedFees = validateFees(fees)
+
+    if (validatedFees instanceof Error) {
+      return new Response(stringifyError(validatedFees), {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
     const quote = await getQuote({amount: sats})
     
     if (!quote.success || !quote.data) {
+      console.error(quote.message)
       return new Response(stringifyError(quote, quote.message), {
         status: 500,
         headers: {
@@ -84,17 +126,20 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
     const quoteId = quote.data.id
 
-    const metadataString = buildResponse("", username, lnAddress).metadata;
+    const metadataString = buildResponse("", username).metadata;
 
     const order = await acceptQuote({
       id: quoteId,
       bankAccountName: account.accountName,
       bankAccountNumber: account.accountNumber,
       bankCode: account.bankCode.toString(),
-      descriptionHash: metadataString
+      descriptionHash: metadataString,
+      customerInternalFee: validatedFees,
+      partner: partnerData.name,
     })
 
     if (!order.success || !order.data) {
+      console.error(order.message)
       return new Response(stringifyError(order, order.message), {
         status: 500,
         headers: {
@@ -117,10 +162,12 @@ export async function GET(request: NextRequest, context: { params: any }) {
       invoice: order.data.paymentBtcDetail,
       createdAt: order.data.createdAt,
       expiryTime: quote.data.expiry,
+      partnerId: partnerData.id,
+      callback: callback,
     }})
     console.log({newOrder})
 
-    const lnResponse = buildLnResponse(order.data.paymentBtcDetail)
+    const lnResponse = buildLnResponse(quote.data, order.data)
     return new Response(JSON.stringify(lnResponse), {
       status: 200,
       headers: {
@@ -152,9 +199,13 @@ const stringifyError = (
 };
 
 
-const buildLnResponse = (lninvoice: string) => {
+const buildLnResponse = (quote: Quote["data"], order: Order) => {
+  const {id, isValid, ...rest } = quote!
   return {
     routes: [],
-    pr: lninvoice,
+    pr: order.paymentBtcDetail,
+    metadata: {...rest},
+    minSpendable: MIN_SPENDABLE,
+    maxSpendable: MAX_SPENDABLE
   }
 }
