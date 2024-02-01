@@ -111,8 +111,17 @@ model Transaction {
 
 model Partner {
   id     Int     @id @default(autoincrement())
-  name   String   @unique
+  name   String  @unique
   domain String
   token  String
   Order  Order[]
+}
+
+model Verification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime @default(now())
 }
