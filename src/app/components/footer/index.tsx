@@ -9,8 +9,8 @@ import YoutubeIcon from "../../assets/svgs/twitter-x-icon.svg";
 
 export const Footer = () => {
   return (
-    <footer className=' pt-20 md:pt-[138px] w-full'>
-      <Wrapper>
+    <footer className=' pt-20 md:pt-[138px] w-full flex items-center justify-center'>
+      <Wrapper className=' max-w-[100%]'>
         <section className='flex flex-col gap-6 items-center justify-center w-full pb-[100px] md:pb-[120px]'>
           <h3 className=' text-[28px] md:text-[40px] font-extrabold leading-[42px] md:leading-[60px] tracking-[0.96px]'>
             MAVAPAY.<span className='text-primary-green'>MONEY</span>

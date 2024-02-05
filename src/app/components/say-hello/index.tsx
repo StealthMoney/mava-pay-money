@@ -32,16 +32,17 @@ export const SayHello = () => {
                   placeholder: "First Name",
                   style: { border: "1.5px solid #DBE1E7", backgroundColor: "#F7F8F9", fontSize: "16px", color: "#090909" },
                 }}
-                className='py-[22px] px-5'
+                className='py-[22px] px-5 placeholder:text-black'
               />
               <CustomInput
                 inputProps={{
                   placeholder: "Email Address",
                   style: { border: "1.5px solid #DBE1E7", backgroundColor: "#F7F8F9", fontSize: "16px", color: "#090909" },
                 }}
+                className=' placeholder:text-black'
               />
               <textarea
-                className='bg-secondary-gray border-[1.5px] py-[26px] px-5 h-[300px] border-card-border rounded-lg placeholder:text-secondary-black text-secondary-black'
+                className='bg-secondary-gray border-[1.5px] py-[26px] px-5 h-[230px] md:h-[300px] border-card-border rounded-lg placeholder:text-secondary-black text-secondary-black'
                 placeholder='Message'
               />
               <CustomButton

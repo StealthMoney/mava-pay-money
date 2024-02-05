@@ -7,7 +7,7 @@ import Wrapper from "../wrapper";
 
 export const FeaturesSection = () => {
   return (
-    <div className=' py-20 lg:py-[120px] bg-white w-full'>
+    <div className=' py-20 lg:py-[120px] bg-white w-full flex items-center justify-center'>
       <Wrapper>
         <div className='flex flex-col items-center justify-center w-full'>
           <h1 className='text-secondary-black text-[32px] leading-[48px] lg:text-[40px] font-bold lg:leading-[60px] tracking-[0.8px] text-center max-w-[763px]'>
@@ -17,7 +17,7 @@ export const FeaturesSection = () => {
             Immerse yourself in the rapid pace of Lightning Network transactions. Instantly send and receive Bitcoin, seamlessly converting it into
             Naira!
           </p>
-          <section className='flex flex-col md:flex-row gap-16 justify-between md:gap-7 pt-16 md:pt-20 w-full'>
+          <section className='flex flex-col items-center justify-center md:flex-row gap-16 md:justify-between md:gap-7 pt-16 md:pt-20 w-full'>
             {FeaturesCopy.map((feature) => (
               <FeatureCard {...feature} key={feature.title} />
             ))}
