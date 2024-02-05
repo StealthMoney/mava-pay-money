@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import Wrapper from "../wrapper";
 import { HowItWorksCard } from "./HowItWorksCard";
 import { CustomButton } from "../custom-button/CustomButtom";
 import ArrowIcon from "../../assets/svgs/arrow.svg";
-import Wrapper from "../wrapper";
+import BentArrowIcon from "../../assets/svgs/bent-arrow.svg";
 
 export const HowItWorks = () => {
   return (
@@ -16,7 +17,11 @@ export const HowItWorks = () => {
           <p className='text-secondary-black max-w-[1031px] pt-2 text-center text-base md:text-xl leading-[28px] md:leading-[150%]'>
             Get started with Mava Money in three (3) easy steps:
           </p>
-          <section className='flex md:flex-row flex-col items-start justify-between gap-20 md:gap-6 pt-20 md:pb-24'>
+          <section className='flex md:flex-row flex-col items-start justify-between gap-20 md:gap-6 pt-20 md:pb-24 relative w-full'>
+            <div className=' hidden md:flex w-full absolute top-[104px] items-center justify-evenly'>
+              <Image src={BentArrowIcon} alt={"hero image"} className=' md:max-w-[120px] lg:max-w-[184px] max-h-[32px]' />
+              <Image src={BentArrowIcon} alt={"hero image"} className=' md:max-w-[120px] max lg:max-w-[184px] max-h-[32px]' />
+            </div>
             {HowItWorksCopy.map((feature) => (
               <HowItWorksCard {...feature} key={feature.title} />
             ))}

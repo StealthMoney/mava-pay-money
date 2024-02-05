@@ -17,7 +17,7 @@ export const FeaturesSection = () => {
             Immerse yourself in the rapid pace of Lightning Network transactions. Instantly send and receive Bitcoin, seamlessly converting it into
             Naira!
           </p>
-          <section className='flex flex-col md:flex-row gap-16 justify-between md:gap-7 pt-16 md:pt-20'>
+          <section className='flex flex-col md:flex-row gap-16 justify-between md:gap-7 pt-16 md:pt-20 w-full'>
             {FeaturesCopy.map((feature) => (
               <FeatureCard {...feature} key={feature.title} />
             ))}
