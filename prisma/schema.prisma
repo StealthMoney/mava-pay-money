@@ -40,31 +40,38 @@ enum TransactionStatus {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  password String
-  kycInfo  KYCInfo?
-  account  Account?
-  verified Boolean  @default(false)
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  kycInfo      KYCInfo?
+  account      Account?
+  verification Verification?
+  verified     Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 }
 
 model Account {
-  id            Int     @id @default(autoincrement())
-  user          User    @relation(fields: [userId], references: [id])
-  userId        Int     @unique
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int      @unique
   bankCode      String
-  accountNumber String  @unique
+  accountNumber String   @unique
   accountName   String
-  lnAddress     String? @unique
+  lnAddress     String?  @unique
   order         Order[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
 }
 
 model KYCInfo {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
-  bvn    String
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  bvn       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Order {
@@ -76,7 +83,6 @@ model Order {
   paymentMethod PaymentMethod
   amount        BigInt
   targetAmount  String
-  createdAt     DateTime
   status        OrderStatus   @default(PENDING)
   isValid       Boolean
   invoice       String
@@ -85,6 +91,8 @@ model Order {
   partner       Partner?      @relation(fields: [partnerId], references: [id])
   partnerId     Int?
   callback      String?
+  createdAt     DateTime
+  updatedAt     DateTime      @default(now()) @updatedAt
 }
 
 model Transaction {
@@ -97,14 +105,23 @@ model Transaction {
   amount    BigInt
   type      TransactionType
   status    TransactionStatus
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @default(now()) @updatedAt
 }
 
 model Partner {
   id     Int     @id @default(autoincrement())
-  name   String   @unique
+  name   String  @unique
   domain String
   token  String
   Order  Order[]
+}
+
+model Verification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime @default(now())
 }

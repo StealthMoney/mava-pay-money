@@ -8,3 +8,6 @@ export const SIGNATURE_HEADER = "X-Mavapay-Money-Signature"
 
 export const WEBHOOK_RETRIES = 3;
 export const DELAY_BETWEEN_RETRIES_IN_SECONDS = 2
+
+export const SALT_ROUNDS = 12
+export const TOKEN_EXPIRY = 600 // 10 minutes

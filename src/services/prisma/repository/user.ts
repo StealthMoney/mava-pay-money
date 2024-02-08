@@ -1,32 +1,20 @@
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { Logger } from "@/config/logger";
 import {
+  parseErrorMessageFromUnknown,
   RepositoryError,
   UnknownRepositoryError,
-  parseErrorMessageFromUnknown,
 } from "@/domain/error";
-import { Logger } from "@/config/logger";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
 type UserType = Prisma.UserCreateInput;
 
-// interface IUserRepository {
-//   create: (user: UserType) => Promise<UserType | RepositoryError>;
-//   updateUser: ({
-//     user,
-//     userId,
-//   }: {
-//     user: UserType;
-//     userId: number;
-//   }) => Promise<true | RepositoryError>;
-//   getUserById: (userId: number) => Promise<(UserType & {id: number}) | RepositoryError>;
-//   getUserBylnAddress: (lnAddress: string) => Promise<UserType | RepositoryError>;
-//   getUserByEmail: (email: string) => Promise<UserType | RepositoryError>;
-//   getUserByAccountId: (
-//     accountId: number
-//   ) => Promise<UserType | RepositoryError>;
-// }
+type Prisma = Omit<
+  PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
 
-export const UserRepository = () => {
+export const UserRepository = (prisma: Prisma) => {
   const create = async (user: UserType) => {
     try {
       const newUser = await prisma.user.create({ data: user });
@@ -84,7 +72,7 @@ export const UserRepository = () => {
           email: true,
           verified: true,
           account: true,
-        }
+        },
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -109,7 +97,7 @@ export const UserRepository = () => {
           email: true,
           verified: true,
           account: true,
-        }
+        },
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -127,7 +115,7 @@ export const UserRepository = () => {
       const user = await prisma.user.findFirst({
         where: {
           account: {
-            lnAddress: lnAddress
+            lnAddress: lnAddress,
           },
         },
         select: {
@@ -136,7 +124,7 @@ export const UserRepository = () => {
           email: true,
           verified: true,
           account: true,
-        }
+        },
       });
       if (!user) {
         return new RepositoryError("User not found");
@@ -154,7 +142,7 @@ export const UserRepository = () => {
       const user = await prisma.user.findFirst({
         where: {
           account: {
-            id: accountId
+            id: accountId,
           },
         },
         select: {
@@ -163,7 +151,7 @@ export const UserRepository = () => {
           email: true,
           verified: true,
           account: true,
-        }
+        },
       });
       if (!user) {
         return new RepositoryError("User not found");

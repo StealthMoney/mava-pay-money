@@ -3,6 +3,7 @@ import { validateLNAddress } from "@/domain/lnAddress/validation";
 import { UserRepository } from "@/services/prisma/repository/user";
 import { buildResponse } from "@/domain/lnAddress/constructor";
 import { API_DOMAIN, MAVAPAY_MONEY_DOMAIN, isProd } from "@/config/process";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest, context: { params: any }) {
   const lnAddress = context.params?.username?.toLowerCase();
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
   }
 
   try {
-    const user = await UserRepository().getUserBylnAddress(
+    const user = await UserRepository(prisma).getUserBylnAddress(
       `${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`
     );
 

@@ -1,18 +1,15 @@
 import { type NextRequest } from "next/server";
 import { validateAmount, validateFees, validateLNAddress } from "@/domain/lnAddress/validation";
-import { UserRepository } from "@/services/prisma/repository/user";
 import { MAVAPAY_MONEY_DOMAIN } from "@/config/process";
 import { acceptQuote, getQuote } from "@/services/mavapay";
-import { TransactionRepository } from "@/services/prisma/repository/transaction";
 import { milliSatsToSats } from "@/utils/conversion";
 import { prisma } from "@/lib/prisma";
-import { AccountRepository } from "@/services/prisma/repository/account";
+import { AccountRepository, UserRepository } from "@/services/prisma/repository";
 import { buildResponse } from "@/domain/lnAddress/constructor";
 import { Quote } from "@/types/quote";
 import { Order } from "@/types/order";
 import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default";
 import { PartnerRepository } from "@/services/prisma/repository/partner";
-import { createJwtToken } from "@/services/auth/token";
 import { Partner } from "@prisma/client";
 
 export async function GET(request: NextRequest, context: { params: any }) {
@@ -26,7 +23,6 @@ export async function GET(request: NextRequest, context: { params: any }) {
 
   let partnerData = {} as Partner;
   
-  console.log("🚀 ~ file: route.ts:24 ~ GET ~ partner:", partner)
   if (partner) {
     const validatedPartner = await PartnerRepository().getPartnerByName(partner)
     if (validatedPartner instanceof Error) {
@@ -74,7 +70,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
   
-  const user = await UserRepository().getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
+  const user = await UserRepository(prisma).getUserBylnAddress(`${lnAddress}@${MAVAPAY_MONEY_DOMAIN}`);
 
   if (user instanceof Error) {
     console.error(user.message)
@@ -86,7 +82,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     });
   }
 
-  const account = await AccountRepository().getAccountByUserId(user.id)
+  const account = await AccountRepository(prisma).getAccountByUserId(user.id)
 
   if (account instanceof Error) {
     return new Response(stringifyError(account), {

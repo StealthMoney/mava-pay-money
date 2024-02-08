@@ -40,3 +40,7 @@ export class ValidationError extends DomainError {}
 export class UnknownRepositoryError extends RepositoryError {
   level = ErrorLevel.Critical
 }
+
+export class SendMailError extends DomainError {
+  level = ErrorLevel.Critical
+}
