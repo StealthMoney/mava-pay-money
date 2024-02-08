@@ -4,7 +4,7 @@ import winston from "winston"
 const transports = []
 
 const logs = {
-  level: process.env.LOG_LEVEL || "info"
+    level: process.env.LOG_LEVEL || "info"
 }
 
 if (isDev) {
