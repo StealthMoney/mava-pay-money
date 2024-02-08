@@ -1,4 +1,4 @@
-import { EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process";
+import { API_DOMAIN, EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process";
 import { prisma } from "@/lib/prisma";
 import { sendMail } from "@/services/mail/sendgrid";
 import { createToken } from "@/utils/auth-token";
@@ -29,14 +29,14 @@ export async function POST(req: Request) {
       });
     }
 
-    if (user && !user.verified) {
+    if (!user.verified) {
       const verification = await prisma.verification.findUnique({
         where: {
           userId: user.id,
         },
       });
       if (verification) {
-        const verificationUrl = `${process.env.VERIFICATION_URL}/account/verify?key=${verification.token}`;
+        const verificationUrl = `${API_DOMAIN}/account/verify?key=${verification.token}`;
         const mail = await sendMail({
           from: "donotreply@mavapay.co",
           to: email,

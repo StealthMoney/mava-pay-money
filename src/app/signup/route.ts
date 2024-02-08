@@ -1,4 +1,4 @@
-import { EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process";
+import { API_DOMAIN, EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process";
 import { prisma } from "@/lib/prisma";
 import { sendMail } from "@/services/mail/sendgrid";
 import {
@@ -14,7 +14,6 @@ type RequestBody = {
   middleName: string;
   email: string;
   password: string;
-  [key: string]: string;
 };
 
 export async function POST(req: Request) {
@@ -28,7 +27,10 @@ export async function POST(req: Request) {
     "email",
     "password",
   ];
-  const missingFields = requiredFields.filter((field) => !requestBody[field]);
+  const requestBodyObjectKeys = Object.keys(requestBody);
+  const missingFields = requiredFields.filter(
+    (field) => !requestBodyObjectKeys.includes(field)
+  );
 
   if (
     missingFields.length > 0 ||
@@ -84,7 +86,7 @@ export async function POST(req: Request) {
         throw new Error(verification.message);
       }
 
-      const verificationUrl = `${process.env.VERIFICATION_URL}/account/verify?key=${token}`;
+      const verificationUrl = `${API_DOMAIN}/account/verify?key=${token}`;
       const mail = await sendMail({
         from: "donotreply@mavapay.co",
         to: email,
