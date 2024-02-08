@@ -4,7 +4,6 @@ import {
     MIN_SPENDABLE
 } from "@/config/default"
 import { ValidationError } from "../error"
-import { MAVAPAY_MONEY_DOMAIN, isDev } from "@/config/process"
 
 export const validateLNAddress = (lnAddress?: string) => {
     let message = ""
@@ -12,20 +11,6 @@ export const validateLNAddress = (lnAddress?: string) => {
         message = "No address provided"
         return new ValidationError(message)
     }
-
-    // const path = lnAddress.split("@")
-    // const username = path[0]
-    // const domain = path[1]
-
-    // if (!domain) {
-    //   message = "Invalid address"
-    //   return new ValidationError(message)
-    // }
-    // if (!isDev) {
-    //   if (domain !== MAVAPAY_MONEY_DOMAIN)
-    //   message = "Invalid domain"
-    //   return new ValidationError(message)
-    // }
 
     if (LN_ADDRESS_REGEX.test(lnAddress)) {
         return {
@@ -49,16 +34,16 @@ export const validateAmount = (amount: any) => {
         return new ValidationError(message)
     }
 
-    const ammount_number = Number(amount)
-    if (ammount_number < MIN_SPENDABLE) {
+    const amount_number = Number(amount)
+    if (amount_number < MIN_SPENDABLE) {
         message = "Amount provided is less than min spendable amount"
         return new ValidationError(message)
     }
-    if (ammount_number > MAX_SPENDABLE) {
+    if (amount_number > MAX_SPENDABLE) {
         message = "Amount provided is more than max spendable amount"
         return new ValidationError(message)
     }
-    return ammount_number
+    return amount_number
 }
 
 export const validateFees = (fees: any) => {

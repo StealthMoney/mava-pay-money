@@ -16,4 +16,4 @@ jobs:
                   cache: "npm"
             - run: npm install
             - name: Run check code
-              run: npm check-code
+              run: npm run check-code
