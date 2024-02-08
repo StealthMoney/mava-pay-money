@@ -1,13 +1,13 @@
-import { Transaction } from "./transaction";
+import { Transaction } from "./transaction"
 
 export type ReceivedWebhookPayload = {
-  event: string;
-  data: Transaction
+    event: string
+    data: Transaction
 }
 
 export type SentWebhookPayload = {
-  event: string;
-  data: Transaction & {
-    txHash: string
-  }
+    event: string
+    data: Transaction & {
+        txHash: string
+    }
 }

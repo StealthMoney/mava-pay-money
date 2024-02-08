@@ -1,26 +1,26 @@
-import { WalletCurrencyType } from "./wallet";
+import { WalletCurrencyType } from "./wallet"
 
-export type PaymentStatus = "INACTIVE" | "PENDING" | "PAID" | "EXPIRED";
+export type PaymentStatus = "INACTIVE" | "PENDING" | "PAID" | "EXPIRED"
 
 export type Transaction = {
-  amount: number;
-  autopayout: boolean;
-  createdAt: string;
-  currency: WalletCurrencyType;
-  fees: number;
-  hash: string;
-  id: string;
-  ref: string;
-  status: "SUCCESS" | "FAILED";
-  transactionMetadata: TransactionMetadata;
-  type: "DEPOSIT" | "WITHDRAWAL";
-  updatedAt: string;
-};
+    amount: number
+    autopayout: boolean
+    createdAt: string
+    currency: WalletCurrencyType
+    fees: number
+    hash: string
+    id: string
+    ref: string
+    status: "SUCCESS" | "FAILED"
+    transactionMetadata: TransactionMetadata
+    type: "DEPOSIT" | "WITHDRAWAL"
+    updatedAt: string
+}
 
 type TransactionMetadata = {
-  id: string;
-  orderId: string;
-  tyrusRef: null;
-  bankCode: string;
-  bankName: string;
-};
+    id: string
+    orderId: string
+    tyrusRef: null
+    bankCode: string
+    bankName: string
+}
