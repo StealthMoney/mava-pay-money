@@ -3,11 +3,12 @@ import { CustomButton } from "../custom-button/CustomButtom";
 
 export const LaunchBanner = () => {
   return (
-    <div className='w-full flex items-center justify-center gap-3 py-6 md:py-[15px] min-h-16 h-full bg-none md:bg-banner-color px-5'>
+    <div className='w-full flex items-center justify-center gap-3 py-6 md:py-[15px] min-h-16 h-full bg-none md:bg-banner-color px-5 font-rebond font-medium'>
       <section className='hidden md:flex'>
         <CustomButton
           label='INFO'
           type='primary'
+          className=' font-medium'
           buttonProps={{ style: { padding: "6px 12px", borderRadius: "1000px", width: "fit-content", height: "fit-content" } }}
           disabled={true}
         />

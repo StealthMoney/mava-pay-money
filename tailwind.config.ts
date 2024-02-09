@@ -27,6 +27,10 @@ const config: Config = {
         "secondary-gray": "#BBBBBB ",
         "secondary-black": "#090909",
       },
+      fontFamily: {
+        rebond: ['"Rebond Grotesque"', "system-ui"],
+        "inter-v": ['"Inter V"'],
+      },
     },
   },
   plugins: [],

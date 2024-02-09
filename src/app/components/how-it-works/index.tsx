@@ -11,10 +11,10 @@ export const HowItWorks = () => {
     <div className='py-20 lg:py-[120px] bg-secondary-green w-full flex items-center justify-center'>
       <Wrapper>
         <div className='flex flex-col items-center justify-center bg-secondary-green w-full'>
-          <h1 className='text-secondary-black text-[32px] md:text-[40px] font-bold leading-[48px] md:leading-[60px] tracking-[0.8px] text-center max-w-[763px]'>
+          <h1 className='text-secondary-black text-[32px] md:text-[40px] font-bold leading-[48px] md:leading-[60px] tracking-[0.8px] text-center max-w-[763px] font-rebond'>
             How it works?{" "}
           </h1>
-          <p className='text-secondary-black max-w-[1031px] pt-2 text-center text-base md:text-xl leading-[28px] md:leading-[150%]'>
+          <p className='text-secondary-black max-w-[1031px] pt-2 text-center text-base md:text-xl leading-[28px] md:leading-[150%] font-inter-v'>
             Get started with Mava Money in three (3) easy steps:
           </p>
           <section className='flex md:flex-row flex-col items-center justify-center md:items-start md:justify-between gap-20 md:gap-6 pt-20 md:pb-24 relative w-full'>

@@ -18,9 +18,9 @@ export const FaqCard = ({ index, title, body }: FaqCardProps) => {
       <section className='flex justify-between items-start md:items-center w-full'>
         <div className='flex flex-col md:flex-row gap-3 md:gap-7 items-start md:items-center'>
           <section className='flex flex-col items-center justify-center h-[44px] w-[44px] rounded-md bg-primary-green'>
-            <h2 className='text-center text-xl font-bold tracking-[0.6px] md:tracking-[2px]'>{index}</h2>
+            <h2 className='text-center text-xl font-bold tracking-[0.6px] md:tracking-[2px] text-transparent cardNo font-rebond'>{index}</h2>
           </section>
-          <h3 className='text-xl text-secondary-black font-semibold leading-[30px]'>{title}</h3>
+          <h3 className='text-xl text-secondary-black font-semibold leading-[30px] font-rebond'>{title}</h3>
         </div>
 
         {collapse[index] ? (
@@ -36,7 +36,7 @@ export const FaqCard = ({ index, title, body }: FaqCardProps) => {
 
       {collapse[index] ? (
         <section className='pt-4 w-full'>
-          <p className='text-base text-secondary-black'>{body}</p>
+          <p className='text-base text-secondary-black font-inter-v'>{body}</p>
         </section>
       ) : null}
     </div>

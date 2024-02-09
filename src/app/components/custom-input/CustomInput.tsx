@@ -14,7 +14,7 @@ export const CustomInput = ({ labelName, inputProps, rightIcon, className }: Cus
       <section className='flex items-center relative'>
         <input
           {...inputProps}
-          className={`text-white border-[1.5px] bg-secondary-gray border-input-border text-base py-[26px] px-5 rounded-md w-full ${className}`}
+          className={`text-white border-[1.5px] bg-secondary-gray border-input-border text-base py-[26px] px-5 rounded-md w-full placeholder:font-rebond placeholder:font-light ${className}`}
         />
         {rightIcon && (
           <div className='absolute bg-white top-[2px] bottom-[2px] right-[2px] flex items-center justify-center p-3 rounded-[6px] w-12'>

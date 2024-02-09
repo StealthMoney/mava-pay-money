@@ -15,8 +15,8 @@ export const FeatureCard = ({ imgSrc, title, body }: FeatureCardProps) => {
         <Image src={imgSrc} alt={`${title}_image`} width={28} height={28} />
       </section>
       <section className='flex flex-col items-center md:items-start gap-2 md:gap-1 text-secondary-black'>
-        <h3 className=' text-[28px] md:text-2xl font-bold leading-[36px] text-center md:text-start'>{title}</h3>
-        <p className='text-2xl md:text-base text-center md:text-start'>{body}</p>
+        <h3 className=' text-[28px] md:text-2xl font-bold leading-[36px] text-center md:text-start font-rebond'>{title}</h3>
+        <p className='text-2xl md:text-base text-center md:text-start font-inter-v'>{body}</p>
       </section>
     </div>
   );

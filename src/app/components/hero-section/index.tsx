@@ -17,16 +17,24 @@ export const HeroSection = () => {
           <div className='flex flex-col-reverse md:flex-row md:gap-16 items-center h-full md:justify-between w-full'>
             <section className='flex flex-col gap-10 md:flex-1'>
               <div className='md:max-w-[588px] flex flex-col gap-3 px-5 md:px-0'>
-                <h2 className=' text-4xl leading-[150%] lg:text-5xl lg:leading-[72px] font-extrabold'>Global money at your fingertips!</h2>
-                <p className='text-[16px] lg:text-lg leading-[32px] max-w-[532px]'>{`Experience the speed of Lightning Network transactions. Receive Naira from anywhere 'lightning fast', with Bitcoin`}</p>
+                <h2
+                  className=' text-4xl leading-[150%] lg:text-5xl lg:leading-[72px] font-extrabold font-rebond'
+                  style={{ fontFamily: "Rebond Grotesque" }}
+                >
+                  Global money at your fingertips!
+                </h2>
+                <p className='text-[16px] lg:text-lg leading-[32px] max-w-[532px] font-inter-v'>{`Experience the speed of Lightning Network transactions. Receive Naira from anywhere 'lightning fast', with Bitcoin`}</p>
               </div>
 
               <div className='flex flex-col gap-7 w-full'>
                 <section className=' hidden md:flex flex-col gap-2 md:max-w-[588px]'>
-                  <CustomInput inputProps={{ placeholder: "Email Address", color: "white" }} className=' bg-transparent text-white' />
+                  <CustomInput
+                    inputProps={{ placeholder: "Email Address", color: "white" }}
+                    className=' bg-transparent text-white placeholder:text-white'
+                  />
                   <aside className='flex gap-1'>
                     <Image src={InfoIcon} alt='info icon' />
-                    <p className='text-xs text-secondary-gray'>Mavapay.money is launching soon, be the first to know when we lauch</p>
+                    <p className='text-xs text-secondary-gray font-inter-v'>Mavapay.money is launching soon, be the first to know when we lauch</p>
                   </aside>
                 </section>
                 <CustomButton

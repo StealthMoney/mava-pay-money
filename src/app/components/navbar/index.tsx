@@ -10,14 +10,14 @@ export const Navbar = () => {
   const [openMenu, setOpenMenu] = React.useState(false);
 
   return (
-    <div className='w-full flex items-center justify-center sticky top-0 bg-secondary-black z-50'>
+    <div className='w-full flex items-center justify-center sticky top-0 bg-secondary-black z-50 font-rebond '>
       <Wrapper className='w-full'>
         <div className='h-[68px] md:h-[100px] w-full flex items-center justify-between'>
-          <h3 className=' text-xl sm:text-2xl font-extrabold leading-9 tracking-[0.96px]'>
+          <Link className=' text-xl sm:text-2xl font-extrabold leading-9 tracking-[0.96px] font-rebond' href={"/"}>
             MAVAPAY.<span className='text-primary-green'>MONEY</span>
-          </h3>
-          <section className='hidden md:flex items-center gap-5 md:gap-10 text-sm md:text-base'>
-            <Link href='' className='tracking-[0.32px]'>
+          </Link>
+          <section className='hidden md:flex items-center gap-5 md:gap-10 text-sm md:text-base font-light'>
+            <Link href='/#contact-us' className='tracking-[0.32px]'>
               Contact Us
             </Link>
             <Link href='https://github.com/StealthMoney/mava-pay-money' className='tracking-[0.32px]'>
@@ -36,7 +36,11 @@ export const Navbar = () => {
         </div>
         {openMenu ? (
           <section className='md:hidden flex bg-secondary-black z-50 flex-col absolute top-[68px] right-0 left-0 bottom-0 h-screen overflow-y-scroll overscroll-y-none'>
-            <Link href='' className='tracking-[0.32px] text-white text-xl py-8 px-5 border-t border-b border-input-border'>
+            <Link
+              href='#contact-us'
+              className='tracking-[0.32px] text-white text-xl py-8 px-5 border-t border-b border-input-border'
+              onClick={() => setOpenMenu(!openMenu)}
+            >
               Contact Us
             </Link>
             <Link

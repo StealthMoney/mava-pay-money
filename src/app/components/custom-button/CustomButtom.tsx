@@ -20,7 +20,7 @@ export const CustomButton = ({ label, rightIcon, type, disabled, loading, classN
           type === "primary" ? "bg-primary-green hover:opacity-70" : "bg-transparent border border-green-border text-primary-green hover:opacity-70"
         } ${
           disabled ? "pointer-events-none" : "cursor-pointer"
-        }  rounded-md w-full px-12 py-[22px] whitespace-nowrap flex items-center gap-[10px] ${className}`}
+        }  rounded-md w-full px-12 py-[22px] whitespace-nowrap flex items-center gap-[10px] font-rebond font-semibold ${className}`}
       >
         {label}
         {rightIcon}
