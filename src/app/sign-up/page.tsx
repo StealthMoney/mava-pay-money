@@ -1,33 +1,128 @@
-import React from "react";
-import CustomButton from "../components/button";
-import CustomInput from "../components/custom-input";
-import PasswordInput from "../components/password-input";
+import React from "react"
+import Link from "next/link"
+import Image from "next/image"
+
+import ArrowIcon from "../assets/svgs/arrow.svg"
+import PasswordInput from "../components/password-input"
+import { RegistrationNavbar } from "../components/registration"
+import { CustomInput } from "../components/custom-input/CustomInput"
+import { CustomButton } from "../components/custom-button/CustomButton"
+import Wrapper from "../components/wrapper"
 
 const page = () => {
-  return (
-    <main className='bg-white h-screen max-h-screen flex justify-between'>
-      <section className='w-full flex flex-col items-center justify-center p-4 md:p-8 '>
-        <div className='w-full flex flex-col items-center justify-center gap-[20px] max-w-[576px]'>
-          <div className='flex items-start w-full pb-4'>
-            <h2 className='text-black text-[32px] max-w-[576px]'>Sign Up</h2>
-          </div>
-          <section className='flex gap-4 w-full'>
-            <CustomInput labelName='First name' inputProps={{ placeholder: "Enter your first name", name: "firstName", type: "text" }} />
-            <CustomInput labelName='Last name' inputProps={{ placeholder: "Enter your last name", name: "lastname", type: "text" }} />
-          </section>
-          <section className='flex gap-4 w-full'>
-            <CustomInput labelName='Username' inputProps={{ placeholder: "Select a username", name: "username", type: "text" }} />
-            <CustomInput labelName='Email' inputProps={{ placeholder: "Enter your email address", name: "email", type: "email" }} />
-          </section>
-          <CustomInput labelName='Phone number' inputProps={{ placeholder: "Enter your phone number", name: "phoneNumber", type: "text" }} />
-          <PasswordInput placeholder="Choose a strong password"  />
-          <CustomButton label='Sign up' loading={false} />
-        </div>
-      </section>
+    return (
+        <main className="min-h-screen h-full bg-white flex flex-col items-center">
+            <RegistrationNavbar routeName={"Sign In"} href={"/sign-in"} />
 
-      <section className='w-full bg-black hidden md:block'></section>
-    </main>
-  );
-};
+            <Wrapper className="flex items-center justify-center w-full h-full px-0 xl:px-0 pt-14">
+                <div className="bg-white flex h-full justify-between w-full">
+                    <section className="w-full flex  flex-col items-center justify-center">
+                        <div className="w-full flex flex-col items-center justify-center max-w-[448px]">
+                            <div className="flex items-start flex-col gap-1 w-full pb-8">
+                                <h2 className="text-black text-[28px] leading-[42px] font-bold">
+                                    Sign Up
+                                </h2>
+                                <p className="font-inter-v text-secondary-black pt-1 tracking-[-0.5px]">
+                                    Create an account let’s get you started with
+                                    Mavapay.Money.{" "}
+                                    <span className=" font-semibold">
+                                        (Please enter your names as they are on
+                                        your bank account).
+                                    </span>
+                                </p>
+                            </div>
 
-export default page;
+                            <div className=" flex flex-col gap-6 w-full">
+                                <section className="flex gap-6 w-full">
+                                    <CustomInput
+                                        inputProps={{
+                                            placeholder: "First Name",
+                                            name: "firstName",
+                                            type: "text",
+                                            style: { color: "black" }
+                                        }}
+                                        className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+                                    />
+                                    <CustomInput
+                                        inputProps={{
+                                            placeholder: "Last Name",
+                                            name: "lastname",
+                                            type: "text",
+                                            style: { color: "black" }
+                                        }}
+                                        className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+                                    />
+                                </section>
+                                <CustomInput
+                                    inputProps={{
+                                        placeholder: "Middle Name (Optional)",
+                                        name: "middleName",
+                                        type: "text",
+                                        style: { color: "black" }
+                                    }}
+                                    className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+                                />
+                                <CustomInput
+                                    inputProps={{
+                                        placeholder: "Enter your email address",
+                                        name: "email",
+                                        type: "email",
+                                        style: { color: "black" }
+                                    }}
+                                    className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+                                />
+                                <PasswordInput placeholder="New Password (min. of 8 characters)" />
+                                <PasswordInput placeholder="Confirm New Password" />
+                            </div>
+
+                            <div className="w-full flex flex-col gap-16 pt-5">
+                                <section className="flex items-start gap-2">
+                                    <input
+                                        type="checkbox"
+                                        className=" accent-primary-green h-4 w-4"
+                                    />
+                                    <p className=" text-xs font-rebond text-secondary-black">
+                                        I have read, understood and I agree to
+                                        Mavapay.Money’{" "}
+                                        <span>
+                                            <Link
+                                                className=" underline text-primary-green"
+                                                href={"/privacy-policy"}
+                                            >
+                                                Privacy Policy
+                                            </Link>
+                                        </span>
+                                        , and{" "}
+                                        <span>
+                                            <Link
+                                                className=" underline text-primary-green"
+                                                href={"/terms-and-conditions"}
+                                            >
+                                                Terms and conditions
+                                            </Link>
+                                            .
+                                        </span>
+                                    </p>
+                                </section>
+                                <CustomButton
+                                    label="Sign Up"
+                                    loading={false}
+                                    type="primary"
+                                    rightIcon={
+                                        <Image
+                                            src={ArrowIcon}
+                                            alt="info icon"
+                                        />
+                                    }
+                                    className="w-full flex items-center justify-center py-7 px-16 md:px-12 md:py-[22px] rounded-md"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </Wrapper>
+        </main>
+    )
+}
+
+export default page
