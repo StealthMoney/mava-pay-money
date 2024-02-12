@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import Wrapper from "../wrapper"
 import { CustomInput } from "../custom-input/CustomInput"
-import { CustomButton } from "../custom-button/CustomButtom"
+import { CustomButton } from "../custom-button/CustomButton"
 import emailjs from "@emailjs/browser"
 
 import ArrowIcon from "../../assets/svgs/arrow.svg"
@@ -14,7 +14,7 @@ import TwitterIcon from "../../assets/svgs/twitter.svg"
 import GithubIcon from "../../assets/svgs/github-icon.svg"
 import SayHelloIcon from "../../assets/svgs/say-hello-icon.svg"
 
-interface InpuEventHandler {
+interface InputEventHandler {
     input: React.ChangeEvent<HTMLInputElement>
     textArea: React.ChangeEvent<HTMLTextAreaElement>
 }
@@ -63,7 +63,9 @@ export const SayHello = () => {
         }
     }
 
-    const handleChange = (event: InpuEventHandler[keyof InpuEventHandler]) => {
+    const handleChange = (
+        event: InputEventHandler[keyof InputEventHandler]
+    ) => {
         event.preventDefault()
         const { value, name } = event.target
 
