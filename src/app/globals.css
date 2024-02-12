@@ -30,6 +30,26 @@ html {
   -webkit-text-stroke: 1px white;
 }
 
+.loader {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 2.5px solid #fff;
+  border-right: 2px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Inter V */
 @font-face {
   font-family: "Inter V";

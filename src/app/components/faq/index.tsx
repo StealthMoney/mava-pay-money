@@ -1,6 +1,7 @@
 import React from "react";
 import Wrapper from "../wrapper";
 import { FaqCard } from "./FaqCard";
+import Link from 'next/link';
 
 export const Faq = () => {
   return (
@@ -13,7 +14,9 @@ export const Faq = () => {
             </h1>
             <p className='text-secondary-black pt-2 text-center text-base md:text-xl leading-[150%] max-w-[556px] font-inter-v'>
               Questions you might ask about our products and services. Can’t find the answer you are looking for?{" "}
-              <span className='underline text-primary-green'> Contact Us.</span>{" "}
+              <span className='underline text-primary-green'>
+                <Link href='/#contact-us' className='tracking-[0.32px]'>Contact Us</Link>
+              </span>
             </p>
           </section>
 
