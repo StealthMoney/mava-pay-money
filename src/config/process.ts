@@ -24,6 +24,22 @@ export const EMAIL_VERIFY_TEMPLATE_ID =
 export const JWT_SECRET = process.env.JWT_SECRET ?? ""
 export const PRIVATE_KEY = process.env.PRIVATE_KEY ?? ""
 export const PUBLIC_KEY = process.env.PUBLIC_KEY ?? ""
+export const EMAILJS_PUBLIC_KEY =
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ??
+    process.env.EMAILJS_PUBLIC_KEY ??
+    ""
+export const EMAILJS_SERVICE_ID =
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ??
+    process.env.PUBLIC_EMAILJS_SERVICE_ID ??
+    ""
+export const EMAILJS_TEMPLATE_ID =
+    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ??
+    process.env.EMAILJS_TEMPLATE_ID ??
+    ""
+export const MAVAPAY_SUPPORT_EMAIL =
+    process.env.NEXT_PUBLIC_MAVAPAY_SUPPORT_EMAIL ??
+    process.env.MAVAPAY_SUPPORT_EMAIL ??
+    ""
 
 if (!MAVAPAY_URL) {
     throw new ConfigError("MAVAPAY_URL not found")

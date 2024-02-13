@@ -1,18 +1,25 @@
 "use client"
 
-import React, { useState } from "react"
-import Link from "next/link"
 import Image from "next/image"
-import Wrapper from "../wrapper"
-import { CustomInput } from "../custom-input/CustomInput"
-import { CustomButton } from "../custom-button/CustomButton"
+import Link from "next/link"
+import React, { useState } from "react"
+
+import {
+    EMAILJS_PUBLIC_KEY,
+    EMAILJS_SERVICE_ID,
+    EMAILJS_TEMPLATE_ID,
+    MAVAPAY_SUPPORT_EMAIL
+} from "@/config/process"
 import emailjs from "@emailjs/browser"
 
 import ArrowIcon from "../../assets/svgs/arrow.svg"
-import PlaneIcon from "../../assets/svgs/plane.svg"
-import TwitterIcon from "../../assets/svgs/twitter.svg"
 import GithubIcon from "../../assets/svgs/github-icon.svg"
+import PlaneIcon from "../../assets/svgs/plane.svg"
 import SayHelloIcon from "../../assets/svgs/say-hello-icon.svg"
+import TwitterIcon from "../../assets/svgs/twitter.svg"
+import { CustomButton } from "../custom-button/CustomButton"
+import { CustomInput } from "../custom-input/CustomInput"
+import Wrapper from "../wrapper"
 
 interface InputEventHandler {
     input: React.ChangeEvent<HTMLInputElement>
@@ -28,7 +35,7 @@ export const SayHello = () => {
     })
 
     React.useEffect(() => {
-        emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string)
+        emailjs.init(EMAILJS_PUBLIC_KEY)
     }, [])
 
     const handleSubmit = async () => {
@@ -43,20 +50,21 @@ export const SayHello = () => {
         try {
             setLoading(true)
             await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
-                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
+                EMAILJS_SERVICE_ID,
+                EMAILJS_TEMPLATE_ID,
                 {
                     from_name: `${formValues.name}_${formValues.email}`,
                     to_name: "Mavapay money support",
                     message: formValues.message,
-                    reply_to: process.env.NEXT_PUBLIC_MAVAPAY_SUPPORT_EMAIL
+                    reply_to: MAVAPAY_SUPPORT_EMAIL
                 },
-                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+                EMAILJS_PUBLIC_KEY
             )
 
-            alert("message sent successfully")
+            alert("Your message sent successfully!")
         } catch (error) {
             console.log(error)
+            alert("Your message was not sent. Please try again!")
         } finally {
             setLoading(false)
             setFormValues({ name: "", email: "", message: "" })
