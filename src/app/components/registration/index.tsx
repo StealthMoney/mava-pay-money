@@ -7,12 +7,14 @@ export interface RegistrationNavbarProps {
     routeName: string
     href: string | UrlObject
     className?: string
+    onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }
 
 export const RegistrationNavbar = ({
     routeName,
     href,
-    className
+    className,
+    onClick
 }: RegistrationNavbarProps) => {
     return (
         <div
@@ -23,6 +25,7 @@ export const RegistrationNavbar = ({
                     <Link
                         className="text-xl sm:text-2xl font-extrabold leading-9 tracking-[0.96px] font-rebond text-secondary-black"
                         href={"/"}
+                        onClick={onClick}
                     >
                         MAVAPAY.
                         <span className="text-primary-green">MONEY</span>
