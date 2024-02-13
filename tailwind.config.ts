@@ -22,7 +22,7 @@ const config: Config = {
                 "secondary-white": "#FAFAFA",
                 "tertiary-gray": "#494949",
                 "tertiary-red": "#FEF6F6",
-                "tertiary-green": "#D7F4DE",
+                "tertiary-green": "#D7F4DE"
             },
             borderColor: {
                 "green-border": "#2EAE4E",

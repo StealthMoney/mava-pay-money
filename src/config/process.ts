@@ -32,18 +32,12 @@ export const EMAIL_VERIFY_TEMPLATE_ID =
     process.env.NEXT_PUBLIC_EMAIL_VERIFY_TEMPLATE_ID ??
     process.env.EMAIL_VERIFY_TEMPLATE_ID ??
     ""
-export const PASSWORD_RESET_TEMPLATE_ID =
-    process.env.NEXT_PUBLIC_PASSWORD_RESET_TEMPLATE_ID ??
-    process.env.PASSWORD_RESET_TEMPLATE_ID ??
-    ""
-export const PRIVATE_KEY = Buffer.from(
-    process.env.NEXT_PUBLIC_PRIVATE_KEY ?? process.env.PRIVATE_KEY ?? "",
-    "base64"
-)
-export const PUBLIC_KEY = Buffer.from(
-    process.env.NEXT_PUBLIC_PUBLIC_KEY ?? process.env.PUBLIC_KEY ?? "",
-    "base64"
-)
+export const JWT_SECRET =
+    process.env.NEXT_PUBLIC_JWT_SECRET ?? process.env.JWT_SECRET ?? ""
+export const PRIVATE_KEY =
+    process.env.NEXT_PUBLIC_PRIVATE_KEY ?? process.env.PRIVATE_KEY ?? ""
+export const PUBLIC_KEY =
+    process.env.NEXT_PUBLIC_PUBLIC_KEY ?? process.env.PUBLIC_KEY ?? ""
 export const EMAILJS_PUBLIC_KEY =
     process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ??
     process.env.EMAILJS_PUBLIC_KEY ??

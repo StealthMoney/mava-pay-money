@@ -5,10 +5,10 @@ import { CustomButton } from "../custom-button/CustomButton"
 
 export const MailCheck = () => {
     return (
-        <div>
+        <div className=" w-full flex flex-col h-full gap-16 justify-between md:justify-center pt-[114px] md:pt-0">
             <section className="flex flex-col items-center gap-7">
                 <Image src={MailCheckImage} alt="mail check image" />
-                <div className=" text-center flex flex-col gap-1 pb-16">
+                <div className=" text-center flex flex-col gap-1">
                     <h2 className="text-black text-[28px] leading-[42px] font-bold">
                         Check your mail{" "}
                     </h2>

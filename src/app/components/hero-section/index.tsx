@@ -24,7 +24,33 @@ export const HeroSection = () => {
                             </div>
 
                             <div className="flex flex-col gap-7 w-full">
-                                <JoinWaitlist />
+                                <section className=" hidden md:flex flex-col gap-2 md:max-w-[588px]">
+                                    <CustomInput
+                                        inputProps={{
+                                            placeholder: "Email Address",
+                                            color: "white"
+                                        }}
+                                        className=" bg-transparent text-white placeholder:text-white py-[26px] px-5 border-[1.5px] border-input-border"
+                                    />
+                                    <aside className="flex gap-1">
+                                        <Image src={InfoIcon} alt="info icon" />
+                                        <p className="text-xs text-secondary-gray font-inter-v">
+                                            Mavapay.money is launching soon, be
+                                            the first to know when we launch
+                                        </p>
+                                    </aside>
+                                </section>
+                                <CustomButton
+                                    label="Join Waitlist"
+                                    type="primary"
+                                    rightIcon={
+                                        <Image
+                                            src={ArrowIcon}
+                                            alt="info icon"
+                                        />
+                                    }
+                                    className="w-full md:w-fit flex items-center justify-center py-7 px-16 md:px-12 md:py-[22px] rounded-none rounded-bl-3xl rounded-br-3xl md:rounded-md"
+                                />
                             </div>
                         </section>
 

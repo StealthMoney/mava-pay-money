@@ -14,7 +14,7 @@ export const KycStepTwo = () => {
                     <div className=" h-2 bg-primary-green w-full rounded-[40px]"></div>
                     <div className="h-2 bg-primary-green w-full rounded-[40px]"></div>
                 </section>
-                <h2 className="text-black text-[28px] leading-[42px] font-bold">
+                <h2 className="text-black text-[28px] leading-[42px] font-bold font-rebond">
                     Complete your KYC <span>(2/2)</span>
                 </h2>
                 <p className="font-inter-v text-secondary-black tracking-[-0.5px]">
@@ -33,10 +33,10 @@ export const KycStepTwo = () => {
                         loading={false}
                         type="primary"
                         rightIcon={<Image src={ArrowIcon} alt="info icon" />}
-                        className="w-full flex items-center justify-center py-7 px-16 md:px-12 md:py-[22px] rounded-md"
+                        className="w-full flex items-center justify-center  px-5 md:px-5 py-[20px] md:py-[22px] rounded-md"
                     />
 
-                    <p className=" text-secondary-black text-center pt-6 text-sm font-rebond">
+                    <p className=" text-secondary-black text-center pt-6 text-sm font-rebond font-medium">
                         <span>
                             <Link
                                 href="/profile"

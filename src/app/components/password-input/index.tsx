@@ -17,7 +17,7 @@ const PasswordInput = ({ placeholder }: { placeholder: string }) => {
                 type: isVisible ? "text" : "password",
                 style: { color: "black" }
             }}
-            className=" border border-card-border text-black placeholder:font-medium py-5 px-4"
+            className=" border border-card-border text-black placeholder:font-light placeholder:text-tertiary-gray py-[18px] px-4"
             rightIcon={
                 <button onClick={() => setIsVisible(!isVisible)}>
                     {isVisible ? (

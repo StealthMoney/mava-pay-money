@@ -33,11 +33,10 @@ export const CustomButton = ({
                         : "bg-transparent border border-green-border text-primary-green hover:opacity-70"
                 } ${
                     disabled ? "pointer-events-none" : "cursor-pointer"
-                }  rounded-md w-full px-12 py-[22px] whitespace-nowrap flex items-center gap-[10px] font-rebond font-semibold ${className}`}
+                }  rounded-md w-full px-12 py-[22px] whitespace-nowrap flex items-center gap-[10px] font-rebond font-medium md:font-semibold ${className}`}
             >
                 {label}
-                {loading ? null : rightIcon}
-                {loading ? <span className="loader"></span> : null}
+                <aside className=" hidden md:block">{rightIcon}</aside>
             </button>
         </div>
     )

@@ -3,7 +3,6 @@
 import React from "react"
 import Link from "next/link"
 import Wrapper from "../wrapper"
-import { CustomButton } from "../custom-button/CustomButton"
 import {
     Cross1Icon,
     ExternalLinkIcon,

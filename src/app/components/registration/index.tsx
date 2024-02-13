@@ -32,7 +32,7 @@ export const RegistrationNavbar = ({
                     </Link>
 
                     <Link
-                        className="font-rebond font-semibold text-base py-4 px-8 text-secondary-black"
+                        className="font-rebond font-semibold text-base py-3 px-4 md:py-4 md:px-8 text-secondary-black whitespace-nowrap"
                         href={href}
                     >
                         {routeName}
