@@ -17,179 +17,188 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+        )
+        rgb(var(--background-start-rgb));
 }
 
 html {
-  scroll-padding-top: 100px;
-  scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+    scroll-behavior: smooth;
 }
 
 .cardNo {
-  -webkit-text-stroke: 1px white;
+    -webkit-text-stroke: 1px white;
 }
 
 .loader {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: inline-block;
-  border-top: 2.5px solid #fff;
-  border-right: 2px solid transparent;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 2.5px solid #fff;
+    border-right: 2px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
 }
 
 @keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Inter V */
 @font-face {
-  font-family: "Inter V";
-  src: url("/fonts/Inter-V.ttf") format("opentype");
-  font-weight: 100 200 300 400;
-  font-style: normal;
+    font-family: "Inter V";
+    src: url("/fonts/Inter-V.ttf") format("opentype");
+    font-weight: 100 200 300 400;
+    font-style: normal;
 }
 
 /* Rebond Grotesque */
 /* Hair line 100*/
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Hairline.otf") format("opentype");
-  font-weight: 50 100;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Hairline.otf") format("opentype");
+    font-weight: 50 100;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Hairline\ Italic.otf") format("opentype");
-  font-weight: 50 100;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Hairline\ Italic.otf")
+        format("opentype");
+    font-weight: 50 100;
+    font-style: italic;
 }
 
 /* thin 100*/
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Thin.otf") format("opentype");
-  font-weight: 100;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Thin.otf") format("opentype");
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Thin\ Italic.otf") format("opentype");
-  font-weight: 100;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Thin\ Italic.otf") format("opentype");
+    font-weight: 100;
+    font-style: italic;
 }
 
 /* Extra light 200*/
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Extralight.otf") format("opentype");
-  font-weight: 200;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Extralight.otf") format("opentype");
+    font-weight: 200;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Extralight\ Italic.otf") format("opentype");
-  font-weight: 200;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Extralight\ Italic.otf")
+        format("opentype");
+    font-weight: 200;
+    font-style: italic;
 }
 
 /* light 300 */
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Light.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Light\ Italic.otf") format("opentype");
-  font-weight: 300;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Light\ Italic.otf") format("opentype");
+    font-weight: 300;
+    font-style: italic;
 }
 
 /* Regular 400 */
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Italic.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Italic.otf") format("opentype");
+    font-weight: 400;
+    font-style: italic;
 }
 
 /* Medium 500*/
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Medium\ Italic.otf") format("opentype");
-  font-weight: 500;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Medium\ Italic.otf") format("opentype");
+    font-weight: 500;
+    font-style: italic;
 }
 
 /* Semi bold 600*/
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Semibold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Semibold.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Semibold\ Italic.otf") format("opentype");
-  font-weight: 600;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Semibold\ Italic.otf")
+        format("opentype");
+    font-weight: 600;
+    font-style: italic;
 }
 
 /* Bold 700 */
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Bold.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Bold\ Italic.otf") format("opentype");
-  font-weight: 700;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Bold\ Italic.otf") format("opentype");
+    font-weight: 700;
+    font-style: italic;
 }
 
 /* Extra bold 800 */
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Extrabold.otf") format("opentype");
-  font-weight: 100 200 300;
-  font-style: normal;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Extrabold.otf") format("opentype");
+    font-weight: 100 200 300;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Rebond Grotesque";
-  src: url("/fonts/Rebond\ Grotesque\ Extrabold\ Italic.otf") format("opentype");
-  font-weight: 100 200 300;
-  font-style: italic;
+    font-family: "Rebond Grotesque";
+    src: url("/fonts/Rebond\ Grotesque\ Extrabold\ Italic.otf")
+        format("opentype");
+    font-weight: 100 200 300;
+    font-style: italic;
 }
