@@ -12,9 +12,10 @@ import { AccountRepository, UserRepository } from "@/services/prisma/repository"
 import { buildResponse } from "@/domain/lnAddress/constructor"
 import { Quote } from "@/types/quote"
 import { Order } from "@/types/order"
-import { MAX_SPENDABLE, MIN_SPENDABLE } from "@/config/default"
+import { MAX_SPENDABLE, MIN_SPENDABLE, PARTNER_QUERY } from "@/config/default"
 import { PartnerRepository } from "@/services/prisma/repository/partner"
 import { Partner } from "@prisma/client"
+import { validateAuthHeader } from "@/services/auth/token"
 
 export async function GET(request: NextRequest, context: { params: any }) {
     const reqUsername = context.params?.username
@@ -22,10 +23,33 @@ export async function GET(request: NextRequest, context: { params: any }) {
     const searchParams = request.nextUrl.searchParams
     const amount = searchParams.get("amount")
     const fees = searchParams.get("feesInSats")
-    const partner = searchParams.get("partner")
     const callback = searchParams.get("callback")
 
+    let partner = ""
     let partnerData = {} as Partner
+
+    const validatedPartner = await validateAuthHeader(request)
+
+    if (validatedPartner instanceof Error) {
+        console.error(validatedPartner.message)
+        return new Response(stringifyError(validatedPartner), {
+            status: validatedPartner.status
+        })
+    }
+
+    if (validatedPartner.isValid) {
+        if (validatedPartner.partner) {
+            searchParams.set(PARTNER_QUERY, validatedPartner.partner)
+            partner = validatedPartner.partner
+        } else {
+            searchParams.delete(PARTNER_QUERY)
+        }
+        request.nextUrl.search = searchParams.toString()
+    } else {
+        return new Response("Unknown Authorization Error", {
+            status: 401
+        })
+    }
 
     if (partner) {
         const validatedPartner =
