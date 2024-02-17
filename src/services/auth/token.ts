@@ -3,6 +3,7 @@ import { UnauthorizedError } from "./error"
 import { NextRequest } from "next/server"
 import { JwtPayload, ValidateAuthHeaderResult } from "@/types/auth"
 import { PARTNER_QUERY } from "@/config/default"
+import { headers } from 'next/headers'
 
 const SECRET = process.env.JWT_SECRET ?? ""
 
@@ -37,7 +38,7 @@ export const validateAuthHeader = async (
     const searchParams = request.nextUrl.searchParams
     const partner = searchParams.get(PARTNER_QUERY)
     const prefix = "Bearer "
-    const auth_header = request.headers.get("Authorization") ?? ""
+    const auth_header = headers().get("Authorization") ?? ""
 
     if (!partner) {
         return {
