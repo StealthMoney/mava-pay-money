@@ -38,7 +38,9 @@ export const validateAuthHeader = async (
     const searchParams = request.nextUrl.searchParams
     const partner = searchParams.get(PARTNER_QUERY)
     const prefix = "Bearer "
-    const auth_header = headers().get("Authorization") ?? ""
+    const headerList = headers()
+    console.log(headerList)
+    const auth_header = headerList.get("Authorization") ?? ""
 
     if (!partner) {
         return {
