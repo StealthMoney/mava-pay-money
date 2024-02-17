@@ -3,10 +3,9 @@ import { UnauthorizedError } from "./error"
 import { NextRequest } from "next/server"
 import { JwtPayload, ValidateAuthHeaderResult } from "@/types/auth"
 import { PARTNER_QUERY } from "@/config/default"
-import { headers } from 'next/headers'
-import { JWT_SECRET } from "@/config/process"
+import { headers } from "next/headers"
 
-const SECRET = JWT_SECRET
+const SECRET = process.env.JWT_SECRET ?? ""
 
 export async function createJwtToken(payload: JwtPayload) {
     const secret = new TextEncoder().encode(SECRET)
