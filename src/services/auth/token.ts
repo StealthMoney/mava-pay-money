@@ -2,7 +2,7 @@ import * as jose from "jose"
 import { UnauthorizedError } from "./error"
 import { NextRequest } from "next/server"
 import { JwtPayload, ValidateAuthHeaderResult } from "@/types/auth"
-import { PARTNER_QUERY } from "@/config/default"
+import { AUTH_HEADER, PARTNER_QUERY } from "@/config/default"
 import { headers } from "next/headers"
 
 const SECRET = process.env.JWT_SECRET ?? ""
@@ -40,7 +40,7 @@ export const validateAuthHeader = async (
     const prefix = "Bearer "
     const headerList = headers()
     console.log(headerList)
-    const auth_header = headerList.get("Authorization") ?? ""
+    const auth_header = headerList.get(AUTH_HEADER) ?? ""
 
     if (!partner) {
         return {
