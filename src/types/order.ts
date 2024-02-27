@@ -1,3 +1,4 @@
+import { Quote } from "./quote"
 import { WalletCurrencyType } from "./wallet"
 
 export type Order = {
@@ -8,6 +9,6 @@ export type Order = {
     orderId: string
     paymentBtcDetail: string
     paymentCollectionMethod: string
-    quoteId: string
     status: string
+    quote: Quote["data"]
 }
