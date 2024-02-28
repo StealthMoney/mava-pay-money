@@ -195,7 +195,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
         })
         console.log({ newOrder })
 
-        const lnResponse = buildLnResponse(quote.data, order.data)
+        const lnResponse = buildLnResponse(order.data)
         return new Response(JSON.stringify(lnResponse), {
             status: 200,
             headers: {
@@ -226,12 +226,12 @@ const stringifyError = (
     })
 }
 
-const buildLnResponse = (quote: Quote["data"], order: Order) => {
-    const { id, isValid, ...rest } = quote!
+const buildLnResponse = (order: Order) => {
+    const { paymentBtcDetail, quote } = order
     return {
         routes: [],
-        pr: order.paymentBtcDetail,
-        metadata: { ...rest },
+        pr: paymentBtcDetail,
+        metadata: { ...quote },
         minSpendable: MIN_SPENDABLE,
         maxSpendable: MAX_SPENDABLE
     }
