@@ -180,7 +180,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
             data: {
                 accountId: account.id,
                 orderId: order.data.orderId,
-                quoteId: order.data.quoteId,
+                quoteId: order.data.quote!.id,
                 paymentMethod: "LIGHTNING",
                 amount: Number(quote.data.amountInSourceCurrency),
                 targetAmount: quote.data.amountInTargetCurrency,

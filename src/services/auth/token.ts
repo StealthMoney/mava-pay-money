@@ -16,12 +16,9 @@ export async function createJwtToken(payload: JwtPayload) {
 }
 
 export const verifyToken = async (token: string) => {
-    console.log(SECRET)
     const secret = new TextEncoder().encode(SECRET)
     try {
-        console.log(token)
         const { payload, protectedHeader } = await jose.jwtVerify(token, secret)
-        console.log({ payload, protectedHeader })
         if (typeof payload === "string" || !payload) {
             return new UnauthorizedError("Invalid token payload")
         }
@@ -39,7 +36,6 @@ export const validateAuthHeader = async (
     const partner = searchParams.get(PARTNER_QUERY)
     const prefix = "Bearer "
     const headerList = headers()
-    console.log(headerList)
     const auth_header = headerList.get(AUTH_HEADER) ?? ""
 
     if (!partner) {
