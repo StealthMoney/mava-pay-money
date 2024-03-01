@@ -17,6 +17,6 @@ export const milliSatsToSats = (milliSats: any) => {
     if (typeof value !== "number") {
         return new ValidationError("value is not a number")
     }
-    const sats = milliSats / 1000
+    const sats = Math.round(milliSats / 1000)
     return sats
 }
