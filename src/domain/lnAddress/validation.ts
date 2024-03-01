@@ -4,6 +4,7 @@ import {
     MIN_SPENDABLE
 } from "@/config/default"
 import { ValidationError } from "../error"
+import { milliSatsToSats } from "@/utils/conversion"
 
 export const validateLNAddress = (lnAddress?: string) => {
     let message = ""
@@ -55,5 +56,5 @@ export const validateFees = (fees: any) => {
         message = "Fee is invalid"
         return new ValidationError(message)
     }
-    return Number(fees)
+    return milliSatsToSats(Number(fees))
 }

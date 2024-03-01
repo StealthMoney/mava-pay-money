@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     const username = reqUsername?.toLowerCase()
     const searchParams = request.nextUrl.searchParams
     const amount = searchParams.get("amount")
-    const fees = searchParams.get("feesInSats")
+    const fees = searchParams.get("fees")
     const callback = searchParams.get("callback")
 
     let partner = ""
