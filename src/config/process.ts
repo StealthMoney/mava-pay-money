@@ -33,6 +33,10 @@ export const EMAIL_VERIFY_TEMPLATE_ID =
     process.env.NEXT_PUBLIC_EMAIL_VERIFY_TEMPLATE_ID ??
     process.env.EMAIL_VERIFY_TEMPLATE_ID ??
     ""
+export const PASSWORD_RESET_TEMPLATE_ID =
+    process.env.NEXT_PUBLIC_PASSWORD_RESET_TEMPLATE_ID ??
+    process.env.PASSWORD_RESET_TEMPLATE_ID ??
+    ""
 export const JWT_SECRET =
     process.env.NEXT_PUBLIC_JWT_SECRET ?? process.env.JWT_SECRET ?? ""
 export const PRIVATE_KEY =
