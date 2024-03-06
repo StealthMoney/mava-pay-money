@@ -68,7 +68,7 @@ export async function POST(req: Request) {
             )
         }
 
-        const token = await createToken({ userId: user.id.toString() })
+        const token = await createToken({ data: { email, id: user.id } })
 
         return new Response(JSON.stringify({ token }), {
             status: 200
