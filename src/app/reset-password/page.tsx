@@ -24,8 +24,26 @@ const page = () => {
                     </p>
                 </div>
                 <div className="flex flex-col gap-6 md:pb-16 w-full">
-                    <PasswordInput placeholder="New Password (min. of 8 characters)" />
-                    <PasswordInput placeholder="Confirm New Password" />
+                    <PasswordInput
+                        placeholder="New Password (min. of 8 characters)"
+                        name={""}
+                        value={""}
+                        onChange={function (
+                            event: React.ChangeEvent<HTMLInputElement>
+                        ): void {
+                            throw new Error("Function not implemented.")
+                        }}
+                    />
+                    <PasswordInput
+                        placeholder="Confirm New Password"
+                        name={""}
+                        value={""}
+                        onChange={function (
+                            event: React.ChangeEvent<HTMLInputElement>
+                        ): void {
+                            throw new Error("Function not implemented.")
+                        }}
+                    />
                 </div>
                 <p className="md:hidden block text-secondary-black text-center pt-6 text-sm">
                     <span>
