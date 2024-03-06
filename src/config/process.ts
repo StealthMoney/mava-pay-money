@@ -37,12 +37,14 @@ export const PASSWORD_RESET_TEMPLATE_ID =
     process.env.NEXT_PUBLIC_PASSWORD_RESET_TEMPLATE_ID ??
     process.env.PASSWORD_RESET_TEMPLATE_ID ??
     ""
-export const JWT_SECRET =
-    process.env.NEXT_PUBLIC_JWT_SECRET ?? process.env.JWT_SECRET ?? ""
-export const PRIVATE_KEY =
-    process.env.NEXT_PUBLIC_PRIVATE_KEY ?? process.env.PRIVATE_KEY ?? ""
-export const PUBLIC_KEY =
-    process.env.NEXT_PUBLIC_PUBLIC_KEY ?? process.env.PUBLIC_KEY ?? ""
+export const PRIVATE_KEY = Buffer.from(
+    process.env.NEXT_PUBLIC_PRIVATE_KEY ?? process.env.PRIVATE_KEY ?? "",
+    "base64"
+)
+export const PUBLIC_KEY = Buffer.from(
+    process.env.NEXT_PUBLIC_PUBLIC_KEY ?? process.env.PUBLIC_KEY ?? "",
+    "base64"
+)
 export const EMAILJS_PUBLIC_KEY =
     process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ??
     process.env.EMAILJS_PUBLIC_KEY ??
@@ -72,9 +74,9 @@ if (!MAVAPAY_MONEY_DOMAIN) {
 if (!API_DOMAIN) {
     throw new ConfigError("API_DOMAIN not found")
 }
-if (!JWT_SECRET) {
-    throw new ConfigError("JWT_SECRET not found")
-}
 if (!PRIVATE_KEY) {
     throw new ConfigError("PRIVATE_KEY not found")
+}
+if (!PUBLIC_KEY) {
+    throw new ConfigError("PUBLIC_KEY not found")
 }
