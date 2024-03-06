@@ -17,7 +17,7 @@ const page = () => {
             onClick={() => {}}
             className=" h-full justify-between md:justify-center pt-10 md:pt-0 pb-16 md:pb-0"
         >
-            <div className=' w-full'>
+            <div className=" w-full">
                 <div className="flex items-start flex-col gap-1 w-full pb-8">
                     <h2 className="text-black text-[28px] leading-[42px] font-bold font-rebond">
                         Your Lightning bank address{" "}

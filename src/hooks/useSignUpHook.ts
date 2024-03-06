@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { IUserSignIn } from '@/types/user'
+import { IUserSignIn } from "@/types/user"
 
 export const useSignUpHook = () => {
     const router = useRouter()
@@ -83,7 +83,9 @@ export const useSignUpHook = () => {
         } catch (error) {
             setLoading(false)
             console.error(error)
-            setError("An error occurred while creating user and account, please try again")
+            setError(
+                "An error occurred while creating user and account, please try again"
+            )
         } finally {
             setLoading(false)
         }

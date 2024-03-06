@@ -113,8 +113,8 @@ export default async function Page({
                     {data.success
                         ? "Proceed to login"
                         : data.message === "Token expired"
-                        ? "Oops! your token is expired, please check your email for new verification token"
-                        : "Please try again"}
+                          ? "Oops! your token is expired, please check your email for new verification token"
+                          : "Please try again"}
                 </p>
             </Suspense>
         </ConfirmEmailTemplate>
