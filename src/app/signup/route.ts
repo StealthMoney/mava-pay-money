@@ -1,11 +1,6 @@
-import { API_DOMAIN, EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process"
 import { prisma } from "@/lib/prisma"
-import { sendMail } from "@/services/mail/sendgrid"
-import {
-    UserRepository,
-    VerificationRepository
-} from "@/services/prisma/repository"
-import { generateEmailToken } from "@/utils/mail"
+import { UserRepository } from "@/services/prisma/repository"
+import { sendVerificationToken } from "@/utils/auth-token"
 import { createPassword } from "@/utils/password"
 
 type RequestBody = {
@@ -76,32 +71,17 @@ export async function POST(req: Request) {
                 throw new Error(user.message)
             }
 
-            const token = generateEmailToken()
-            const verification = await VerificationRepository(prisma).create({
-                user: {
-                    connect: { id: user.id }
-                },
-                token,
-                userId: user.id
+            const result = await sendVerificationToken({
+                email,
+                userId: user.id,
+                prisma: prisma
             })
-            if (verification instanceof Error) {
-                throw new Error(verification.message)
+
+            if (result instanceof Error) {
+                throw result
             }
 
-            const verificationUrl = `${API_DOMAIN}/account/verify?key=${token}`
-            const mail = await sendMail({
-                from: "donotreply@mavapay.co",
-                to: email,
-                templateId: EMAIL_VERIFY_TEMPLATE_ID,
-                dynamicTemplateData: {
-                    url: verificationUrl
-                }
-            })
-            if (mail instanceof Error) {
-                throw new Error(mail.message)
-            }
-
-            return verification
+            return result
         })
 
         if (!(await result).token || result instanceof Error) {

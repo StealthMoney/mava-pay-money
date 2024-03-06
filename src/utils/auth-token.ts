@@ -1,7 +1,16 @@
 import { JWTPayload, jwtVerify, SignJWT } from "jose"
 
-import { JWT_SECRET_KEY } from "@/config/process"
+import {
+    API_DOMAIN,
+    EMAIL_VERIFY_TEMPLATE_ID,
+    JWT_SECRET_KEY
+} from "@/config/process"
 import { TOKEN_EXPIRY } from "@/config/default"
+import { generateEmailToken } from "./mail"
+import { VerificationRepository } from "@/services/prisma/repository"
+import { sendMail } from "@/services/mail/sendgrid"
+import { Prisma, PrismaClient } from "@prisma/client"
+import { DefaultArgs } from "@prisma/client/runtime/library"
 
 interface TokenPayload {
     data: Record<string, unknown>
@@ -52,4 +61,62 @@ export async function createRefreshToken({
         .setIssuedAt(iat)
         .setExpirationTime(exp)
         .sign(JWT_SECRET_KEY)
+}
+
+export async function sendVerificationToken({
+    email,
+    userId,
+    prisma
+}: {
+    email: string
+    userId: number
+    prisma: Omit<
+        PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+        | "$connect"
+        | "$disconnect"
+        | "$on"
+        | "$transaction"
+        | "$use"
+        | "$extends"
+    >
+}) {
+    try {
+        const token = generateEmailToken()
+
+        // expiry time for verification is 24 hours
+        const expiresAt = new Date().getTime() + 1000 * 60 * 60 * 24
+        const verification = await VerificationRepository(prisma).create({
+            user: {
+                connect: { id: userId }
+            },
+            token,
+            expiresAt: new Date(expiresAt),
+            userId: userId
+        })
+
+        if (verification instanceof Error) {
+            throw new Error(verification.message)
+        }
+
+        const verificationUrl = `${API_DOMAIN}/account/verify?key=${token}&email=${JSON.stringify(email)}`
+
+        const mail = await sendMail({
+            from: "donotreply@mavapay.co",
+            to: email,
+            templateId: EMAIL_VERIFY_TEMPLATE_ID,
+            dynamicTemplateData: {
+                url: verificationUrl
+            }
+        })
+
+        if (mail instanceof Error) {
+            throw new Error(mail.message)
+        }
+
+        return verification
+    } catch (error) {
+        return new Error(
+            error instanceof Error ? error.message : "Token verification failed"
+        )
+    }
 }

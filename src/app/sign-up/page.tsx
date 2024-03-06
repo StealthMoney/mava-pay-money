@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -8,8 +10,22 @@ import { RegistrationNavbar } from "../components/registration"
 import { CustomInput } from "../components/custom-input/CustomInput"
 import { CustomButton } from "../components/custom-button/CustomButton"
 import Wrapper from "../components/wrapper"
+import { useSignUpHook } from "@/hooks/useSignUpHook"
 
-const page = () => {
+const Page = () => {
+    const {
+        form,
+        loading,
+        error,
+        confirmPassword,
+        checked,
+        passwordError,
+        handleInputChange,
+        handleUserSignup,
+        handleCheckboxChange,
+        handleConfirmPasswordChange
+    } = useSignUpHook()
+    const { firstName, lastName, middleName, email, password } = form
     return (
         <main className="min-h-screen h-full bg-white flex flex-col items-center">
             <RegistrationNavbar
@@ -34,6 +50,9 @@ const page = () => {
                                         your bank account).
                                     </span>
                                 </p>
+                                <p className=" text-red-500 text-sm text-center w-full">
+                                    {error}
+                                </p>
                             </div>
 
                             <div className=" flex flex-col gap-6 w-full">
@@ -43,16 +62,20 @@ const page = () => {
                                             placeholder: "First Name",
                                             name: "firstName",
                                             type: "text",
-                                            style: { color: "black" }
+                                            style: { color: "black" },
+                                            onChange: handleInputChange,
+                                            value: firstName
                                         }}
                                         className=" border border-card-border text-black placeholder:font-light placeholder:text-tertiary-gray py-[18px] md:py-5 px-4"
                                     />
                                     <CustomInput
                                         inputProps={{
                                             placeholder: "Last Name",
-                                            name: "lastname",
+                                            name: "lastName",
                                             type: "text",
-                                            style: { color: "black" }
+                                            style: { color: "black" },
+                                            onChange: handleInputChange,
+                                            value: lastName
                                         }}
                                         className=" border border-card-border text-black placeholder:font-light placeholder:text-tertiary-gray py-[18px] md:py-5 px-4"
                                     />
@@ -62,7 +85,9 @@ const page = () => {
                                         placeholder: "Middle Name (Optional)",
                                         name: "middleName",
                                         type: "text",
-                                        style: { color: "black" }
+                                        style: { color: "black" },
+                                        onChange: handleInputChange,
+                                        value: middleName
                                     }}
                                     className=" border border-card-border text-black placeholder:font-light placeholder:text-tertiary-gray py-[18px] md:py-5 px-4"
                                 />
@@ -71,46 +96,67 @@ const page = () => {
                                         placeholder: "Enter your email address",
                                         name: "email",
                                         type: "email",
-                                        style: { color: "black" }
+                                        style: { color: "black" },
+                                        onChange: handleInputChange,
+                                        value: email
                                     }}
                                     className=" border border-card-border text-black placeholder:font-light placeholder:text-tertiary-gray py-[18px] md:py-5 px-4"
                                 />
-                                <PasswordInput placeholder="New Password (min. of 8 characters)" />
-                                <PasswordInput placeholder="Confirm New Password" />
+                                <PasswordInput
+                                    placeholder="New Password (min. of 8 characters)"
+                                    name="password"
+                                    value={password}
+                                    onChange={handleInputChange}
+                                />
+                                <PasswordInput
+                                    placeholder="Confirm New Password"
+                                    name="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={handleConfirmPasswordChange}
+                                    infoText={
+                                        passwordError ? passwordError : ""
+                                    }
+                                />
                             </div>
 
                             <div className="w-full flex flex-col gap-16 pt-5">
-                                <section className="flex items-start gap-2">
-                                    <input
-                                        type="checkbox"
-                                        className=" accent-primary-green h-4 w-4"
-                                    />
-                                    <p className=" text-xs font-rebond text-secondary-black font-light">
-                                        I have read, understood and I agree to
-                                        Mavapay.Money’{" "}
-                                        <span>
-                                            <Link
-                                                className=" underline text-primary-green"
-                                                href={"/privacy-policy"}
-                                            >
-                                                Privacy Policy
-                                            </Link>
-                                        </span>
-                                        , and{" "}
-                                        <span>
-                                            <Link
-                                                className=" underline text-primary-green"
-                                                href={"/terms-and-conditions"}
-                                            >
-                                                Terms and conditions
-                                            </Link>
-                                            .
-                                        </span>
-                                    </p>
-                                </section>
+                                <div>
+                                    <section className="flex items-start gap-2">
+                                        <input
+                                            type="checkbox"
+                                            className=" accent-primary-green h-4 w-4 cursor-pointer"
+                                            onChange={handleCheckboxChange}
+                                            checked={checked}
+                                        />
+                                        <p className=" text-xs font-rebond text-secondary-black font-light">
+                                            I have read, understood and I agree
+                                            to Mavapay.Money’{" "}
+                                            <span>
+                                                <Link
+                                                    className=" underline text-primary-green"
+                                                    href={"/privacy-policy"}
+                                                >
+                                                    Privacy Policy
+                                                </Link>
+                                            </span>
+                                            , and{" "}
+                                            <span>
+                                                <Link
+                                                    className=" underline text-primary-green"
+                                                    href={
+                                                        "/terms-and-conditions"
+                                                    }
+                                                >
+                                                    Terms and conditions
+                                                </Link>
+                                                .
+                                            </span>
+                                        </p>
+                                    </section>
+                                </div>
                                 <CustomButton
                                     label="Sign Up"
-                                    loading={false}
+                                    loading={loading}
                                     type="primary"
                                     rightIcon={
                                         <Image
@@ -119,14 +165,18 @@ const page = () => {
                                         />
                                     }
                                     className="w-full flex items-center justify-center  px-5 md:px-5 py-[20px] md:py-[22px] rounded-md"
+                                    buttonProps={{
+                                        onClick: handleUserSignup
+                                    }}
                                 />
                             </div>
                         </div>
                     </section>
                 </div>
+                {/* <MailCheck /> */}
             </Wrapper>
         </main>
     )
 }
 
-export default page
+export default Page

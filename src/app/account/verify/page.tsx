@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
+import { sendVerificationToken } from "@/utils/auth-token"
 import { Suspense } from "react"
+import ConfirmEmailTemplate from "@/app/components/confirm-email-template"
 
 const verifyUser = async (key: string) => {
     "use server"
@@ -13,6 +15,15 @@ const verifyUser = async (key: string) => {
             return {
                 data: {
                     message: "Invalid token"
+                }
+            }
+        }
+        if (verification.expiresAt < new Date()) {
+            return {
+                data: {
+                    data: verification,
+                    message: "Token expired",
+                    success: false
                 }
             }
         }
@@ -48,34 +59,64 @@ const verifyUser = async (key: string) => {
 export default async function Page({
     searchParams
 }: {
-    searchParams: { key: string }
+    searchParams: { key: string; email: string }
 }) {
-    const { data } = await verifyUser(searchParams.key)
+    const { email } = searchParams
+    const key = searchParams.key
+
+    const { data } = await verifyUser(key)
+    if (data.message === "Token expired") {
+        await prisma.verification.delete({
+            where: {
+                id: data.data?.id
+            }
+        })
+
+        const res = await sendVerificationToken({
+            email,
+            userId: data.data?.userId!,
+            prisma
+        })
+
+        if (res instanceof Error) {
+            return (
+                <div>
+                    <h1 className="text-xl text-black font-semibold">
+                        Account Verification Status
+                    </h1>
+                    <p>{res.message}</p>
+                </div>
+            )
+        }
+    }
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <div className=" bg-green-300 p-6 text-center border border-green-400 rounded-sm">
-                <h1 className="text-xl text-black font-semibold">
-                    Account Verification Status
-                </h1>
-                <Suspense
-                    fallback={
-                        <div>
-                            <p className="text-black">Loading...</p>
-                        </div>
-                    }
+        <ConfirmEmailTemplate path="/sign-in">
+            <h2 className="text-black text-[28px] leading-[42px] font-bold">
+                Account Verification Status
+            </h2>
+            <Suspense
+                fallback={
+                    <div>
+                        <p className="text-black">Loading...</p>
+                    </div>
+                }
+            >
+                <p
+                    className={`${data.success ? "text-slate-800" : "text-red-500"} font-inter-v pt-1 tracking-[-0.5px]`}
                 >
-                    <p
-                        className={`${data.success ? "text-slate-800" : "text-red-500"}`}
-                    >
-                        {data.message}
-                    </p>
-                    <p
-                        className={`${data.success ? "text-slate-800" : "text-red-500"}`}
-                    >
-                        {data.success ? "Proceed to login" : "Please try again"}
-                    </p>
-                </Suspense>
-            </div>
-        </div>
+                    {data.message}
+                </p>
+                <p
+                    className={`${data.success ? "text-slate-800" : "text-red-500"} font-inter-v pt-1 tracking-[-0.5px]`}
+                >
+                    {data.success
+                        ? "Proceed to login"
+                        : data.message === "Token expired"
+                        ? "Oops! your token is expired, please check your email for new verification token"
+                        : "Please try again"}
+                </p>
+            </Suspense>
+        </ConfirmEmailTemplate>
     )
 }

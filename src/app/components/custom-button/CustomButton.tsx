@@ -33,10 +33,17 @@ export const CustomButton = ({
                         : "bg-transparent border border-green-border text-primary-green hover:opacity-70"
                 } ${
                     disabled ? "pointer-events-none" : "cursor-pointer"
-                }  rounded-md w-full px-12 py-[22px] whitespace-nowrap flex items-center gap-[10px] font-rebond font-medium md:font-semibold ${className}`}
+                }  rounded-md w-full px-12 py-5 md:py-[22px] whitespace-nowrap flex items-center font-rebond font-medium md:font-semibold relative ${className}`}
             >
-                {label}
-                <aside className=" hidden md:block">{rightIcon}</aside>
+                <section className=" flex items-center gap-2">
+                    {label}
+                    <aside className=" hidden md:block">{rightIcon}</aside>
+                </section>
+                {loading ? (
+                    <section className=" absolute right-[64px]">
+                        <div className="m-auto border-[3px] border-[#ffffff] rounded-[50%] border-t-3 border-t-[#2EAE4E] max-w-[24px] max-h-[24px] w-[24px] h-[24px] animate-spin"></div>
+                    </section>
+                ) : null}
             </button>
         </div>
     )
