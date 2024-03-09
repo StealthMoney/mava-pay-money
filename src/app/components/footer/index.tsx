@@ -52,18 +52,18 @@ export const Footer = () => {
 
 export const FooterCopy = [
     {
-        href: "",
+        href: "https://twitter.com/Mavapay_Money",
         title: "Twitter",
         imgSrc: XIcon
-    },
-    {
-        href: "",
-        title: "Facebook",
-        imgSrc: FacebookIcon
-    },
-    {
-        href: "",
-        title: "Youtube",
-        imgSrc: YoutubeIcon
     }
+    // {
+    //     href: "",
+    //     title: "Facebook",
+    //     imgSrc: FacebookIcon
+    // },
+    // {
+    //     href: "",
+    //     title: "Youtube",
+    //     imgSrc: YoutubeIcon
+    // }
 ]

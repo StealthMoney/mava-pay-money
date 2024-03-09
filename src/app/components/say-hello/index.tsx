@@ -185,8 +185,12 @@ export const SayHello = () => {
 }
 
 export const SocialLinks = [
-    { link: "", imgSrc: TwitterIcon, alt: "twitter icon" },
-    { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
+    {
+        link: "https://twitter.com/Mavapay_Money",
+        imgSrc: TwitterIcon,
+        alt: "twitter icon"
+    },
+    // { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
     {
         link: "https://github.com/StealthMoney/mava-pay-money",
         imgSrc: GithubIcon,
