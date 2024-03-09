@@ -1,11 +1,8 @@
 import React from "react"
 import Image from "next/image"
-import { CustomInput } from "../custom-input/CustomInput"
-import { CustomButton } from "../custom-button/CustomButton"
 import { LaunchBanner } from "../launch-banner/LaunchBanner"
-import InfoIcon from "../../assets/svgs/info.svg"
-import ArrowIcon from "../../assets/svgs/arrow.svg"
 import HeroImage from "../../assets/images/hero-image.webp"
+import { JoinWaitlist } from "./waitlist-input"
 
 export const HeroSection = () => {
     return (
@@ -27,33 +24,7 @@ export const HeroSection = () => {
                             </div>
 
                             <div className="flex flex-col gap-7 w-full">
-                                <section className=" hidden md:flex flex-col gap-2 md:max-w-[588px]">
-                                    <CustomInput
-                                        inputProps={{
-                                            placeholder: "Email Address",
-                                            color: "white"
-                                        }}
-                                        className=" bg-transparent text-white placeholder:text-white"
-                                    />
-                                    <aside className="flex gap-1">
-                                        <Image src={InfoIcon} alt="info icon" />
-                                        <p className="text-xs text-secondary-gray font-inter-v">
-                                            Mavapay.money is launching soon, be
-                                            the first to know when we launch
-                                        </p>
-                                    </aside>
-                                </section>
-                                <CustomButton
-                                    label="Join Waitlist"
-                                    type="primary"
-                                    rightIcon={
-                                        <Image
-                                            src={ArrowIcon}
-                                            alt="info icon"
-                                        />
-                                    }
-                                    className="w-full md:w-fit flex items-center justify-center py-7 px-16 md:px-12 md:py-[22px] rounded-none rounded-bl-3xl rounded-br-3xl md:rounded-md"
-                                />
+                                <JoinWaitlist />
                             </div>
                         </section>
 
