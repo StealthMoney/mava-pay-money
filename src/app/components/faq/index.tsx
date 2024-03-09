@@ -41,26 +41,21 @@ export const FaqCopy = [
     {
         index: "01",
         title: "What is Mavapay.money?",
-        body: "Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+        body: "Mava pay money is a platform that allows you to receive money from your loved ones in any country at the speed of lightning. Experience the speed of Lightning Network transactions. Receive Naira from anywhere 'lightning fast', with Bitcoin."
     },
     {
         index: "02",
         title: "What is a lightning bank address?",
-        body: "Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+        body: "This is a unique address that is generated for you to receive money from anyone using a wallet that supports lightning addresses. The lightning address is linked directly to your Naira bank account. This means that you can receive money from anyone in the world and have it deposited directly into your Naira bank account. An example of a lightning address is - extheo@mavapay.money"
     },
     {
         index: "03",
         title: "Can I send Bitcoin using Mavapay.Money?",
-        body: "Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+        body: "No, you cannot send Bitcoin using Mavapay.money. At the moment it is a receive only platform."
     },
     {
         index: "04",
         title: "Why do you need my BVN?",
-        body: "Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
-    },
-    {
-        index: "05",
-        title: "What is Mavapay.money?",
-        body: "Vorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+        body: "We need your BVN to verify your identity and to ensure that the bank account you are linking to your lightning address is yours. We do not store your BVN. We use it to verify your identity and then discard it. We take your privacy and security very seriously."
     }
 ]

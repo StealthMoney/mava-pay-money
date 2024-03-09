@@ -28,12 +28,12 @@ export const Navbar = () => {
                         <Link href="/#contact-us" className="tracking-[0.32px]">
                             Contact Us
                         </Link>
-                        <Link
+                        {/* <Link
                             href="https://github.com/StealthMoney/mava-pay-money"
                             className="tracking-[0.32px]"
                         >
                             GitHub
-                        </Link>
+                        </Link> */}
                     </section>
 
                     <section className=" hidden md:flex items-center gap-5">
