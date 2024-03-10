@@ -20,7 +20,6 @@ export const VerificationRepository = (prisma: Prisma) => {
     ) => {
         try {
             const { userId, ...verificationData } = verification
-            console.log({ verificationData })
             const newVerification = await prisma.verification.create({
                 data: {
                     ...verificationData,
