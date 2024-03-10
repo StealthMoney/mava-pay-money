@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
-import { UserRepository } from "@/services/prisma/repository"
+import { AccountRepository, UserRepository } from "@/services/prisma/repository"
+import { KYCRepository } from "@/services/prisma/repository/kyc"
 import { sendVerificationToken } from "@/utils/auth-token"
 import { createPassword } from "@/utils/password"
 
@@ -62,13 +63,36 @@ export async function POST(req: Request) {
         const result = prisma.$transaction(async (prisma) => {
             const hashedPassword = await createPassword(password)
             const user = await UserRepository(prisma).create({
-                email,
-                name: `${firstName} ${lastName} ${middleName}`,
+                email: email.trim().toLowerCase(),
+                name: `${firstName.trim().toLowerCase()} ${lastName.trim().toLowerCase()} ${middleName.trim().toLowerCase()}`,
                 password: hashedPassword,
                 verified: false
             })
             if (user instanceof Error) {
                 throw new Error(user.message)
+            }
+            const account = await AccountRepository(prisma).create({
+                accountName: "",
+                accountNumber: "",
+                bankCode: "",
+                userId: user.id,
+                lnAddress: "",
+                user: {
+                    connect: { id: user.id }
+                }
+            })
+            if (account instanceof Error) {
+                throw new Error(account.message)
+            }
+            const kyc = await KYCRepository(prisma).create({
+                bvn: "",
+                userId: user.id,
+                user: {
+                    connect: { id: user.id }
+                }
+            })
+            if (kyc instanceof Error) {
+                throw new Error(kyc.message)
             }
 
             const result = await sendVerificationToken({

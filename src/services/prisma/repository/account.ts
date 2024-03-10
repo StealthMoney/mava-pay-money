@@ -54,7 +54,7 @@ export const AccountRepository = (prisma: Prisma) => {
     }) => {
         try {
             const updatedAccount = await prisma.account.update({
-                where: { id: userId },
+                where: { userId: userId },
                 data: account
             })
             if (!updatedAccount.id) {
@@ -90,6 +90,20 @@ export const AccountRepository = (prisma: Prisma) => {
             const account = await prisma.account.findUnique({
                 where: {
                     userId: userId
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                            kycInfo: {
+                                select: {
+                                    status: true,
+                                    bvn: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
             if (!account) {

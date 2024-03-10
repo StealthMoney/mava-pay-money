@@ -2,12 +2,14 @@ import { Cross1Icon } from "@radix-ui/react-icons"
 import React from "react"
 import { CustomButton } from "../components/custom-button/CustomButton"
 import { ProfileBlock } from "./ProfileBlock"
+import { Profile } from "@/types/profile"
 
 export interface ProfileModalProps {
     onClose: () => void
+    profileData: Profile
 }
 
-export const ProfileModal = ({ onClose }: ProfileModalProps) => {
+export const ProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
     return (
         <div
             className=" h-full max-h-screen w-screen flex flex-col items-center justify-center fixed z-50 bg-[#00000033] overflow-hidden overflow-y-hidden"
@@ -32,23 +34,32 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
                         <div className=" flex items-center gap-4 md:gap-6 w-full">
                             <ProfileBlock
                                 title="First Name"
-                                value="Oladimeji"
+                                value={profileData?.user?.firstName}
                             />
-                            <ProfileBlock title="Last Name" value="Bamidele" />
+                            <ProfileBlock
+                                title="Last Name"
+                                value={profileData?.user.lastName}
+                            />
                         </div>
                         <div className=" flex items-center gap-4 md:gap-6 w-full">
                             <ProfileBlock
-                                title="First Name"
-                                value="Oladimeji"
+                                title="Middle Name"
+                                value={profileData?.user?.middleName}
                             />
-                            <ProfileBlock title="Last Name" value="Bamidele" />
+                            <ProfileBlock
+                                title="Email"
+                                value={profileData?.user?.email}
+                            />
                         </div>
                         <div className=" flex items-center gap-4 md:gap-6 w-full">
                             <ProfileBlock
-                                title="First Name"
-                                value="Oladimeji"
+                                title="LN Address"
+                                value={profileData?.lnAddress}
                             />
-                            <ProfileBlock title="Last Name" value="Bamidele" />
+                            <ProfileBlock
+                                title="KYC Status"
+                                value={profileData?.user?.kycInfo?.status}
+                            />
                         </div>
                     </section>
 

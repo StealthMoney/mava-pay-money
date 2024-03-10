@@ -25,7 +25,6 @@ export const RegistrationNavbar = ({
                     <Link
                         className="text-xl sm:text-2xl font-extrabold leading-9 tracking-[0.96px] font-rebond text-secondary-black"
                         href={"/"}
-                        onClick={onClick}
                     >
                         MAVAPAY.
                         <span className="text-primary-green">MONEY</span>
@@ -34,6 +33,7 @@ export const RegistrationNavbar = ({
                     <Link
                         className="font-rebond font-semibold text-base py-3 px-4 md:py-4 md:px-8 text-secondary-black whitespace-nowrap"
                         href={href}
+                        onClick={onClick}
                     >
                         {routeName}
                     </Link>

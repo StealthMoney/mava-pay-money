@@ -1,9 +1,13 @@
 import { IUserSignIn } from "@/types/user"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import React, { useState, useEffect } from "react"
+import { signIn } from "next-auth/react"
 
 export const useSignInHook = () => {
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl") ?? "/profile"
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [passwordError, setPasswordError] = useState("")
@@ -38,13 +42,14 @@ export const useSignInHook = () => {
         }
 
         try {
-            const res = await fetch("/signin", {
-                method: "POST",
-                body: JSON.stringify(form)
+            const res = await signIn("credentials", {
+                email: form.email,
+                password: form.password,
+                redirect: false,
+                callbackUrl
             })
-            console.log({ res })
 
-            if (res.ok === false) {
+            if (res && !res.ok) {
                 if (res.status === 404) {
                     setError(
                         "You might want to check your login details, User not found"
@@ -56,7 +61,7 @@ export const useSignInHook = () => {
                     setLoading(false)
                     return
                 } else if (res.status === 401) {
-                    setError("We cannot find a user with this login details ")
+                    setError("We cannot find a user with this login details")
                     setLoading(false)
                     return
                 } else {
@@ -68,8 +73,7 @@ export const useSignInHook = () => {
                 }
             }
 
-            router.push("/profile")
-
+            router.push(res?.url ?? callbackUrl)
             setLoading(false)
         } catch (error) {
             setLoading(false)

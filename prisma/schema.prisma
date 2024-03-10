@@ -39,6 +39,12 @@ enum TransactionStatus {
   FAILED
 }
 
+enum KYCStatus {
+  APPROVED
+  REJECTED
+  PENDING
+}
+
 model User {
   id           Int           @id @default(autoincrement())
   name         String
@@ -66,12 +72,13 @@ model Account {
 }
 
 model KYCInfo {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int       @unique
   bvn       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  status    KYCStatus @default(PENDING)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
 
 model Order {

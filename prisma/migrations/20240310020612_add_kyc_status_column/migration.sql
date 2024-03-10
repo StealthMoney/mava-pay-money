@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "KYCStatus" AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
+
+-- AlterTable
+ALTER TABLE "KYCInfo" ADD COLUMN     "status" "KYCStatus" NOT NULL DEFAULT 'PENDING';

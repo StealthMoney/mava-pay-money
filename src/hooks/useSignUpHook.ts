@@ -65,7 +65,7 @@ export const useSignUpHook = () => {
         }
 
         try {
-            const res = await fetch("/signup", {
+            const res = await fetch("/api/sign-up", {
                 method: "POST",
                 body: JSON.stringify(form)
             })

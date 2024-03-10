@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -6,8 +8,22 @@ import ArrowIcon from "../assets/svgs/arrow.svg"
 import PasswordInput from "../components/password-input"
 import { CustomButton } from "../components/custom-button/CustomButton"
 import PageSkeleton from "../components/page-skeleton/PageSkeleton"
+import { useResetPassword } from "../../hooks/useResetPassword"
+import { useSearchParams } from "next/navigation"
 
-const page = () => {
+const Page = () => {
+    const searchParams = useSearchParams()
+    const token = searchParams.get("token")
+    const { error, resetPasswordRequest, loading, message, success } =
+        useResetPassword()
+
+    const [password, setPassword] = React.useState("")
+    const [confirmPassword, setConfirmPassword] = React.useState("")
+
+    const handleSubmit = async () => {
+        await resetPasswordRequest({ password, confirmPassword, token })
+    }
+
     return (
         <PageSkeleton
             navbarRouteName={"Sign Up"}
@@ -23,25 +39,35 @@ const page = () => {
                         Enter and confirm your new password
                     </p>
                 </div>
+                {error && (
+                    <p className="text-red-500 text-center text-sm md:text-xl font-normal md:font-semibold font-rebond">
+                        {error}
+                    </p>
+                )}
+                {success && (
+                    <p className="text-green-500 text-center text-sm md:text-xl font-medium md:font-semibold font-rebond">
+                        {message}
+                    </p>
+                )}
                 <div className="flex flex-col gap-6 md:pb-16 w-full">
                     <PasswordInput
                         placeholder="New Password (min. of 8 characters)"
                         name={""}
-                        value={""}
-                        onChange={function (
+                        value={password}
+                        onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
-                        ): void {
-                            throw new Error("Function not implemented.")
+                        ) => {
+                            setPassword(event.target.value)
                         }}
                     />
                     <PasswordInput
                         placeholder="Confirm New Password"
                         name={""}
-                        value={""}
-                        onChange={function (
+                        value={confirmPassword}
+                        onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
-                        ): void {
-                            throw new Error("Function not implemented.")
+                        ) => {
+                            setConfirmPassword(event.target.value)
                         }}
                     />
                 </div>
@@ -57,9 +83,13 @@ const page = () => {
             <div className="w-full">
                 <CustomButton
                     label="Reset password"
-                    loading={false}
+                    loading={loading}
+                    disabled={loading}
                     type="primary"
                     rightIcon={<Image src={ArrowIcon} alt="info icon" />}
+                    buttonProps={{
+                        onClick: handleSubmit
+                    }}
                     className="w-full flex items-center justify-center  px-5 md:px-5 py-[20px] md:py-[22px] rounded-md"
                 />
                 <p className="hidden md:block text-secondary-black text-center pt-6 text-sm">
@@ -74,4 +104,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

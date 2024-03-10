@@ -1,16 +1,24 @@
 import { JWTPayload, jwtVerify, SignJWT } from "jose"
+import {
+    GetServerSidePropsContext,
+    NextApiRequest,
+    NextApiResponse
+} from "next"
+import { getServerSession } from "next-auth"
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/options"
+import { TOKEN_EXPIRY } from "@/config/default"
 import {
     API_DOMAIN,
     EMAIL_VERIFY_TEMPLATE_ID,
     JWT_SECRET_KEY
 } from "@/config/process"
-import { TOKEN_EXPIRY } from "@/config/default"
-import { generateEmailToken } from "./mail"
-import { VerificationRepository } from "@/services/prisma/repository"
 import { sendMail } from "@/services/mail/sendgrid"
+import { VerificationRepository } from "@/services/prisma/repository"
 import { Prisma, PrismaClient } from "@prisma/client"
 import { DefaultArgs } from "@prisma/client/runtime/library"
+
+import { generateEmailToken } from "./mail"
 
 interface TokenPayload {
     data: Record<string, unknown>
@@ -119,4 +127,13 @@ export async function sendVerificationToken({
             error instanceof Error ? error.message : "Token verification failed"
         )
     }
+}
+
+export function auth(
+    ...args:
+        | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+        | [NextApiRequest, NextApiResponse]
+        | []
+) {
+    return getServerSession(...args, authOptions)
 }

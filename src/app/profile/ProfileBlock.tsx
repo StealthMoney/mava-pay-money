@@ -4,7 +4,7 @@ import DarkCopyIcon from "../assets/svgs/dark-copy-icon.svg"
 
 export interface ProfileBlockProps {
     title?: string
-    value?: string
+    value?: string | boolean
     placeHolder?: string
     onCopyClick?: (value: string) => void
 }
