@@ -1,5 +1,4 @@
 import { config } from "dotenv"
-import { ConfigError } from "./errors"
 
 config()
 
@@ -61,22 +60,3 @@ export const MAVAPAY_SUPPORT_EMAIL =
     process.env.NEXT_PUBLIC_MAVAPAY_SUPPORT_EMAIL ??
     process.env.MAVAPAY_SUPPORT_EMAIL ??
     ""
-
-if (!MAVAPAY_URL) {
-    throw new ConfigError("MAVAPAY_URL not found")
-}
-if (!MAVAPAY_API_KEY) {
-    throw new ConfigError("MAVAPAY_API_KEY not found")
-}
-if (!MAVAPAY_MONEY_DOMAIN) {
-    throw new ConfigError("MAVAPAY_MONEY_DOMAIN not found")
-}
-if (!API_DOMAIN) {
-    throw new ConfigError("API_DOMAIN not found")
-}
-if (!PRIVATE_KEY) {
-    throw new ConfigError("PRIVATE_KEY not found")
-}
-if (!PUBLIC_KEY) {
-    throw new ConfigError("PUBLIC_KEY not found")
-}
