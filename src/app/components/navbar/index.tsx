@@ -37,7 +37,7 @@ export const Navbar = () => {
                     </section>
 
                     <section className=" hidden md:flex items-center gap-5">
-                        <CustomButton
+                        {/* <CustomButton
                             label="Sign In"
                             type="secondary"
                             buttonProps={{ style: { padding: "16px 32px" } }}
@@ -46,6 +46,23 @@ export const Navbar = () => {
                             label="Sign Up"
                             type="primary"
                             buttonProps={{ style: { padding: "16px 32px" } }}
+                        /> */}
+                        <CustomButton
+                            label="Join Waitlist"
+                            type="primary"
+                            className="py-5 px-8 flex items-center justify-center"
+                            buttonProps={{
+                                // TODO: remove after launch
+                                onClick: () => {
+                                    const el =
+                                        document.getElementById("waitlist")
+                                    if (el) {
+                                        el.scrollIntoView({
+                                            behavior: "smooth"
+                                        })
+                                    }
+                                }
+                            }}
                         />
                     </section>
 
@@ -79,7 +96,7 @@ export const Navbar = () => {
                         </Link>
 
                         <section className=" pt-[100px] p-5 flex flex-col gap-6">
-                            <CustomButton
+                            {/* <CustomButton
                                 label="Sign Up"
                                 type="primary"
                                 className="py-5 px-8 flex items-center justify-center"
@@ -88,6 +105,24 @@ export const Navbar = () => {
                                 label="Sign In"
                                 type="secondary"
                                 className="py-5 px-8 flex items-center justify-center"
+                            /> */}
+                            <CustomButton
+                                label="Join Waitlist"
+                                type="primary"
+                                className="py-5 px-8 flex items-center justify-center"
+                                buttonProps={{
+                                    // TODO: remove after launch
+                                    onClick: () => {
+                                        setOpenMenu(!openMenu)
+                                        const el =
+                                            document.getElementById("waitlist")
+                                        if (el) {
+                                            el.scrollIntoView({
+                                                behavior: "smooth"
+                                            })
+                                        }
+                                    }
+                                }}
                             />
                         </section>
                     </section>
