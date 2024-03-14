@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export const useResetPassword = () => {
@@ -7,7 +6,6 @@ export const useResetPassword = () => {
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
-    const router = useRouter()
 
     const resetPasswordRequest = async ({
         token,
@@ -45,9 +43,6 @@ export const useResetPassword = () => {
             setResetPassword(true)
             setMessage(data.message)
             setSuccess(true)
-            // setTimeout(() => {
-            //     router.push("/sign-in")
-            // }, 3000)
         } catch (error: any) {
             setError(
                 `${error instanceof Error ? error.message : "Password reset failed. Please try again."}`

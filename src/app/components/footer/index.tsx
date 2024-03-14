@@ -37,7 +37,15 @@ export const Footer = () => {
 
                 <section className="w-full">
                     <div className="w-full h-[1px] bg-tertiary-gray"></div>
-                    <div className="flex gap-3 items-center justify-center w-full pt-[28px] pb-[50px] font-rebond font-light">
+                    <div className="flex flex-col md:flex-row items-center justify-center w-full pt-8 md:pt-12">
+                        <p className="text-tertiary-gray text-center text-sm md:text-base md:max-w-4xl md:leading-7 font-light">
+                            Mavapay Money is not a foreign remittance or money
+                            exchange platform. Mavapay Money is in partnership
+                            with third party licensed companies that facilitate
+                            and provide other services on its behalf.
+                        </p>
+                    </div>
+                    <div className="flex gap-3 items-center justify-center w-full pt-[28px] pb-[50px] font-rebond font-light text-tertiary-gray">
                         <section className="flex gap-1 items-center">
                             <Image src={CopyrightIcon} alt="copy right icon" />
                             <p>Mavapay.money</p>

@@ -1,13 +1,16 @@
 "use client"
 
-import React from "react"
 import Link from "next/link"
-import Wrapper from "../wrapper"
+import React from "react"
+
 import {
     Cross1Icon,
     ExternalLinkIcon,
     HamburgerMenuIcon
 } from "@radix-ui/react-icons"
+
+import { CustomButton } from "../custom-button/CustomButton"
+import Wrapper from "../wrapper"
 
 export const Navbar = () => {
     const [openMenu, setOpenMenu] = React.useState(false)
@@ -27,12 +30,6 @@ export const Navbar = () => {
                         <Link href="/#contact-us" className="tracking-[0.32px]">
                             Contact Us
                         </Link>
-                        {/* <Link
-                            href="https://github.com/StealthMoney/mava-pay-money"
-                            className="tracking-[0.32px]"
-                        >
-                            GitHub
-                        </Link> */}
                     </section>
 
                     <section className=" hidden md:flex items-center gap-5">
@@ -85,16 +82,8 @@ export const Navbar = () => {
                         >
                             Contact Us
                         </Link>
-                        <Link
-                            href="https://github.com/StealthMoney/mava-pay-money"
-                            className="tracking-[0.32px] text-white text-xl py-8 px-5 border-b border-input-border border-t-0 flex items-center justify-between"
-                            target="_blank"
-                        >
-                            GitHub
-                            <ExternalLinkIcon height="24px" width="24px" />
-                        </Link>
 
-                        <section className=" pt-[100px] p-5 flex flex-col gap-6">
+                        <section className=" pt-[50px] p-5 flex flex-col gap-6">
                             {/* <CustomButton
                                 label="Sign Up"
                                 type="primary"

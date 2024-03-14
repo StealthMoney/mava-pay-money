@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         .setIssuedAt()
         .setExpirationTime("15m")
         .sign(JWT_SECRET_KEY)
-    const resetUrl = `${API_DOMAIN}/reset-password?token=${token}`
+    const resetUrl = `${process.env.VERCEL_URL ?? API_DOMAIN}/reset-password?token=${token}`
 
     try {
         await sendMail({

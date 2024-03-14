@@ -15,14 +15,20 @@ export async function POST(req: Request) {
     }
     const payload = await verifyToken(token)
     if (!payload) {
-        return new Response(JSON.stringify({ error: "invalid token" }), {
-            status: 400
-        })
+        return new Response(
+            JSON.stringify({ error: "Invalid token. This link has expired." }),
+            {
+                status: 400
+            }
+        )
     }
     if (payload.type !== "password-reset") {
-        return new Response(JSON.stringify({ error: "invalid token" }), {
-            status: 400
-        })
+        return new Response(
+            JSON.stringify({ error: "Invalid token. This link has expired" }),
+            {
+                status: 400
+            }
+        )
     }
 
     const user = await UserRepository(prisma).getUserByEmail(

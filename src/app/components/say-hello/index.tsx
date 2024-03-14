@@ -187,11 +187,11 @@ export const SocialLinks = [
         link: "https://twitter.com/Mavapay_Money",
         imgSrc: TwitterIcon,
         alt: "twitter icon"
-    },
-    // { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
-    {
-        link: "https://github.com/StealthMoney/mava-pay-money",
-        imgSrc: GithubIcon,
-        alt: "github icon"
     }
+    // { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
+    // {
+    //     link: "https://github.com/StealthMoney/mava-pay-money",
+    //     imgSrc: GithubIcon,
+    //     alt: "github icon"
+    // }
 ]

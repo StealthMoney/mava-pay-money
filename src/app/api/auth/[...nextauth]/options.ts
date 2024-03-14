@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { NextAuthOptions, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import { JWTPayload, decodeJwt } from "jose"
+import { API_DOMAIN } from "@/config/process"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -18,14 +19,17 @@ export const authOptions: NextAuthOptions = {
                 }
             },
             async authorize(credentials, req) {
-                const res = await fetch("http://localhost:3000/api/sign-in", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        email: credentials?.email,
-                        password: credentials?.password
-                    }),
-                    headers: { "Content-Type": "application/json" }
-                })
+                const res = await fetch(
+                    `${process.env.VERCEL_URL ?? API_DOMAIN}/api/sign-in`,
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            email: credentials?.email,
+                            password: credentials?.password
+                        }),
+                        headers: { "Content-Type": "application/json" }
+                    }
+                )
 
                 const user = await res.json()
                 if (res.ok && user) {

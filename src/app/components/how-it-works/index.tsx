@@ -13,7 +13,7 @@ export const HowItWorks = () => {
                         How it works?{" "}
                     </h1>
                     <p className="text-secondary-black max-w-[1031px] pt-2 text-center text-base md:text-xl leading-[28px] md:leading-[150%] font-inter-v">
-                        Get started with Mava Money in three (3) easy steps:
+                        Get started with Mavapay Money in three (3) easy steps:
                     </p>
                     <section className="flex md:flex-row flex-col items-center justify-center md:items-start md:justify-between gap-20 md:gap-6 pt-20 relative w-full">
                         <div className=" hidden md:flex w-full absolute top-[104px] items-center justify-evenly">

@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -9,9 +9,10 @@ import PasswordInput from "../components/password-input"
 import { CustomButton } from "../components/custom-button/CustomButton"
 import PageSkeleton from "../components/page-skeleton/PageSkeleton"
 import { useResetPassword } from "../../hooks/useResetPassword"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 const Page = () => {
+    const router = useRouter()
     const searchParams = useSearchParams()
     const token = searchParams.get("token")
     const { error, resetPasswordRequest, loading, message, success } =
@@ -23,6 +24,19 @@ const Page = () => {
     const handleSubmit = async () => {
         await resetPasswordRequest({ password, confirmPassword, token })
     }
+
+    useEffect(() => {
+        if (!token) {
+            router.push("/sign-in")
+        }
+        if (success) {
+            setPassword("")
+            setConfirmPassword("")
+            setTimeout(() => {
+                router.push("/sign-in")
+            }, 2000)
+        }
+    }, [token, success, router])
 
     return (
         <PageSkeleton

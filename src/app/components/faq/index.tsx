@@ -56,6 +56,6 @@ export const FaqCopy = [
     {
         index: "04",
         title: "Why do you need my BVN?",
-        body: "We need your BVN to verify your identity and to ensure that the bank account you are linking to your lightning address is yours. We do not store your BVN. We use it to verify your identity and then discard it. We take your privacy and security very seriously."
+        body: "We need your BVN to verify your identity and to ensure that the bank account you are linking to your lightning address is yours. We take your privacy and security very seriously."
     }
 ]
