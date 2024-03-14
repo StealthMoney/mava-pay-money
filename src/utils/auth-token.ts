@@ -8,17 +8,14 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/options"
 import { TOKEN_EXPIRY } from "@/config/default"
-import {
-    API_DOMAIN,
-    EMAIL_VERIFY_TEMPLATE_ID,
-    JWT_SECRET_KEY
-} from "@/config/process"
+import { EMAIL_VERIFY_TEMPLATE_ID, JWT_SECRET_KEY } from "@/config/process"
 import { sendMail } from "@/services/mail/sendgrid"
 import { VerificationRepository } from "@/services/prisma/repository"
 import { Prisma, PrismaClient } from "@prisma/client"
 import { DefaultArgs } from "@prisma/client/runtime/library"
 
 import { generateEmailToken } from "./mail"
+import { getBaseUrl } from "."
 
 interface TokenPayload {
     data: Record<string, unknown>
@@ -108,7 +105,8 @@ export async function sendVerificationToken({
             throw new Error(verification.message)
         }
 
-        const verificationUrl = `${API_DOMAIN}/account/verify?key=${token}&email=${JSON.stringify(email)}`
+        const baseUrl = getBaseUrl()
+        const verificationUrl = `${baseUrl}/account/verify?key=${token}&email=${JSON.stringify(email)}`
 
         const mail = await sendMail({
             from: "noreply@mavapay.co",

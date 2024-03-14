@@ -1,6 +1,7 @@
-import { API_DOMAIN, EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process"
+import { EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process"
 import { prisma } from "@/lib/prisma"
 import { sendMail } from "@/services/mail/sendgrid"
+import { getBaseUrl } from "@/utils"
 import { createToken } from "@/utils/auth-token"
 import { comparePassword } from "@/utils/password"
 
@@ -36,9 +37,10 @@ export async function POST(req: Request) {
                 }
             })
             if (verification) {
-                const verificationUrl = `${API_DOMAIN}/account/verify?key=${verification.token}`
+                const baseUrl = getBaseUrl()
+                const verificationUrl = `${baseUrl}/account/verify?key=${verification.token}`
                 const mail = await sendMail({
-                    from: "donotreply@mavapay.co",
+                    from: "noreply@mavapay.co",
                     to: email,
                     templateId: EMAIL_VERIFY_TEMPLATE_ID,
                     dynamicTemplateData: {

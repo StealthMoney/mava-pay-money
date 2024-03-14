@@ -1,13 +1,10 @@
 import { SignJWT } from "jose"
 
-import {
-    API_DOMAIN,
-    JWT_SECRET_KEY,
-    PASSWORD_RESET_TEMPLATE_ID
-} from "@/config/process"
+import { JWT_SECRET_KEY, PASSWORD_RESET_TEMPLATE_ID } from "@/config/process"
 import { prisma } from "@/lib/prisma"
 import { sendMail } from "@/services/mail/sendgrid"
 import { UserRepository } from "@/services/prisma/repository"
+import { getBaseUrl } from "@/utils"
 
 export async function POST(req: Request) {
     const { email } = (await req.json()) as { email: string }
@@ -27,7 +24,8 @@ export async function POST(req: Request) {
         .setIssuedAt()
         .setExpirationTime("15m")
         .sign(JWT_SECRET_KEY)
-    const resetUrl = `${process.env.VERCEL_URL ?? API_DOMAIN}/reset-password?token=${token}`
+    const baseUrl = getBaseUrl()
+    const resetUrl = `${baseUrl}/reset-password?token=${token}`
 
     try {
         await sendMail({
