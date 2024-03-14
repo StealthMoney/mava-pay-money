@@ -74,10 +74,12 @@ export async function createRefreshToken({
 export async function sendVerificationToken({
     email,
     userId,
-    prisma
+    prisma,
+    name
 }: {
     email: string
     userId: number
+    name: string
     prisma: Omit<
         PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
         | "$connect"
@@ -109,11 +111,12 @@ export async function sendVerificationToken({
         const verificationUrl = `${API_DOMAIN}/account/verify?key=${token}&email=${JSON.stringify(email)}`
 
         const mail = await sendMail({
-            from: "donotreply@mavapay.co",
+            from: "noreply@mavapay.co",
             to: email,
             templateId: EMAIL_VERIFY_TEMPLATE_ID,
             dynamicTemplateData: {
-                url: verificationUrl
+                url: verificationUrl,
+                name: name
             }
         })
 

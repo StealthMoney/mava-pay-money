@@ -98,7 +98,8 @@ export async function POST(req: Request) {
             const result = await sendVerificationToken({
                 email,
                 userId: user.id,
-                prisma: prisma
+                prisma: prisma,
+                name: firstName.charAt(0).toUpperCase() + firstName.slice(1)
             })
 
             if (result instanceof Error) {

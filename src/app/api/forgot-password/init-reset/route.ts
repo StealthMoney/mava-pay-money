@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     try {
         await sendMail({
-            from: "donotreply@mavapay.co",
+            from: "noreply@mavapay.co",
             to: email,
             templateId: PASSWORD_RESET_TEMPLATE_ID,
             dynamicTemplateData: {
