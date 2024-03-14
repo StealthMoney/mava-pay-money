@@ -79,7 +79,7 @@ export async function sendVerificationToken({
 }: {
     email: string
     userId: number
-    name: string
+    name?: string
     prisma: Omit<
         PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
         | "$connect"

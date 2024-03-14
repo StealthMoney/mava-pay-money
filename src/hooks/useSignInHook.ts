@@ -43,8 +43,8 @@ export const useSignInHook = () => {
 
         try {
             const res = await signIn("credentials", {
-                email: form.email,
-                password: form.password,
+                email: form.email.trim(),
+                password: form.password.trim(),
                 redirect: false,
                 callbackUrl
             })
