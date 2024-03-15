@@ -3,8 +3,6 @@ import { NextAuthOptions, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-import { getBaseUrl } from "@/utils"
-
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -20,7 +18,10 @@ export const authOptions: NextAuthOptions = {
                 }
             },
             async authorize(credentials, req) {
-                const baseUrl = getBaseUrl()
+                const baseUrl =
+                    process.env.NODE_ENV === "development"
+                        ? `http://${req?.headers?.host}`
+                        : `https://${req?.headers?.host}`
                 console.log({ baseUrl })
                 const res = await fetch(`${baseUrl}/api/sign-in`, {
                     method: "POST",
@@ -31,11 +32,11 @@ export const authOptions: NextAuthOptions = {
                     headers: { "Content-Type": "application/json" }
                 })
 
+                console.log({ res })
                 const user = await res.json()
                 if (res.ok && user) {
                     return user
                 } else {
-                    console.log({ user })
                     return null
                 }
             }
