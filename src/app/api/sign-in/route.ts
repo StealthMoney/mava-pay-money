@@ -21,6 +21,13 @@ export async function POST(req: Request) {
         const user = await prisma.user.findUnique({
             where: {
                 email
+            },
+            include: {
+                kycInfo: {
+                    select: {
+                        status: true
+                    }
+                }
             }
         })
 
@@ -33,7 +40,7 @@ export async function POST(req: Request) {
         if (!user.verified) {
             const verification = await prisma.verification.findUnique({
                 where: {
-                    userId: user.id
+                    userEmail: user.email
                 }
             })
             if (verification) {
@@ -70,7 +77,9 @@ export async function POST(req: Request) {
             )
         }
 
-        const token = await createToken({ data: { email, id: user.id } })
+        const token = await createToken({
+            data: { email, kyc_status: user.kycInfo?.status, id: user.id }
+        })
 
         return new Response(JSON.stringify({ token }), {
             status: 200

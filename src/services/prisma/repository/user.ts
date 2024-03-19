@@ -114,8 +114,8 @@ export const UserRepository = (prisma: Prisma) => {
         try {
             const user = await prisma.user.findFirst({
                 where: {
-                    account: {
-                        lnAddress: lnAddress
+                    lnAddress: {
+                        address: lnAddress
                     }
                 },
                 select: {
@@ -123,7 +123,8 @@ export const UserRepository = (prisma: Prisma) => {
                     name: true,
                     email: true,
                     verified: true,
-                    account: true
+                    account: true,
+                    lnAddress: true
                 }
             })
             if (!user) {

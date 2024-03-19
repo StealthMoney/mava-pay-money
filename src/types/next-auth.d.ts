@@ -9,6 +9,7 @@ declare module "next-auth" {
         user: {
             role: string
             id: string
+            kycStatus: string
         } & DefaultSession["user"]
     }
 

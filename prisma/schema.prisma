@@ -52,6 +52,7 @@ model User {
   password     String
   kycInfo      KYCInfo?
   account      Account?
+  lnAddress    LnAddress?
   verification Verification?
   verified     Boolean       @default(false)
   createdAt    DateTime      @default(now())
@@ -60,21 +61,32 @@ model User {
 
 model Account {
   id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [userId], references: [id])
-  userId        Int      @unique
+  user          User     @relation(fields: [userEmail], references: [email])
+  userId        Int
+  userEmail     String   @unique @default("")
   bankCode      String
-  accountNumber String   @unique
+  accountNumber String
   accountName   String
-  lnAddress     String?  @unique
+  lnAddress     String?
   order         Order[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
 }
 
+model LnAddress {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userEmail], references: [email])
+  userEmail String   @unique @default("")
+  address   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
 model KYCInfo {
   id        Int       @id @default(autoincrement())
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int       @unique
+  user      User      @relation(fields: [userEmail], references: [email])
+  userId    Int
+  userEmail String    @unique @default("")
   bvn       String
   status    KYCStatus @default(PENDING)
   createdAt DateTime  @default(now())
@@ -126,8 +138,9 @@ model Partner {
 
 model Verification {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
+  user      User     @relation(fields: [userEmail], references: [email])
+  userId    Int
+  userEmail String   @unique @default("")
   token     String   @unique
   createdAt DateTime @default(now())
   expiresAt DateTime @default(now())

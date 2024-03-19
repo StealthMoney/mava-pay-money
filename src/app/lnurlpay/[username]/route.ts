@@ -113,7 +113,9 @@ export async function GET(request: NextRequest, context: { params: any }) {
         })
     }
 
-    const account = await AccountRepository(prisma).getAccountByUserId(user.id)
+    const account = await AccountRepository(prisma).getAccountByUserEmail(
+        user.email
+    )
 
     if (account instanceof Error) {
         return new Response(stringifyError(account), {

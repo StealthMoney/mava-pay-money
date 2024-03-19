@@ -21,7 +21,7 @@ const useProfile = () => {
                 const { data } = response
                 const formattedProfile = {
                     ...data,
-                    lnAddress: data.lnAddress || undefined,
+                    lnAddress: data.user.lnAddress?.address || "",
                     user: {
                         ...data.user,
                         email: data.user.email,

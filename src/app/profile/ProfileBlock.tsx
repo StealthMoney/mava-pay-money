@@ -1,19 +1,22 @@
 import React from "react"
 import Image from "next/image"
 import DarkCopyIcon from "../assets/svgs/dark-copy-icon.svg"
+import PencilIcon from "../assets/svgs/pencil-icon.svg"
 
 export interface ProfileBlockProps {
     title?: string
     value?: string | boolean
     placeHolder?: string
-    onCopyClick?: (value: string) => void
+    onCopyClick?: () => void
+    onEditClick?: () => void
 }
 
 export const ProfileBlock = ({
     title,
     value,
     placeHolder,
-    onCopyClick
+    onCopyClick,
+    onEditClick
 }: ProfileBlockProps) => {
     return (
         <section className="py-2 md:py-4 p-4 h-14 md:h-[60px] flex items-center justify-between border-[0.82px] border-card-border rounded-md bg-secondary-gray w-full">
@@ -33,8 +36,14 @@ export const ProfileBlock = ({
             </section>
 
             {onCopyClick ? (
-                <button>
+                <button onClick={onCopyClick ? () => onCopyClick() : undefined}>
                     <Image src={DarkCopyIcon} alt="copy" />
+                </button>
+            ) : null}
+
+            {onEditClick ? (
+                <button onClick={onEditClick ? () => onEditClick() : undefined}>
+                    <Image src={PencilIcon} alt="edit" />
                 </button>
             ) : null}
         </section>

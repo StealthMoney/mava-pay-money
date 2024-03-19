@@ -2,6 +2,7 @@ import { IUserSignIn } from "@/types/user"
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { signIn } from "next-auth/react"
+import { getBaseUrl } from "@/utils"
 
 export const useSignInHook = () => {
     const router = useRouter()
@@ -46,7 +47,10 @@ export const useSignInHook = () => {
                 email: form.email.trim(),
                 password: form.password.trim(),
                 redirect: false,
-                callbackUrl
+                callbackUrl:
+                    callbackUrl === `${getBaseUrl()}/get-address`
+                        ? "/profile"
+                        : callbackUrl
             })
 
             if (res && !res.ok) {
@@ -57,7 +61,9 @@ export const useSignInHook = () => {
                     setLoading(false)
                     return
                 } else if (res.status === 403) {
-                    setError("Please check your mail to verify your account ")
+                    setError(
+                        "Account not verified! Please check your email to verify your account "
+                    )
                     setLoading(false)
                     return
                 } else if (res.status === 401) {
@@ -73,7 +79,12 @@ export const useSignInHook = () => {
                 }
             }
 
-            router.push(res?.url ?? callbackUrl)
+            const route =
+                res?.url === `${getBaseUrl()}/get-address`
+                    ? "/profile"
+                    : res?.url
+
+            router.push(route!)
             setLoading(false)
         } catch (error) {
             setLoading(false)

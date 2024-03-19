@@ -1,11 +1,9 @@
 "use server"
 
-import { UnauthorizedError } from "@/server/error"
 import { AccountRepository } from "@/services/prisma/repository"
 import { auth } from "@/utils/auth-token"
 import { decodeJwt } from "jose"
 import { prisma } from "@/lib/prisma"
-import { RepositoryError } from "@/domain/error"
 
 export const getProfile = async () => {
     const session = await auth()
@@ -23,11 +21,11 @@ export const getProfile = async () => {
         }
     }
     const decodedToken = decodeJwt(token)
-    const userId = (decodedToken.id as string) ?? (session.user.id as string)
+    const userEmail =
+        (decodedToken.email as string) ?? (session.user.email as string)
 
-    const profile = await AccountRepository(prisma).getAccountByUserId(
-        Number(userId)
-    )
+    const profile =
+        await AccountRepository(prisma).getAccountByUserEmail(userEmail)
     if (profile instanceof Error) {
         return {
             error: "unable to fetch profile data",

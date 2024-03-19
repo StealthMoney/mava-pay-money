@@ -173,7 +173,6 @@ const Page = () => {
                         </div>
                     </section>
                 </div>
-                {/* <MailCheck /> */}
             </Wrapper>
         </main>
     )

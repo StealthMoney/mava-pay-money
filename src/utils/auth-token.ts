@@ -10,9 +10,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options"
 import { TOKEN_EXPIRY } from "@/config/default"
 import { EMAIL_VERIFY_TEMPLATE_ID, JWT_SECRET_KEY } from "@/config/process"
 import { sendMail } from "@/services/mail/sendgrid"
-import { VerificationRepository } from "@/services/prisma/repository"
-import { Prisma, PrismaClient } from "@prisma/client"
-import { DefaultArgs } from "@prisma/client/runtime/library"
+import { prisma } from "@/lib/prisma"
 
 import { generateEmailToken } from "./mail"
 import { getBaseUrl } from "."
@@ -71,43 +69,67 @@ export async function createRefreshToken({
 export async function sendVerificationToken({
     email,
     userId,
-    prisma,
     name
 }: {
     email: string
     userId: number
     name?: string
-    prisma: Omit<
-        PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
-        | "$connect"
-        | "$disconnect"
-        | "$on"
-        | "$transaction"
-        | "$use"
-        | "$extends"
-    >
 }) {
+    const baseUrl = getBaseUrl()
+    let token = generateEmailToken()
+    // expiry time for verification is 24 hours
+    const expiresAt = new Date().getTime() + 1000 * 60 * 60 * 24
     try {
-        const token = generateEmailToken()
-
-        // expiry time for verification is 24 hours
-        const expiresAt = new Date().getTime() + 1000 * 60 * 60 * 24
-        const verification = await VerificationRepository(prisma).create({
-            user: {
-                connect: { id: userId }
-            },
-            token,
-            expiresAt: new Date(expiresAt),
-            userId: userId
+        const verificationTokenExists = await prisma.verification.findFirst({
+            where: {
+                user: {
+                    email: email
+                }
+            }
         })
+        if (verificationTokenExists) {
+            const update = await prisma.verification.update({
+                where: {
+                    id: verificationTokenExists.id
+                },
+                data: {
+                    token,
+                    expiresAt: new Date(expiresAt)
+                }
+            })
+            const verificationUrl = `${baseUrl}/account/verify?key=${update.token}&email=${JSON.stringify(email)}`
+            const mail = await sendMail({
+                from: "noreply@mavapay.co",
+                to: email,
+                templateId: EMAIL_VERIFY_TEMPLATE_ID,
+                dynamicTemplateData: {
+                    url: verificationUrl,
+                    name: name
+                }
+            })
 
-        if (verification instanceof Error) {
-            throw new Error(verification.message)
+            if (mail instanceof Error) {
+                return mail.message
+            }
+            return update
         }
 
-        const baseUrl = getBaseUrl()
+        const verification = await prisma.verification.create({
+            data: {
+                token,
+                userId,
+                expiresAt: new Date(expiresAt),
+                user: {
+                    connect: {
+                        email: email
+                    }
+                }
+            }
+        })
+        if (!verification) {
+            throw new Error("Could not create verification token")
+        }
         const verificationUrl = `${baseUrl}/account/verify?key=${token}&email=${JSON.stringify(email)}`
-
         const mail = await sendMail({
             from: "noreply@mavapay.co",
             to: email,

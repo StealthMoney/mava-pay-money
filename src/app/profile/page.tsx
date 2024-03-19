@@ -1,11 +1,14 @@
 "use client"
 
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
+import { redirect, useRouter } from "next/navigation"
 import React from "react"
 
 import useProfile from "@/hooks/useProfileHook"
+import { useToast } from "@/hooks/useToast"
+import { KYCStatus } from "@prisma/client"
 
 import EditIcon from "../assets/svgs/edit-icon.svg"
 import KycIcon from "../assets/svgs/kyc-icon.svg"
@@ -16,11 +19,41 @@ import { RegistrationNavbar } from "../components/registration"
 import Wrapper from "../components/wrapper"
 import { ProfileBlock } from "./ProfileBlock"
 import { ProfileModal } from "./ProfileModal"
-import { KYCStatus } from "@prisma/client"
+import { ToastContainer } from "react-toastify"
 
 const Page = () => {
-    const [open, setOpen] = React.useState(false)
+    const router = useRouter()
+    const { data, status } = useSession()
     const { profile, loading, error } = useProfile()
+    const { showToast } = useToast()
+
+    const [open, setOpen] = React.useState(false)
+
+    if (status !== "authenticated") {
+        redirect("/sign-in")
+    }
+    const kycStatus = data.user.kycStatus as KYCStatus
+
+    const handleGetAddress = () => {
+        if (kycStatus === KYCStatus.APPROVED) {
+            if (!profile.lnAddress) {
+                router.push("/create-address")
+                return
+            }
+            router.push(
+                `/get-address?username=${profile.lnAddress.split("@")[0]}`
+            )
+            return
+        } else if (kycStatus === KYCStatus.PENDING) {
+            router.push("/kyc")
+        }
+    }
+
+    const handleCopyAddress = () => {
+        navigator.clipboard.writeText(profile.lnAddress || "").then(() => {
+            showToast("Address copied to clipboard", "success")
+        })
+    }
 
     return (
         <main className="min-h-screen h-full w-full bg-white flex flex-col items-center">
@@ -37,14 +70,14 @@ const Page = () => {
                 <div className="bg-white flex h-full justify-between w-full pb-[92px] md:pb-28">
                     <section className="w-full flex  flex-col items-center justify-center">
                         <div className="w-full flex flex-col items-center justify-center max-w-[1030px]">
-                            <div className="flex items-start flex-col gap-1 w-full pb-7">
+                            <div className="flex items-start flex-col gap-1 w-full pb-2 md:pb-7">
                                 <h2 className="text-black text-[28px] md:text-[32px] md:leading-[48px] font-bold font-rebond">
                                     My Profile
                                 </h2>
                             </div>
 
                             <div
-                                className={`flex items-center gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] border-secondary-red rounded-xl h-[140px] md:h-[200px] bg-tertiary-red ${profile?.user?.kycInfo?.status === KYCStatus.APPROVED ? "hidden" : "block"}`}
+                                className={`flex items-center gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] border-secondary-red rounded-xl h-[140px] md:h-[200px] bg-tertiary-red ${kycStatus === KYCStatus.APPROVED ? "hidden" : "block"}`}
                             >
                                 <Image
                                     src={KycIcon}
@@ -119,31 +152,29 @@ const Page = () => {
 
                                         <div>
                                             <CustomButton
-                                                label="Edit Profle"
+                                                label={
+                                                    kycStatus ===
+                                                    KYCStatus.APPROVED
+                                                        ? "LN Bank Address"
+                                                        : "Get LN Bank Address"
+                                                }
                                                 loading={false}
                                                 type="primary"
                                                 rightIcon={
-                                                    <Image
-                                                        src={EditIcon}
-                                                        alt="info icon"
-                                                    />
+                                                    kycStatus !==
+                                                        KYCStatus.APPROVED && (
+                                                        <Image
+                                                            src={EditIcon}
+                                                            alt="info icon"
+                                                        />
+                                                    )
                                                 }
-                                                className="w-[149px] h-12 items-center justify-center px-5 py-3 rounded-md md:flex hidden"
+                                                className={`w-[149px] h-12 items-center justify-center px-5 py-3 rounded-md md:flex hidden ${kycStatus === KYCStatus.REJECTED ? "hidden" : "block"}`}
                                                 buttonProps={{
-                                                    onClick: () =>
-                                                        setOpen(!open)
+                                                    title: `${kycStatus === KYCStatus.APPROVED ? "LN Bank Address" : "Get LN Bank Address"}`,
+                                                    onClick: handleGetAddress
                                                 }}
                                             />
-
-                                            <button
-                                                onClick={() => setOpen(!open)}
-                                            >
-                                                <Image
-                                                    src={PencilIcon}
-                                                    alt="pencil icon"
-                                                    className="block md:hidden"
-                                                />
-                                            </button>
                                         </div>
                                     </section>
                                 </div>
@@ -158,9 +189,6 @@ const Page = () => {
                                                 <h3 className=" font-bold text-secondary-black font-rebond">
                                                     Personal Information
                                                 </h3>
-                                                {/* <p className=" text-sm text-subtext-gray whitespace-nowrap">
-                                            Update your personal details here.
-                                        </p> */}
                                             </section>
 
                                             <section className=" w-full flex flex-col gap-6">
@@ -200,15 +228,23 @@ const Page = () => {
                                                 <ProfileBlock
                                                     placeHolder="Username"
                                                     value={profile?.lnAddress}
-                                                    onCopyClick={() => {}}
+                                                    onEditClick={
+                                                        !profile?.lnAddress
+                                                            ? handleGetAddress
+                                                            : undefined
+                                                    }
+                                                    onCopyClick={
+                                                        profile?.lnAddress
+                                                            ? handleCopyAddress
+                                                            : undefined
+                                                    }
                                                 />
                                                 <ProfileBlock placeHolder="Account Number" />
-                                                <ProfileBlock placeHolder="Bank Name" />
+                                                <ToastContainer />
                                             </section>
                                         </>
                                     )}
                                 </div>
-                                d
                             </div>
                         </div>
                     </section>

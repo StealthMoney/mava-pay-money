@@ -37,7 +37,7 @@ export const useSignUpHook = () => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
         const { name, value } = event.target
-        setForm((prev) => ({ ...prev, [name]: value }))
+        setForm((prev) => ({ ...prev, [name]: value.trim() }))
     }
 
     const handleConfirmPasswordChange = (
@@ -71,8 +71,23 @@ export const useSignUpHook = () => {
             })
 
             console.log({ res })
-            if (res instanceof Error) {
-                throw res
+            if (res.status !== 201 || !res.ok) {
+                switch (res.status) {
+                    case 409:
+                        setError(
+                            "An account with this email already exists, please sign in"
+                        )
+                        setLoading(false)
+                        return
+                    case 403:
+                        setError(
+                            "Account already exists for this email but not verified! Please check your email to verify your account."
+                        )
+                        setLoading(false)
+                        return
+                    default:
+                        throw res
+                }
             }
 
             if (res.status === 201 || res.ok) {
@@ -84,7 +99,7 @@ export const useSignUpHook = () => {
             setLoading(false)
             console.error(error)
             setError(
-                "An error occurred while creating user and account, please try again"
+                "An error occurred while creating user account, please try again!"
             )
         } finally {
             setLoading(false)

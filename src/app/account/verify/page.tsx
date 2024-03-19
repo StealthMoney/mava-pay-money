@@ -29,7 +29,7 @@ const verifyUser = async (key: string) => {
         }
         await prisma.user.update({
             where: {
-                id: verification.userId
+                email: verification.userEmail
             },
             data: {
                 verified: true
@@ -74,8 +74,7 @@ export default async function Page({
 
         const res = await sendVerificationToken({
             email,
-            userId: data.data?.userId!,
-            prisma
+            userId: data.data?.userId!
         })
 
         if (res instanceof Error) {

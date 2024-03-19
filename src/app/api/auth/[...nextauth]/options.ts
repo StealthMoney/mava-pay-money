@@ -46,10 +46,6 @@ export const authOptions: NextAuthOptions = {
         signIn: "/sign-in"
         // signOut: "/account/logout",
     },
-    session: {
-        // maxAge: 60 * 15 // 15 minutes
-        strategy: "jwt"
-    },
     callbacks: {
         async signIn({ user }) {
             if (user && user?.token) {
@@ -65,17 +61,15 @@ export const authOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }: { session: Session; token: JWT }) {
-            session.accessToken = undefined
+            // session.accessToken = undefined
             if (token.token) {
                 const decoded = decodeJwt(token.token as string) as JWTPayload
-                session.accessToken = token.token
-                session.expires = new Date(
-                    (decoded.exp ?? 0) * 1000
-                ).toISOString()
+                session.accessToken = token.token as string
                 session.user.id = decoded.id as string
                 token.email = decoded.email as string
                 session.user.email = decoded.email as string
                 session.user.role = decoded.type as string
+                session.user.kycStatus = decoded.kyc_status as string
             }
             return session
         }

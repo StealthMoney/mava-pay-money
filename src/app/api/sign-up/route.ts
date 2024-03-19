@@ -52,15 +52,40 @@ export async function POST(req: Request) {
         )
     }
 
-    const userExists = await UserRepository(prisma).getUserByEmail(email)
-    if (!(userExists instanceof Error)) {
-        return new Response(JSON.stringify({ error: "User already exists" }), {
-            status: 400
-        })
-    }
-
     try {
-        const result = prisma.$transaction(async (prisma) => {
+        const userExists = await UserRepository(prisma).getUserByEmail(email)
+        if (!(userExists instanceof Error)) {
+            if (!userExists.verified) {
+                const verificationResult = await sendVerificationToken({
+                    email,
+                    userId: userExists.id,
+                    name: firstName.charAt(0).toUpperCase() + firstName.slice(1)
+                })
+                if (verificationResult instanceof Error) {
+                    return new Response(
+                        JSON.stringify({ error: verificationResult.message }),
+                        {
+                            status: 500
+                        }
+                    )
+                }
+                return new Response(
+                    JSON.stringify({ error: "User not verified." }),
+                    {
+                        status: 403
+                    }
+                )
+            }
+
+            return new Response(
+                JSON.stringify({ error: "User already exists" }),
+                {
+                    status: 409
+                }
+            )
+        }
+
+        await prisma.$transaction(async (prisma) => {
             const hashedPassword = await createPassword(password)
             const user = await UserRepository(prisma).create({
                 email: email.trim().toLowerCase(),
@@ -75,10 +100,11 @@ export async function POST(req: Request) {
                 accountName: "",
                 accountNumber: "",
                 bankCode: "",
-                userId: user.id,
+                userEmail: email,
                 lnAddress: "",
+                userId: 0,
                 user: {
-                    connect: { id: user.id }
+                    connect: { email: email }
                 }
             })
             if (account instanceof Error) {
@@ -86,44 +112,61 @@ export async function POST(req: Request) {
             }
             const kyc = await KYCRepository(prisma).create({
                 bvn: "",
-                userId: user.id,
+                userEmail: email,
                 user: {
-                    connect: { id: user.id }
-                }
+                    connect: { email: email }
+                },
+                userId: 0
             })
             if (kyc instanceof Error) {
                 throw new Error(kyc.message)
             }
-
-            const result = await sendVerificationToken({
-                email,
-                userId: user.id,
-                prisma: prisma,
-                name: firstName.charAt(0).toUpperCase() + firstName.slice(1)
-            })
-
-            if (result instanceof Error) {
-                throw result
-            }
-
-            return result
         })
 
-        if (!(await result).token || result instanceof Error) {
-            throw new Error("An error occurred while creating user and account")
-        } else {
-            return new Response(JSON.stringify({ message: "user created!" }), {
-                status: 201,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
+        const user = await UserRepository(prisma).getUserByEmail(email)
+        if (user instanceof Error) {
+            throw new Error(user.message)
         }
+        const updatedAccount = await AccountRepository(prisma).updateAccount({
+            account: {
+                userId: user.id
+            },
+            userEmail: email
+        })
+        if (updatedAccount instanceof Error) {
+            throw new Error(updatedAccount.message)
+        }
+        const updatedKyc = await KYCRepository(prisma).updateKYC({
+            kyc: {
+                userId: user.id
+            },
+            userEmail: email
+        })
+        if (updatedKyc instanceof Error) {
+            throw new Error(updatedKyc.message)
+        }
+
+        const verificationResult = await sendVerificationToken({
+            email,
+            userId: user.id,
+            name: firstName.charAt(0).toUpperCase() + firstName.slice(1)
+        })
+        if (verificationResult instanceof Error) {
+            throw verificationResult
+        }
+
+        return new Response(JSON.stringify({ message: "user created!" }), {
+            status: 201,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
     } catch (error) {
         console.error(error)
+
         return new Response(
             JSON.stringify({
-                error: "An error occurred while creating user and account"
+                error: "An error occurred while creating user account"
             }),
             {
                 status: 500

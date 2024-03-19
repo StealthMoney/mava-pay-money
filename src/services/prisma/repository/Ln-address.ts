@@ -12,30 +12,30 @@ type Prisma = Omit<
     "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
 >
 
-export const KYCRepository = (prisma: Prisma) => {
+export const LnAddressRepository = (prisma: Prisma) => {
     const create = async (
-        kycData: Prisma.KYCInfoCreateInput & { userEmail: string }
+        lnAddressData: Prisma.LnAddressCreateInput & { userEmail: string }
     ) => {
         try {
-            const { userEmail, ...kyc } = kycData
-            const newKYC = await prisma.kYCInfo.create({
+            const { userEmail, ...lnAddress } = lnAddressData
+            const newLnAddress = await prisma.lnAddress.create({
                 data: {
-                    ...kyc,
+                    ...lnAddress,
                     user: {
                         connect: { email: userEmail }
                     }
                 }
             })
-            if (!newKYC) {
-                return new RepositoryError("Could not create KYC")
+            if (!newLnAddress) {
+                return new RepositoryError("Could not create lnAddress")
             }
 
-            return newKYC
+            return newLnAddress
         } catch (error) {
             const err = error as unknown as Error
             switch (err.name) {
                 case "PrismaClientKnownRequestError":
-                    return new RepositoryError("KYC Info already exists")
+                    return new RepositoryError("LnAddress already exists")
                 default:
                     break
             }
@@ -45,20 +45,20 @@ export const KYCRepository = (prisma: Prisma) => {
         }
     }
 
-    const updateKYC = async ({
-        kyc,
+    const updateLnAddress = async ({
+        lnAddress,
         userEmail
     }: {
-        kyc: Prisma.KYCInfoUpdateInput
+        lnAddress: Prisma.LnAddressUpdateInput
         userEmail: string
     }) => {
         try {
-            const updatedKYC = await prisma.kYCInfo.update({
+            const updatedLnAddress = await prisma.lnAddress.update({
                 where: { userEmail },
-                data: kyc
+                data: lnAddress
             })
-            if (!updatedKYC.id) {
-                return new RepositoryError("Could not update KYC")
+            if (!updatedLnAddress.id) {
+                return new RepositoryError("Could not update lnAddress")
             }
             return true
         } catch (error) {
@@ -68,34 +68,31 @@ export const KYCRepository = (prisma: Prisma) => {
         }
     }
 
-    const getKYCById = async (id: number) => {
+    const getLnAddressByUserEmail = async (userEmail: string) => {
         try {
-            const kyc = await prisma.kYCInfo.findUnique({
-                where: {
-                    id
-                }
+            const lnAddress = await prisma.lnAddress.findUnique({
+                where: { userEmail }
             })
-            if (!kyc) {
-                return new RepositoryError("KYC not found")
+            if (!lnAddress) {
+                return new RepositoryError("LnAddress not found")
             }
-            return kyc
+            return lnAddress
         } catch (error) {
             Logger.error(error)
             const errMsg = parseErrorMessageFromUnknown(error)
             return new UnknownRepositoryError(errMsg)
         }
     }
-    const getKYCByUserEmail = async (userEmail: string) => {
+
+    const getLnAddressByUsername = async (address: string) => {
         try {
-            const kyc = await prisma.kYCInfo.findUnique({
-                where: {
-                    userEmail
-                }
+            const lnAddress = await prisma.lnAddress.findFirst({
+                where: { address }
             })
-            if (!kyc) {
-                return new RepositoryError("KYC not found")
+            if (!lnAddress) {
+                return new RepositoryError("LnAddress not found")
             }
-            return kyc
+            return lnAddress
         } catch (error) {
             Logger.error(error)
             const errMsg = parseErrorMessageFromUnknown(error)
@@ -105,8 +102,8 @@ export const KYCRepository = (prisma: Prisma) => {
 
     return {
         create,
-        getKYCById,
-        getKYCByUserEmail,
-        updateKYC
+        updateLnAddress,
+        getLnAddressByUserEmail,
+        getLnAddressByUsername
     }
 }

@@ -31,7 +31,7 @@ export function SessionCheckComponent({
                     redirect: false
                 })
             }
-        }, 10000) // check every 10 seconds
+        }, 60000) // check every minute
 
         return () => clearInterval(intervalId)
     }, [session, status])

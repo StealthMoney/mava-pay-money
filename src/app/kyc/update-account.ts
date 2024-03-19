@@ -15,12 +15,12 @@ export const updateAccount = async (accountDetails: AccountDetails) => {
             message: "Unauthorized"
         }
     }
-    const userId = session.user?.id
+    const userEmail = session.user?.email
     try {
         const result = await prisma.$transaction(async (prisma) => {
             const accountToUpdate = await AccountRepository(
                 prisma
-            ).getAccountByUserId(Number(userId))
+            ).getAccountByUserEmail(userEmail!)
             if (accountToUpdate instanceof Error) {
                 throw new Error(accountToUpdate.message)
             }
@@ -32,7 +32,7 @@ export const updateAccount = async (accountDetails: AccountDetails) => {
                         bankCode: accountDetails.bankCode,
                         lnAddress: ""
                     },
-                    userId: Number(userId)
+                    userEmail: userEmail!
                 }
             )
             if (updateAccount instanceof Error) {
@@ -42,7 +42,7 @@ export const updateAccount = async (accountDetails: AccountDetails) => {
                 kyc: {
                     bvn: accountDetails.bvn
                 },
-                userId: Number(userId)
+                userEmail: userEmail!
             })
             if (updateKyc instanceof Error) {
                 throw new Error(updateKyc.message)

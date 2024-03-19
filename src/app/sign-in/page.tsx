@@ -34,7 +34,7 @@ const Page = () => {
                         Sign In
                     </h2>
                     <p className="font-inter-v text-secondary-black pt-1 tracking-[-0.5px]">
-                        Enter you email and password to sign into your account
+                        Enter your email and password to sign into your account
                     </p>
                     <p className=" text-red-500 text-sm w-full">{error}</p>
                 </div>
