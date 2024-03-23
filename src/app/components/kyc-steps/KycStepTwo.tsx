@@ -1,12 +1,20 @@
-import React from "react"
-import Link from "next/link"
+"use client"
+
 import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import React from "react"
+
+import { useIdentityVerify } from "@/hooks/useIdentityVerify"
 
 import ArrowIcon from "../../assets/svgs/arrow.svg"
 import SelfieIcon from "../../assets/svgs/selfie-icon.svg"
 import { CustomButton } from "../custom-button/CustomButton"
+import DialogBox from "../dialog/Dialog"
 
 export const KycStepTwo = () => {
+    const router = useRouter()
+    const { error, success, loading, verifyIdentity } = useIdentityVerify()
     return (
         <>
             <div className="flex items-start flex-col gap-1 w-full pb-8">
@@ -31,8 +39,12 @@ export const KycStepTwo = () => {
                     <CustomButton
                         label="Continue"
                         loading={false}
+                        disabled={loading}
                         type="primary"
                         rightIcon={<Image src={ArrowIcon} alt="info icon" />}
+                        buttonProps={{
+                            onClick: verifyIdentity
+                        }}
                         className="w-full flex items-center justify-center  px-5 md:px-5 py-[20px] md:py-[22px] rounded-md"
                     />
 
@@ -48,6 +60,19 @@ export const KycStepTwo = () => {
                     </p>
                 </div>
             </div>
+            <DialogBox
+                isOpen={success}
+                title="KYC Verification Pending"
+                description="We will notify you once your KYC is verified."
+                onDismiss={() => router.push("/profile")}
+                ctaOnClick={() => router.push("/profile")}
+                ctaText="Go back to profile"
+            >
+                <p className="text-black text-center mb-3">
+                    This can take between a few minutes to several hours. We
+                    will notify you when we&apos;re done verifying your details
+                </p>
+            </DialogBox>
         </>
     )
 }

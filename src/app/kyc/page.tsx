@@ -9,6 +9,7 @@ import { signOut } from "next-auth/react"
 import { getAccountName, getBankCode } from "@/services/mavapay/bank"
 import { ACCOUNT_NUMBER_LENGTH, BVN_LENGTH } from "@/config/default"
 import { updateAccount } from "./update-account"
+import { Gender } from "@prisma/client"
 
 export interface BankCode {
     nipBankCode: string
@@ -20,10 +21,15 @@ export interface AccountDetails {
     accountName?: string
     bankCode: string
     bvn: string
+    email?: string
+    gender: Gender
 }
 
 const Page = () => {
-    const [step, setStep] = useState({ first: true, second: false })
+    const [step, setStep] = useState({
+        first: true,
+        second: false
+    })
     const [loading, setLoading] = useState({
         bank: false,
         accountUpdate: false
@@ -40,7 +46,8 @@ const Page = () => {
         accountNumber: "",
         accountName: "",
         bankCode: "",
-        bvn: ""
+        bvn: "",
+        gender: "NULL"
     })
 
     const verifyAccount = useCallback(
@@ -91,6 +98,14 @@ const Page = () => {
     )
 
     const goToStepTwo = async () => {
+        if (!accountDetails.gender) {
+            setStepOneError({
+                error: true,
+                message: "Please select a gender",
+                type: "gender"
+            })
+            return
+        }
         if (!accountDetails.accountName || !accountDetails.bankCode) {
             setStepOneError({
                 error: true,
@@ -107,6 +122,7 @@ const Page = () => {
             })
             return
         }
+
         setLoading((prev) => ({
             ...prev,
             accountUpdate: true

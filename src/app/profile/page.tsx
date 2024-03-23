@@ -4,7 +4,8 @@ import { signOut, useSession } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
 import { redirect, useRouter } from "next/navigation"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { ToastContainer } from "react-toastify"
 
 import useProfile from "@/hooks/useProfileHook"
 import { useToast } from "@/hooks/useToast"
@@ -12,14 +13,12 @@ import { KYCStatus } from "@prisma/client"
 
 import EditIcon from "../assets/svgs/edit-icon.svg"
 import KycIcon from "../assets/svgs/kyc-icon.svg"
-import PencilIcon from "../assets/svgs/pencil-icon.svg"
 import CaretRight from "../assets/svgs/right-caret-icon.svg"
 import { CustomButton } from "../components/custom-button/CustomButton"
+import DialogBox from "../components/dialog/Dialog"
 import { RegistrationNavbar } from "../components/registration"
 import Wrapper from "../components/wrapper"
 import { ProfileBlock } from "./ProfileBlock"
-import { ProfileModal } from "./ProfileModal"
-import { ToastContainer } from "react-toastify"
 
 const Page = () => {
     const router = useRouter()
@@ -27,7 +26,7 @@ const Page = () => {
     const { profile, loading, error } = useProfile()
     const { showToast } = useToast()
 
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = useState(false)
 
     if (status !== "authenticated") {
         redirect("/sign-in")
@@ -44,7 +43,7 @@ const Page = () => {
                 `/get-address?username=${profile.lnAddress.split("@")[0]}`
             )
             return
-        } else if (kycStatus === KYCStatus.PENDING) {
+        } else if (kycStatus === KYCStatus.NOT_SUBMITTED) {
             router.push("/kyc")
         }
     }
@@ -54,6 +53,14 @@ const Page = () => {
             showToast("Address copied to clipboard", "success")
         })
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (kycStatus === KYCStatus.APPROVED && !profile.lnAddress) {
+                setOpen(true)
+            }
+        }, 5000)
+    }, [profile.lnAddress, kycStatus])
 
     return (
         <main className="min-h-screen h-full w-full bg-white flex flex-col items-center">
@@ -77,7 +84,7 @@ const Page = () => {
                             </div>
 
                             <div
-                                className={`flex items-center gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] border-secondary-red rounded-xl h-[140px] md:h-[200px] bg-tertiary-red ${kycStatus === KYCStatus.APPROVED ? "hidden" : "block"}`}
+                                className={`flex items-center w-full gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] ${kycStatus === KYCStatus.PENDING ? "border-orange-400 bg-orange-50" : "border-secondary-red bg-tertiary-red"} rounded-xl h-[140px] md:h-[200px] ${kycStatus === KYCStatus.APPROVED ? "hidden" : "block"}`}
                             >
                                 <Image
                                     src={KycIcon}
@@ -87,20 +94,32 @@ const Page = () => {
                                 <section className="flex flex-col gap-3">
                                     <div className="flex flex-col">
                                         <h3 className=" text-secondary-black text-base md:text-2xl font-bold md:leading-9 font-rebond">
-                                            Complete Your KYC
+                                            {kycStatus === KYCStatus.PENDING
+                                                ? "KYC Verification Pending"
+                                                : kycStatus ===
+                                                    KYCStatus.REJECTED
+                                                  ? "KYC Verification Rejected"
+                                                  : "Complete Your KYC"}
                                         </h3>
-                                        <p className=" text-secondary-black text-[10px] md:text-xl font-inter-v">
-                                            Complete your KYC by providing your
+                                        <p
+                                            className={`text-secondary-black text-[10px] md:text-xl font-inter-v`}
+                                        >
+                                            {kycStatus === KYCStatus.PENDING
+                                                ? `We're verifying your credentials. We will let you know when it's done.`
+                                                : kycStatus ===
+                                                    KYCStatus.REJECTED
+                                                  ? `Your KYC verification was rejected. Please contact support at info@mavapay.co if you have any questions.`
+                                                  : `Complete your KYC by providing your
                                             bank details and carrying out face
                                             identification. This process is
                                             quick and easy, and it will only
-                                            take a few minutes.
+                                            take a few minutes.`}
                                         </p>
                                     </div>
 
                                     <Link
                                         href="/kyc"
-                                        className=" font-semibold text-secondary-red flex gap-1 w-fit text-sm md:text-base"
+                                        className={`font-semibold text-secondary-red flex gap-1 w-fit text-sm md:text-base ${(kycStatus === KYCStatus.PENDING || kycStatus === KYCStatus.REJECTED) && "hidden"}`}
                                     >
                                         Complete KYC
                                         <Image
@@ -250,12 +269,21 @@ const Page = () => {
                     </section>
                 </div>
             </Wrapper>
-            {open && (
-                <ProfileModal
-                    onClose={() => setOpen(false)}
-                    profileData={profile}
-                />
-            )}
+
+            <DialogBox
+                isOpen={open}
+                title="Set up your LN bank address"
+                ctaOnClick={() => router.push("/create-address")}
+                ctaText="Set up"
+                onDismiss={() => setOpen(false)}
+            >
+                <div className="flex items-center justify-center w-full">
+                    <p className="text-secondary-black text-center text-lg md:text-2xl font-rebond font-light text-clip max-w-xs">
+                        Create your mavapay money lightning address to start
+                        receiving payments
+                    </p>
+                </div>
+            </DialogBox>
         </main>
     )
 }

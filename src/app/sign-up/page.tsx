@@ -130,7 +130,7 @@ const Page = () => {
                                         />
                                         <p className=" text-xs font-rebond text-secondary-black font-light">
                                             I have read, understood and I agree
-                                            to Mavapay.Money’{" "}
+                                            to Mavapay.Money{" "}
                                             <span>
                                                 <Link
                                                     className=" underline text-primary-green"

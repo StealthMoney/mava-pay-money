@@ -100,7 +100,8 @@ export const AccountRepository = (prisma: Prisma) => {
                             kycInfo: {
                                 select: {
                                     status: true,
-                                    bvn: true
+                                    bvn: true,
+                                    gender: true
                                 }
                             },
                             lnAddress: {

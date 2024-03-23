@@ -1,18 +1,20 @@
 "use client"
 
-import React from "react"
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
+import React from "react"
+
+import { AccountDetails } from "@/app/kyc/page"
+import { BankCode } from "@/types/bank"
+import { Gender } from "@prisma/client"
 
 import ArrowIcon from "../../assets/svgs/arrow.svg"
-import { CustomInput } from "../custom-input/CustomInput"
 import { CustomButton } from "../custom-button/CustomButton"
-import { BankCode } from "@/types/bank"
-import { AccountDetails } from "@/app/kyc/page"
+import { CustomInput } from "../custom-input/CustomInput"
 
 export interface KycStepOneProps {
     onClickContinue: () => void
-    setAccountDetails: React.Dispatch<React.SetStateAction<any>>
+    setAccountDetails: React.Dispatch<React.SetStateAction<AccountDetails>>
     bankCodes: BankCode[]
     accountDetails: AccountDetails
     error: {
@@ -54,7 +56,33 @@ export const KycStepOne = ({
                     </p>
                 </div>
 
-                <div className=" flex flex-col gap-6 w-full">
+                <div className="flex flex-col gap-6 w-full">
+                    <p className="text-black font-rebond font-medium text-[14px]">
+                        Gender{" "}
+                        <span className="text-secondary-red text-[14px] font-rebond font-medium">
+                            {error.type === "gender"
+                                ? `(${error.message})`
+                                : ""}
+                        </span>
+                    </p>
+                    <select
+                        name="gender"
+                        onChange={(e) =>
+                            setAccountDetails((prev: any) => ({
+                                ...prev,
+                                gender: e.target.value as Gender
+                            }))
+                        }
+                        className="border-[1.5px] bg-secondary-gray text-base rounded-md w-full placeholder:font-rebond font-rebond font-light placeholder:font-light py-[18px] md:py-5 px-4 text-tertiary-gray"
+                    >
+                        <option value="">Select</option>
+                        <option value="MALE" className="font-medium">
+                            MALE
+                        </option>
+                        <option value="FEMALE" className="font-medium">
+                            FEMALE
+                        </option>
+                    </select>
                     <p className=" text-black font-rebond font-medium text-[14px]">
                         Bank Details
                         {bankCodes && bankCodes?.length > 0 && (
@@ -65,8 +93,7 @@ export const KycStepOne = ({
                         )}
                     </p>
                     <select
-                        name=""
-                        id=""
+                        name="bank-details"
                         onChange={(e) =>
                             setAccountDetails((prev: any) => ({
                                 ...prev,
