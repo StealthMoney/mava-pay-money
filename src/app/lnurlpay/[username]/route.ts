@@ -14,7 +14,7 @@ import { Quote } from "@/types/quote"
 import { Order } from "@/types/order"
 import { MAX_SPENDABLE, MIN_SPENDABLE, PARTNER_QUERY } from "@/config/default"
 import { PartnerRepository } from "@/services/prisma/repository/partner"
-import { Partner } from "@prisma/client"
+import { KYCStatus, Partner } from "@prisma/client"
 import { validateAuthHeader } from "@/services/auth/token"
 
 export async function GET(request: NextRequest, context: { params: any }) {
@@ -120,6 +120,16 @@ export async function GET(request: NextRequest, context: { params: any }) {
     if (account instanceof Error) {
         return new Response(stringifyError(account), {
             status: 404,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    }
+
+    const isKycVerified = account.user.kycInfo?.status === KYCStatus.APPROVED
+    if (!isKycVerified) {
+        return new Response(stringifyError(new Error("unauthorized")), {
+            status: 403,
             headers: {
                 "Content-Type": "application/json"
             }
