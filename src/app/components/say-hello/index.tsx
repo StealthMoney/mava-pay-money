@@ -98,7 +98,6 @@ export const SayHello = () => {
                     </section>
 
                     <section className="flex gap-16 md:gap-32 w-full items-center">
-                        {/* <form onSubmit={handleSubmit} className=' w-full'> */}
                         <div className="flex flex-col gap-7 max-w-full md:max-w-[549px] w-full">
                             <CustomInput
                                 inputProps={{
@@ -130,7 +129,7 @@ export const SayHello = () => {
                                     type: "email",
                                     value: formValues.email
                                 }}
-                                className=" placeholder:text-black"
+                                className="py-[22px] px-5 placeholder:text-black"
                             />
                             <textarea
                                 className="bg-secondary-gray border-[1.5px] py-[26px] px-5 h-[230px] md:h-[300px] border-card-border rounded-lg placeholder:text-secondary-black text-secondary-black font-rebond placeholder:font-light font-medium"
@@ -157,7 +156,6 @@ export const SayHello = () => {
                                 }}
                             />
                         </div>
-                        {/* </form> */}
 
                         <section className=" hidden md:flex flex-col gap-10">
                             <Image src={SayHelloIcon} alt="say hello icon" />
@@ -189,11 +187,11 @@ export const SocialLinks = [
         link: "https://twitter.com/Mavapay_Money",
         imgSrc: TwitterIcon,
         alt: "twitter icon"
-    },
-    // { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
-    {
-        link: "https://github.com/StealthMoney/mava-pay-money",
-        imgSrc: GithubIcon,
-        alt: "github icon"
     }
+    // { link: "", imgSrc: PlaneIcon, alt: "plane icon" },
+    // {
+    //     link: "https://github.com/StealthMoney/mava-pay-money",
+    //     imgSrc: GithubIcon,
+    //     alt: "github icon"
+    // }
 ]

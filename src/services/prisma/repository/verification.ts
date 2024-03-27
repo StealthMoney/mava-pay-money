@@ -23,6 +23,7 @@ export const VerificationRepository = (prisma: Prisma) => {
             const newVerification = await prisma.verification.create({
                 data: {
                     ...verificationData,
+                    userId: userId,
                     user: {
                         connect: { id: userId }
                     }
@@ -37,7 +38,7 @@ export const VerificationRepository = (prisma: Prisma) => {
         } catch (error) {
             const err = error as unknown as Error
             switch (err.name) {
-                case "SequelizeUniqueConstraintError":
+                case "PrismaClientKnownRequestError":
                     return new RepositoryError("Verification already exists")
                 default:
                     break
@@ -48,10 +49,10 @@ export const VerificationRepository = (prisma: Prisma) => {
         }
     }
 
-    const getVerificationByUserId = async (userId: number) => {
+    const getVerificationByUserEmail = async (email: string) => {
         try {
             const verification = await prisma.verification.findUnique({
-                where: { userId }
+                where: { userEmail: email }
             })
             if (!verification) {
                 return new RepositoryError("Could not find verification")
@@ -65,10 +66,10 @@ export const VerificationRepository = (prisma: Prisma) => {
         }
     }
 
-    const deleteVerificationByUserId = async (userId: number) => {
+    const deleteVerificationByUserEmail = async (email: string) => {
         try {
             const verification = await prisma.verification.delete({
-                where: { userId }
+                where: { userEmail: email }
             })
             if (!verification) {
                 return new RepositoryError("Could not delete verification")
@@ -101,8 +102,8 @@ export const VerificationRepository = (prisma: Prisma) => {
 
     return {
         create,
-        getVerificationByUserId,
-        deleteVerificationByUserId,
+        getVerificationByUserEmail,
+        deleteVerificationByUserEmail,
         getVerificationByToken
     }
 }

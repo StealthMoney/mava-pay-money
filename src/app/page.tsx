@@ -35,14 +35,13 @@ export default function Home() {
                     href="/favicon-16x16.png"
                 />
             </Head>
-            <main className="flex min-h-screen flex-col items-center pt-0">
+            <main className="flex min-h-screen bg-black flex-col items-center pt-0">
                 <Navbar />
                 <HeroSection />
                 <FeaturesSection />
                 <HowItWorks />
                 <Faq />
                 <SayHello />
-                <WaitList />
                 <Footer />
             </main>
         </>

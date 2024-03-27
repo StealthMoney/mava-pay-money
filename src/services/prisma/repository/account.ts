@@ -14,15 +14,15 @@ type Prisma = Omit<
 
 export const AccountRepository = (prisma: Prisma) => {
     const create = async (
-        accountData: Prisma.AccountCreateInput & { userId: number }
+        accountData: Prisma.AccountCreateInput & { userEmail: string }
     ) => {
         try {
-            const { userId, ...account } = accountData
+            const { userEmail, ...account } = accountData
             const newAccount = await prisma.account.create({
                 data: {
                     ...account,
                     user: {
-                        connect: { id: userId }
+                        connect: { email: userEmail }
                     }
                 }
             })
@@ -32,9 +32,10 @@ export const AccountRepository = (prisma: Prisma) => {
 
             return newAccount
         } catch (error) {
+            console.log({ error })
             const err = error as unknown as Error
             switch (err.name) {
-                case "SequelizeUniqueConstraintError":
+                case "PrismaClientKnownRequestError":
                     return new RepositoryError("Account already exists")
                 default:
                     break
@@ -47,14 +48,14 @@ export const AccountRepository = (prisma: Prisma) => {
 
     const updateAccount = async ({
         account,
-        userId
+        userEmail
     }: {
         account: Prisma.AccountUpdateInput
-        userId: number
+        userEmail: string
     }) => {
         try {
             const updatedAccount = await prisma.account.update({
-                where: { id: userId },
+                where: { userEmail },
                 data: account
             })
             if (!updatedAccount.id) {
@@ -85,29 +86,31 @@ export const AccountRepository = (prisma: Prisma) => {
             return new UnknownRepositoryError(errMsg)
         }
     }
-    const getAccountByUserId = async (userId: number) => {
+    const getAccountByUserEmail = async (email: string) => {
         try {
             const account = await prisma.account.findUnique({
                 where: {
-                    userId: userId
-                }
-            })
-            if (!account) {
-                return new RepositoryError("Account not found")
-            }
-            return account
-        } catch (error) {
-            Logger.error(error)
-            const errMsg = parseErrorMessageFromUnknown(error)
-            return new UnknownRepositoryError(errMsg)
-        }
-    }
-
-    const getAccountBylnAddress = async (lnAddress: string) => {
-        try {
-            const account = await prisma.account.findFirst({
-                where: {
-                    lnAddress: lnAddress
+                    userEmail: email
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                            kycInfo: {
+                                select: {
+                                    status: true,
+                                    bvn: true,
+                                    gender: true
+                                }
+                            },
+                            lnAddress: {
+                                select: {
+                                    address: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
             if (!account) {
@@ -125,7 +128,6 @@ export const AccountRepository = (prisma: Prisma) => {
         create,
         updateAccount,
         getAccountById,
-        getAccountByUserId,
-        getAccountBylnAddress
+        getAccountByUserEmail
     }
 }

@@ -1,6 +1,7 @@
-import { API_DOMAIN, EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process"
+import { EMAIL_VERIFY_TEMPLATE_ID } from "@/config/process"
 import { prisma } from "@/lib/prisma"
 import { sendMail } from "@/services/mail/sendgrid"
+import { getBaseUrl } from "@/utils"
 import { createToken } from "@/utils/auth-token"
 import { comparePassword } from "@/utils/password"
 
@@ -20,6 +21,13 @@ export async function POST(req: Request) {
         const user = await prisma.user.findUnique({
             where: {
                 email
+            },
+            include: {
+                kycInfo: {
+                    select: {
+                        status: true
+                    }
+                }
             }
         })
 
@@ -32,13 +40,14 @@ export async function POST(req: Request) {
         if (!user.verified) {
             const verification = await prisma.verification.findUnique({
                 where: {
-                    userId: user.id
+                    userEmail: user.email
                 }
             })
             if (verification) {
-                const verificationUrl = `${API_DOMAIN}/account/verify?key=${verification.token}`
+                const baseUrl = getBaseUrl()
+                const verificationUrl = `${baseUrl}/account/verify?key=${verification.token}`
                 const mail = await sendMail({
-                    from: "donotreply@mavapay.co",
+                    from: "noreply@mavapay.co",
                     to: email,
                     templateId: EMAIL_VERIFY_TEMPLATE_ID,
                     dynamicTemplateData: {
@@ -68,7 +77,9 @@ export async function POST(req: Request) {
             )
         }
 
-        const token = await createToken({ data: { email, id: user.id } })
+        const token = await createToken({
+            data: { email, kyc_status: user.kycInfo?.status, id: user.id }
+        })
 
         return new Response(JSON.stringify({ token }), {
             status: 200

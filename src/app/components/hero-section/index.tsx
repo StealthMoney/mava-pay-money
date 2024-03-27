@@ -1,14 +1,10 @@
 import React from "react"
 import Image from "next/image"
-import { LaunchBanner } from "../launch-banner/LaunchBanner"
 import HeroImage from "../../assets/images/hero-image.webp"
-import { JoinWaitlist } from "./waitlist-input"
 
 export const HeroSection = () => {
     return (
         <div className="w-full min-h-[calc(100vh-68px)] flex flex-col">
-            <LaunchBanner />
-
             <div className="flex flex-1 w-full h-full justify-center">
                 <div className="px-0 sm:px-0 md:px-5 lg:px-10 xl:px-[100px] w-full max-w-[1440px]">
                     <div className="flex flex-col-reverse md:flex-row md:gap-16 items-center h-full md:justify-between w-full">
@@ -21,10 +17,6 @@ export const HeroSection = () => {
                                     Global money at your fingertips!
                                 </h2>
                                 <p className="text-[16px] lg:text-lg leading-[32px] max-w-[532px] font-inter-v">{`Experience the speed of Lightning Network transactions. Receive Naira from anywhere 'lightning fast', with Bitcoin`}</p>
-                            </div>
-
-                            <div className="flex flex-col gap-7 w-full">
-                                <JoinWaitlist />
                             </div>
                         </section>
 

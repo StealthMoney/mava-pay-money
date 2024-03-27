@@ -9,10 +9,13 @@ async function main() {
         create: {
             email: "test@test.com",
             name: "Test User",
-            password: `$2y$12$GBfcgD6XwaMferSOdYGiduw3Awuo95QAPhxFE0oNJ.Ds8qj3pzEZy`, //password
+            password: `$2b$12$wylqDr1chQPQ7VPUh9Lo3umThVbp7hKde7zJEx/DY1JFjiLH/3f0q`, //password
+            verified: true,
             kycInfo: {
                 create: {
-                    bvn: "22394832848"
+                    bvn: "22394832848",
+                    userId: 1,
+                    status: "APPROVED"
                 }
             },
             account: {
@@ -20,12 +23,18 @@ async function main() {
                     bankCode: "100004",
                     accountNumber: "7055604770",
                     accountName: "EMMANUEL ANUOLUWA ITAKPE",
-                    lnAddress: "test@mavapay.money"
+                    lnAddress: "test@mavapay.money",
+                    userId: 1
+                }
+            },
+            lnAddress: {
+                create: {
+                    address: "test@mavapay.money"
                 }
             }
         }
     })
-    const partner = await prisma.partner.upsert({
+    await prisma.partner.upsert({
         where: { name: "test_partner" },
         update: {},
         create: {

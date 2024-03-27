@@ -73,7 +73,7 @@ export const JoinWaitlist = () => {
                         value: email,
                         onChange: handleInputChange
                     }}
-                    className=" bg-transparent text-white placeholder:text-white"
+                    className="bg-transparent text-white placeholder:text-white"
                 />
                 <aside className="flex gap-1">
                     <Image src={InfoIcon} alt="info icon" />

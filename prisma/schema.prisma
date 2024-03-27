@@ -39,6 +39,19 @@ enum TransactionStatus {
   FAILED
 }
 
+enum KYCStatus {
+  APPROVED
+  REJECTED
+  PENDING
+  NOT_SUBMITTED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NULL
+}
+
 model User {
   id           Int           @id @default(autoincrement())
   name         String
@@ -46,6 +59,7 @@ model User {
   password     String
   kycInfo      KYCInfo?
   account      Account?
+  lnAddress    LnAddress?
   verification Verification?
   verified     Boolean       @default(false)
   createdAt    DateTime      @default(now())
@@ -54,24 +68,38 @@ model User {
 
 model Account {
   id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [userId], references: [id])
-  userId        Int      @unique
+  user          User     @relation(fields: [userEmail], references: [email])
+  userId        Int
+  userEmail     String   @unique @default("")
   bankCode      String
-  accountNumber String   @unique
+  accountNumber String
   accountName   String
-  lnAddress     String?  @unique
+  lnAddress     String?
   order         Order[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
 }
 
-model KYCInfo {
+model LnAddress {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  bvn       String
+  user      User     @relation(fields: [userEmail], references: [email])
+  userEmail String   @unique @default("")
+  address   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+}
+
+model KYCInfo {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userEmail], references: [email])
+  userId      Int
+  userEmail   String    @unique @default("")
+  bvn         String
+  identityRef String    @default("")
+  gender      Gender    @default(NULL)
+  status      KYCStatus @default(NOT_SUBMITTED)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 }
 
 model Order {
@@ -119,8 +147,9 @@ model Partner {
 
 model Verification {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
+  user      User     @relation(fields: [userEmail], references: [email])
+  userId    Int
+  userEmail String   @unique @default("")
   token     String   @unique
   createdAt DateTime @default(now())
   expiresAt DateTime @default(now())
@@ -129,6 +158,15 @@ model Verification {
 model Waitlist {
   id        Int      @id @default(autoincrement())
   email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model ExternalAccountKeys {
+  id        Int      @id @default(autoincrement())
+  key       String
+  name      String   @unique
+  issuer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
