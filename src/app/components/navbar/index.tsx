@@ -1,18 +1,16 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import React from "react"
 
-import {
-    Cross1Icon,
-    ExternalLinkIcon,
-    HamburgerMenuIcon
-} from "@radix-ui/react-icons"
+import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons"
 
 import { CustomButton } from "../custom-button/CustomButton"
 import Wrapper from "../wrapper"
 
 export const Navbar = () => {
+    const router = useRouter()
     const [openMenu, setOpenMenu] = React.useState(false)
 
     return (
@@ -32,31 +30,24 @@ export const Navbar = () => {
                         </Link>
                     </section>
 
-                    <section className=" hidden md:flex items-center gap-5">
-                        {/* <CustomButton
+                    <section className="hidden md:flex items-center gap-5">
+                        <CustomButton
                             label="Sign In"
                             type="secondary"
-                            buttonProps={{ style: { padding: "16px 32px" } }}
+                            buttonProps={{
+                                style: { padding: "16px 32px" },
+                                onClick: () => {
+                                    router.push("/sign-in")
+                                }
+                            }}
                         />
                         <CustomButton
                             label="Sign Up"
                             type="primary"
-                            buttonProps={{ style: { padding: "16px 32px" } }}
-                        /> */}
-                        <CustomButton
-                            label="Join Waitlist"
-                            type="primary"
-                            className="py-5 px-8 flex items-center justify-center"
                             buttonProps={{
-                                // TODO: remove after launch
+                                style: { padding: "16px 32px" },
                                 onClick: () => {
-                                    const el =
-                                        document.getElementById("waitlist")
-                                    if (el) {
-                                        el.scrollIntoView({
-                                            behavior: "smooth"
-                                        })
-                                    }
+                                    router.push("/sign-up")
                                 }
                             }}
                         />
@@ -84,31 +75,25 @@ export const Navbar = () => {
                         </Link>
 
                         <section className=" pt-[50px] p-5 flex flex-col gap-6">
-                            {/* <CustomButton
+                            <CustomButton
                                 label="Sign Up"
                                 type="primary"
                                 className="py-5 px-8 flex items-center justify-center"
+                                buttonProps={{
+                                    onClick: () => {
+                                        setOpenMenu(!openMenu)
+                                        router.push("/sign-up")
+                                    }
+                                }}
                             />
                             <CustomButton
                                 label="Sign In"
                                 type="secondary"
                                 className="py-5 px-8 flex items-center justify-center"
-                            /> */}
-                            <CustomButton
-                                label="Join Waitlist"
-                                type="primary"
-                                className="py-5 px-8 flex items-center justify-center"
                                 buttonProps={{
-                                    // TODO: remove after launch
                                     onClick: () => {
                                         setOpenMenu(!openMenu)
-                                        const el =
-                                            document.getElementById("waitlist")
-                                        if (el) {
-                                            el.scrollIntoView({
-                                                behavior: "smooth"
-                                            })
-                                        }
+                                        router.push("/sign-in")
                                     }
                                 }}
                             />

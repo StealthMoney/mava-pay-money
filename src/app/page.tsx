@@ -42,7 +42,6 @@ export default function Home() {
                 <HowItWorks />
                 <Faq />
                 <SayHello />
-                <WaitList />
                 <Footer />
             </main>
         </>
