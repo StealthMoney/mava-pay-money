@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
             const isBvnCorrect =
                 Number(profile.user.kycInfo?.bvn || 0) === Number(bvn)
             const isNameValid = profile.accountName
-                ? [firstName, lastName, middleName].every((name) =>
+                ? [firstName, lastName, middleName].some((name) =>
                       profile.accountName.includes(name)
                   )
                 : false

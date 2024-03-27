@@ -122,11 +122,30 @@ export const KYCRepository = (prisma: Prisma) => {
         }
     }
 
+    const getKYCByUserId = async (userId: number) => {
+        try {
+            const kyc = await prisma.kYCInfo.findFirst({
+                where: {
+                    userId
+                }
+            })
+            if (!kyc) {
+                return new RepositoryError("KYC not found")
+            }
+            return kyc
+        } catch (error) {
+            Logger.error(error)
+            const errMsg = parseErrorMessageFromUnknown(error)
+            return new UnknownRepositoryError(errMsg)
+        }
+    }
+
     return {
         create,
         getKYCById,
         getKYCByUserEmail,
         getKYCByIdentityRef,
+        getKYCByUserId,
         updateKYC
     }
 }

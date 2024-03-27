@@ -4,8 +4,7 @@ import {
     saveIdentityRef
 } from "@/app/kyc/update-account"
 import { generateUserRef } from "@/utils"
-import { KYCStatus } from "@prisma/client"
-import { signOut, useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import { useState } from "react"
 import useIdentityPayKYC from "react-identity-kyc"
 
@@ -21,7 +20,7 @@ interface IdentityConfig {
 }
 
 export const useIdentityVerify = () => {
-    const { data: session, status, update } = useSession()
+    const { status } = useSession()
     const [config, setConfig] = useState<IdentityConfig | null>({
         first_name: "",
         last_name: "",
@@ -84,20 +83,13 @@ export const useIdentityVerify = () => {
                 ) {
                     setSuccess(true)
                     console.log("KYC verification successful")
+                    signIn("credentials", {
+                        redirect: false
+                    })
                 } else {
                     setError("KYC verification failed")
                     console.log("KYC verification failed")
                 }
-                // update the kyc status to pending
-                // update({ kycStatus: KYCStatus.PENDING })
-                //     .then((data) => {
-                //         console.log("KYC status updated")
-                //         console.log({ data })
-                //     })
-                //     .catch((error) => {
-                //         console.log("Error updating KYC status")
-                //         console.log({ error })
-                //     })
                 return response
             }
         }

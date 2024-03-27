@@ -28,10 +28,7 @@ const Page = () => {
 
     const [open, setOpen] = useState(false)
 
-    if (status !== "authenticated") {
-        redirect("/sign-in")
-    }
-    const kycStatus = data.user.kycStatus as KYCStatus
+    const kycStatus = data?.user.kycStatus as KYCStatus
 
     const handleGetAddress = () => {
         if (kycStatus === KYCStatus.APPROVED) {
@@ -55,11 +52,12 @@ const Page = () => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
+        const t = setTimeout(() => {
             if (kycStatus === KYCStatus.APPROVED && !profile.lnAddress) {
                 setOpen(true)
             }
-        }, 5000)
+        }, 10000)
+        return () => clearTimeout(t)
     }, [profile.lnAddress, kycStatus])
 
     return (
@@ -84,7 +82,7 @@ const Page = () => {
                             </div>
 
                             <div
-                                className={`flex items-center w-full gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] ${kycStatus === KYCStatus.PENDING ? "border-orange-400 bg-orange-50" : "border-secondary-red bg-tertiary-red"} rounded-xl h-[140px] md:h-[200px] ${kycStatus === KYCStatus.APPROVED ? "hidden" : "block"}`}
+                                className={`flex items-center w-full gap-1 md:gap-5 px-4 pl-0 md:px-8 border-[1.5px] ${kycStatus === KYCStatus.PENDING ? "border-orange-400 bg-orange-50" : "border-secondary-red bg-tertiary-red"} rounded-xl h-[140px] md:h-[200px] ${kycStatus === KYCStatus.APPROVED || status === "loading" ? "hidden" : "block"}`}
                             >
                                 <Image
                                     src={KycIcon}
@@ -245,8 +243,12 @@ const Page = () => {
                                                     }
                                                 />
                                                 <ProfileBlock
+                                                    title="LN Bank Address"
                                                     placeHolder="Username"
-                                                    value={profile?.lnAddress}
+                                                    value={
+                                                        profile?.lnAddress ||
+                                                        "..."
+                                                    }
                                                     onEditClick={
                                                         !profile?.lnAddress
                                                             ? handleGetAddress
@@ -258,7 +260,14 @@ const Page = () => {
                                                             : undefined
                                                     }
                                                 />
-                                                <ProfileBlock placeHolder="Account Number" />
+                                                <ProfileBlock
+                                                    title="Account Number"
+                                                    placeHolder="Account Number"
+                                                    value={
+                                                        profile.accountNumber ||
+                                                        "..."
+                                                    }
+                                                />
                                                 <ToastContainer />
                                             </section>
                                         </>

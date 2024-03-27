@@ -3,6 +3,9 @@ import { NextAuthOptions, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials"
 
+import { prisma } from "@/lib/prisma"
+import { KYCRepository } from "@/services/prisma/repository/kyc"
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -56,20 +59,34 @@ export const authOptions: NextAuthOptions = {
         },
         async jwt({ token, user }) {
             if (user && user?.token) {
+                const decoded = decodeJwt(user.token as string) as JWTPayload
+                const expires = new Date((decoded.exp ?? 0) * 1000)
+
                 token.token = user.token
+                token.userId = decoded.id as string
+                token.email = decoded.email as string
+                token.role = decoded.type as string
+                token.expires = expires.toISOString()
+                token.kycStatus = decoded.kyc_status as string
+            } else if (!user && token.userId) {
+                const updatedKYC = await KYCRepository(prisma).getKYCByUserId(
+                    Number(token.userId)
+                )
+                if (updatedKYC instanceof Error) {
+                    return token
+                }
+                token.kycStatus = updatedKYC.status as string
             }
             return token
         },
         async session({ session, token }: { session: Session; token: JWT }) {
-            // session.accessToken = undefined
             if (token.token) {
-                const decoded = decodeJwt(token.token as string) as JWTPayload
+                session.expires = token.expires as string
                 session.accessToken = token.token as string
-                session.user.id = decoded.id as string
-                token.email = decoded.email as string
-                session.user.email = decoded.email as string
-                session.user.role = decoded.type as string
-                session.user.kycStatus = decoded.kyc_status as string
+                session.user.id = token.userId as string
+                session.user.email = token.email as string
+                session.user.role = token.role as string
+                session.user.kycStatus = token.kycStatus as string
             }
             return session
         }

@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState } from "react"
+import React from "react"
 
 import { useCreateAddress } from "@/hooks/useCreateAddress"
 

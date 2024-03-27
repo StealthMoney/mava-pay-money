@@ -128,7 +128,6 @@ const Page = () => {
             accountUpdate: true
         }))
         const result = await updateAccount(accountDetails)
-        console.log({ result })
         setLoading((prev) => ({
             ...prev,
             accountUpdate: false

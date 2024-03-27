@@ -26,7 +26,6 @@ export const getAccountName = async (
         const res = await axiosInstance.get(
             `bank/name-enquiry?accountNumber=${accountNumber}&bankCode=${bankCode}`
         )
-        console.log(res.data.data)
         return { success: true, data: res.data.data }
     } catch (error: any) {
         console.log(error.response)

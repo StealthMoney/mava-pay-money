@@ -25,13 +25,12 @@ export function SessionCheckComponent({
                 signOut({ redirect: false })
                 return
             }
-            const expires = new Date((decodedToken.exp ?? 0) * 1000)
-            if (expires < new Date()) {
-                signOut({
-                    redirect: false
-                })
+            const sessionExpiry = new Date(session.expires).getTime()
+            const now = new Date().getTime()
+            if (sessionExpiry < now) {
+                signOut()
             }
-        }, 60000) // check every minute
+        }, 5000) // check every 5 seconds
 
         return () => clearInterval(intervalId)
     }, [session, status])
